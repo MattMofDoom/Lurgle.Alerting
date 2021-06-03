@@ -36,7 +36,7 @@ namespace Lurgle.Alerting
                 alertConfig = new AlertConfig()
                 {
                     AppName = ConfigurationManager.AppSettings["AppName"],
-                    MailRenderer = GetRenderer(ConfigurationManager.AppSettings["MailTemplatePath"]),
+                    MailRenderer = GetRenderer(ConfigurationManager.AppSettings["MailRenderer"]),
                     MailTemplatePath = ConfigurationManager.AppSettings["MailTemplatePath"],
                     MailHost = ConfigurationManager.AppSettings["MailHost"],
                     MailPort = GetInt(ConfigurationManager.AppSettings["MailPort"]),
@@ -85,6 +85,7 @@ namespace Lurgle.Alerting
                     alertConfig.AppVersion = string.Empty;
                 }
             }
+
             //Attempt to set the templates if it's not specified 
             if (string.IsNullOrEmpty(alertConfig.MailTemplatePath) || !Directory.Exists(alertConfig.MailTemplatePath))
             {
@@ -96,7 +97,7 @@ namespace Lurgle.Alerting
                 alertConfig.MailPort = 25;
             }
 
-            return config;
+            return alertConfig;
         }
 
         /// <summary>

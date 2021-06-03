@@ -93,7 +93,7 @@ namespace Lurgle.Alerting
         /// <summary>
         /// Instantiate a new <see cref="Alert"/>  class with the desired <see cref="from"/>  address. <para />
         /// 
-        /// Uses <see cref="SFTPResource.emailFromDefault"/> if an email is not specified.
+        /// Uses <see cref="AlertConfig.MailFrom"/> if an email is not specified.
         /// </summary>
         /// <param name="fromAddress">Email address to send the email from</param>
         /// <param name="fromName">Display name of the sender</param>
@@ -145,7 +145,7 @@ namespace Lurgle.Alerting
             string emailAddress;
             if (string.IsNullOrEmpty(toAddress))
             {
-                emailAddress = GetEmailAddress("MailTo", AddressType.FromConfig, isDebug);
+                emailAddress = GetEmailAddress(Alerting.Config.MailTo, AddressType.Email, isDebug);
             }
             else
             {
@@ -170,7 +170,7 @@ namespace Lurgle.Alerting
                 toList.Add(new Address(emailAddress, toName));
             }
 
-            return new Alert { to = toList, MethodName = methodName, IsDebug = isDebug, IsMethod = isMethod };
+            return new Alert { from = new Address(Alerting.Config.MailFrom), to = toList, MethodName = methodName, IsDebug = isDebug, IsMethod = isMethod };
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Lurgle.Alerting
             string emailAddress;
             if (string.IsNullOrEmpty(toAddress))
             {
-                emailAddress = GetEmailAddress("MailTo", AddressType.FromConfig, IsDebug);
+                emailAddress = GetEmailAddress(Alerting.Config.MailTo, AddressType.Email, IsDebug);
             }
             else
             {
@@ -470,7 +470,7 @@ namespace Lurgle.Alerting
             string emailAddress;
             if (string.IsNullOrEmpty(replyToAddress))
             {
-                emailAddress = GetEmailAddress("MailFrom", AddressType.FromConfig, IsDebug);
+                emailAddress = GetEmailAddress(Alerting.Config.MailFrom, AddressType.Email, IsDebug);
             }
             else
             {

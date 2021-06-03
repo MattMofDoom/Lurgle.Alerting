@@ -22,6 +22,7 @@ namespace Lurgle.Alerting
         public static void SetConfig(AlertConfig alertConfig = null)
         {
             Config = AlertConfig.GetConfig(alertConfig);
+            
             switch (Config.MailRenderer)
             {
                 case RendererType.Razor:
