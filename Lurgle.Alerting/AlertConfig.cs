@@ -19,7 +19,7 @@ namespace Lurgle.Alerting
         /// App version will be determined from the binary version, but can be overriden
         /// </summary>
         public string AppVersion { get; set; }
-        public RendererType Renderer { get; set; }
+        public RendererType MailRenderer { get; set; }
         public string MailTemplatePath { get; set; }
         public string MailHost { get; set; }
         public int MailPort { get; set; }
@@ -36,6 +36,7 @@ namespace Lurgle.Alerting
                 alertConfig = new AlertConfig()
                 {
                     AppName = ConfigurationManager.AppSettings["AppName"],
+                    MailRenderer = GetRenderer(ConfigurationManager.AppSettings["MailTemplatePath"]),
                     MailTemplatePath = ConfigurationManager.AppSettings["MailTemplatePath"],
                     MailHost = ConfigurationManager.AppSettings["MailHost"],
                     MailPort = GetInt(ConfigurationManager.AppSettings["MailPort"]),
@@ -134,6 +135,19 @@ namespace Lurgle.Alerting
             }
 
             return tryTimeout;
+        }
+
+        private static RendererType GetRenderer(string configValue)
+        {
+            if (!string.IsNullOrEmpty(configValue))
+            {
+                if (Enum.TryParse(configValue, true, out RendererType renderer))
+                {
+                    return renderer;
+                }
+            }
+
+            return RendererType.Replace;
         }
 
         /// <summary>
