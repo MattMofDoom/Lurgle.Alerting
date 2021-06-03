@@ -24,7 +24,7 @@ namespace Lurgle.Alerting
             if (Email.DefaultRenderer == null)
             {
                 Config = AlertConfig.GetConfig(alertConfig);
-                switch (Config.Renderer)
+                switch (Config.MailRenderer)
                 {
                     case RendererType.Razor:
                         Email.DefaultRenderer = new RazorRenderer();
