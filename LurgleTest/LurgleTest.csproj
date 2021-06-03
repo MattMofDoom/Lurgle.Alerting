@@ -1,8 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net461;net47;net48;</TargetFrameworks>
+    <Version>1.0.4</Version>
+    <Authors>Matt Marlor</Authors>
+    <Company>orMatt Marlor</Company>
   </PropertyGroup>
 
   <ItemGroup>
