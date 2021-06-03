@@ -102,7 +102,7 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         public static IEnvelope From(string fromAddress = null, string fromName = null, AddressType addressType = AddressType.Email, bool isDebug = false, bool isMethod = false, [CallerMemberName] string methodName = null)
         {
-            if (Email.DefaultRenderer == null)
+            if (Alerting.Config == null)
             {
                 Alerting.Init();
             }
@@ -137,7 +137,7 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         public static IEnvelope To(string toAddress = null, string toName = null, AddressType addressType = AddressType.Email, bool isDebug = false, bool isMethod = false, [CallerMemberName] string methodName = null)
         {
-            if (Email.DefaultRenderer == null)
+            if (Alerting.Config == null)
             {
                 Alerting.Init();
             }

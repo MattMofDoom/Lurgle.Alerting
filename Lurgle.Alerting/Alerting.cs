@@ -17,25 +17,22 @@ namespace Lurgle.Alerting
         public static readonly string defaultSubject = "Alert!";
 
         /// <summary>
-        /// Set the alerting config. This will only set/update the config if there is no Renderer currently set. 
+        /// Set the alerting config. 
         /// </summary>
         public static void SetConfig(AlertConfig alertConfig = null)
         {
-            if (Email.DefaultRenderer == null)
+            Config = AlertConfig.GetConfig(alertConfig);
+            switch (Config.MailRenderer)
             {
-                Config = AlertConfig.GetConfig(alertConfig);
-                switch (Config.MailRenderer)
-                {
-                    case RendererType.Razor:
-                        Email.DefaultRenderer = new RazorRenderer();
-                        break;
-                    case RendererType.Fluid:
-                        Email.DefaultRenderer = new LiquidRenderer(Options.Create(new LiquidRendererOptions() { TextEncoder = HtmlEncoder.Default, FileProvider = new PhysicalFileProvider(Config.MailTemplatePath) }));
-                        break;
-                    default:
-                        Email.DefaultRenderer = new ReplaceRenderer();
-                        break;
-                }
+                case RendererType.Razor:
+                    Email.DefaultRenderer = new RazorRenderer();
+                    break;
+                case RendererType.Fluid:
+                    Email.DefaultRenderer = new LiquidRenderer(Options.Create(new LiquidRendererOptions() { TextEncoder = HtmlEncoder.Default, FileProvider = new PhysicalFileProvider(Config.MailTemplatePath) }));
+                    break;
+                default:
+                    Email.DefaultRenderer = new ReplaceRenderer();
+                    break;
             }
         }
 
