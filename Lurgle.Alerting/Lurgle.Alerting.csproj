@@ -9,6 +9,10 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageIcon>LurgleMail.png</PackageIcon>
     <ApplicationIcon>LurgleMail.ico</ApplicationIcon>
+    <PackageProjectUrl>https://github.com/MattMofDoom/Lurgle.Alerting</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageTags>Fluent Email,Alert,Alerts,Alerting,Razor,Fluid,Smtp</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
