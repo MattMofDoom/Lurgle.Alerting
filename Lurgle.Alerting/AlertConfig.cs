@@ -51,6 +51,40 @@ namespace Lurgle.Alerting
                 alertConfig = config;
             }
 
+            bool isSuccess = true;
+
+            //If AppName is not specified in config, attempt to populate it. Populate AppVersion while we're at it.
+            try
+            {
+                if (string.IsNullOrEmpty(alertConfig.AppName))
+                {
+                    alertConfig.AppName = Assembly.GetEntryAssembly().GetName().Name;
+                }
+
+                alertConfig.AppVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
+            }
+            catch
+            {
+                isSuccess = false;
+            }
+
+            if (!isSuccess)
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(alertConfig.AppName))
+                    {
+                        alertConfig.AppName = Assembly.GetExecutingAssembly().GetName().Name;
+                    }
+
+                    alertConfig.AppVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                }
+                catch
+                {
+                    //We surrender ...
+                    alertConfig.AppVersion = string.Empty;
+                }
+            }
             //Attempt to set the templates if it's not specified 
             if (string.IsNullOrEmpty(alertConfig.MailTemplatePath) || !Directory.Exists(alertConfig.MailTemplatePath))
             {
