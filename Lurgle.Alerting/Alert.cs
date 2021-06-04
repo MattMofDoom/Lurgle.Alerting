@@ -35,6 +35,14 @@ namespace Lurgle.Alerting
             }
         }
 
+        /// <summary>
+        /// Retrieve a file spec for attachment as an inline file
+        /// </summary>
+        /// <param name="inlineFile"></param>
+        /// <param name="folderLocation"></param>
+        /// <param name="contentId"></param>
+        /// <param name="filePath"></param>
+        /// <param name="contentType"></param>
         private static void GetInlineFile(string inlineFile, string folderLocation, out string contentId, out string filePath, out string contentType)
         {
             contentId = string.Empty;
@@ -56,9 +64,7 @@ namespace Lurgle.Alerting
         /// <summary>
         /// Resolve email addresses using the given <see cref="AddressType"/> <para/>
         /// 
-        /// If <see cref="Config.isDebug"/> is true, emails will automatically be replaced with the configured debug email address.<para/>
-        /// 
-        /// If <see cref="Config.logEmail"/> is also true, the original email and the debug email will be written as a log entry.
+        /// If <see cref="isDebug"/> is true, emails will automatically be replaced with the configured debug email address.<para/>        
         /// </summary>
         /// <param name="emailType">Email config item or email address</param>
         /// <param name="addressType">Type of email being passed</param>
@@ -91,13 +97,15 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Instantiate a new <see cref="Alert"/>  class with the desired <see cref="from"/>  address. <para />
+        /// Instantiate a new email with the desired <see cref="fromAddress"/>  address. <para />
         /// 
         /// Uses <see cref="AlertConfig.MailFrom"/> if an email is not specified.
         /// </summary>
         /// <param name="fromAddress">Email address to send the email from</param>
         /// <param name="fromName">Display name of the sender</param>
-        /// <param name="showMethod">Add the calling method to the message text if using <see cref="Send"/> to send an email</param>
+        /// <param name="addressType">Type of email address - defaults to <see cref="AddressType.Email"/> but accepts <see cref="AddressType.FromConfig"/> to read from config</param>
+        /// <param name="isDebug">If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default <see cref="Alerting.Config.MailTo"/> email</param>
+        /// <param name="isMethod">Add the calling method to the message text if using <see cref="Send"/> to send an email</param>
         /// <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
         /// <returns></returns>
         public static IEnvelope From(string fromAddress = null, string fromName = null, AddressType addressType = AddressType.Email, bool isDebug = false, bool isMethod = false, [CallerMemberName] string methodName = null)
@@ -128,11 +136,13 @@ namespace Lurgle.Alerting
         /// <summary>
         /// Instantiate a new Alert class using the default from address and specified toAddress. You can chain additional recipients to this.<para />
         /// 
-        /// Uses <see cref="Config.MailTo"/> if an email is not specified.
+        /// Uses <see cref="Alerting.Config.MailFrom"/>, and <see cref="Alerting.Config.MailTo"/> if an email is not specified.
         /// </summary>
         /// <param name="toAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
         /// <param name="toName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
-        /// <param name="showMethod">Add the calling method to the message text if using <see cref="Send"/> to send an email</param>
+        /// <param name="addressType">Type of email address - defaults to <see cref="AddressType.Email"/> but accepts <see cref="AddressType.FromConfig"/> to read from config</param>
+        /// <param name="isDebug">If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default <see cref="Alerting.Config.MailTo"/> email</param>
+        /// <param name="isMethod">Add the calling method to the message text if using <see cref="Send"/> to send an email</param>
         /// <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
         /// <returns></returns>
         public static IEnvelope To(string toAddress = null, string toName = null, AddressType addressType = AddressType.Email, bool isDebug = false, bool isMethod = false, [CallerMemberName] string methodName = null)
@@ -174,12 +184,15 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add a single <see cref="to"/>  address to the alert. You can chain this multiple times.<para /> 
+        /// Add a single recipient email address to the alert. You can chain this multiple times.<para /> 
         /// 
-        /// As an optional parameter, this method will not add empty or null addresses to the email.
+        /// As an optional parameter, this method will not add empty or null addresses to the email.<para/>
+        /// 
+        /// You can optionally supply key names to retrieve email addresses from the app config.
         /// </summary>
         /// <param name="toAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
         /// <param name="toName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
+        /// <param name="addressType">Type of email address - defaults to <see cref="AddressType.Email"/> but accepts <see cref="AddressType.FromConfig"/> to read from config</param>
         /// <returns></returns>
         public IEnvelope To(string toAddress, string toName = null, AddressType addressType = AddressType.Email)
         {
@@ -210,7 +223,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add an array of email addresses to the <see cref="to"/>  field for the alert.<para/>
+        /// Add an array of email addresses to the recipient field for the alert.<para/>
         /// 
         /// As an optional parameter, this method will not add empty or null addresses to the email
         /// </summary>
@@ -230,7 +243,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add a list of email addresses to the <see cref="to"/>  field for the alert<para/> 
+        /// Add a list of email addresses to the recipient  field for the alert<para/> 
         /// 
         /// As an optional parameter, this method will not add empty or null addresses to the email
         /// </summary>
@@ -250,7 +263,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add a list of paired email address and name values to the <see cref="to"/>  field for the alert.<para/>
+        /// Add a list of paired email address and name values to the recipient field for the alert.<para/>
         /// 
         /// As an optional parameter, this method will not add empty or null addresses to the email
         /// </summary>
@@ -274,12 +287,13 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add a single <see cref="cc"/>  address to the alert. You can chain this multiple times.<para /> 
+        /// Add a single CC  address to the alert. You can chain this multiple times.<para /> 
         /// 
         /// As an optional parameter, this method will not add empty or null addresses to the email.
         /// </summary>
         /// <param name="ccAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
         /// <param name="ccName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
+        /// <param name="addressType">Type of email address - defaults to <see cref="AddressType.Email"/> but accepts <see cref="AddressType.FromConfig"/> to read from config</param>
         /// <returns></returns>
         public IEnvelope Cc(string ccAddress, string ccName = null, AddressType addressType = AddressType.Email)
         {
@@ -303,7 +317,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add an array of email addresses to the <see cref="cc"/> field for the alert<para/>
+        /// Add an array of email addresses to the CC field for the alert<para/>
         /// 
         /// As an optional parameter, this method will not add empty or null addresses to the email
         /// </summary>
@@ -324,7 +338,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add a list of email addresses to the <see cref="cc"/> field for the alert<para/>
+        /// Add a list of email addresses to the CC field for the alert<para/>
         /// 
         /// As an optional parameter, this method will not add empty or null addresses to the email
         /// </summary>
@@ -345,7 +359,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add a list of paired email address and name values to the <see cref="cc"/> field for the alert<para/>
+        /// Add a list of paired email address and name values to the CC field for the alert<para/>
         /// 
         /// As an optional parameter, this method will not add empty or null addresses to the email
         /// </summary>
@@ -366,12 +380,13 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add a single <see cref="bcc"/> address to the alert. You can chain this multiple times.<para /> 
+        /// Add a single BCC address to the alert. You can chain this multiple times.<para /> 
         /// 
         /// As an optional parameter, this method will not add empty or null addresses to the email.
         /// </summary>
         /// <param name="bccAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
         /// <param name="bccName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
+        /// <param name="addressType">Type of email address - defaults to <see cref="AddressType.Email"/> but accepts <see cref="AddressType.FromConfig"/> to read from config</param>
         /// <returns></returns>
         public IEnvelope Bcc(string bccAddress, string bccName = null, AddressType addressType = AddressType.Email)
         {
@@ -395,7 +410,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Add an array of email addresses to the <see cref="bcc"/> field for this alert<para/>
+        /// Add an array of email addresses to the BCC field for this alert<para/>
         /// 
         /// As an optional parameter, this method will not add empty or null addresses to the email
         /// </summary>
@@ -458,12 +473,13 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Set the <see cref="replyTo"/>  address for the alert.<para /> 
+        /// Set the Reply To address for the alert.<para /> 
         /// 
-        /// If no address is specified, <see cref="Config.MailFrom"/> will be used.
+        /// If no address is specified, <see cref="Alerting.Config.MailFrom"/> value will be used.
         /// </summary>
         /// <param name="replyToAddress">Email address to send replies to.</param>
         /// <param name="replyToName">Display name of the recipient.</param>
+        /// <param name="addressType">Type of email address - defaults to <see cref="AddressType.Email"/> but accepts <see cref="AddressType.FromConfig"/> to read from config</param>
         /// <returns></returns>
         public IEnvelope ReplyTo(string replyToAddress = null, string replyToName = null, AddressType addressType = AddressType.Email)
         {
@@ -486,7 +502,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Set the <see cref="subject"/> for the alert email.<para/>
+        /// Set the subject for the alert email.<para/>
         /// 
         /// Passing an empty subjectText will use the <see cref="Alerting.defaultSubject"/> .
         /// </summary>
@@ -512,7 +528,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Set the <see cref="priority"/> for the alert email.<para/>
+        /// Set the Priority for the alert email.<para/>
         /// 
         /// Emails default to <see cref="AlertLevel.Normal"/> 
         /// </summary>
@@ -527,7 +543,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// sets the current email to html based on passed in param
+        /// Sets the current email to HTML if true (default)
         /// </summary>
         /// <param name="isHtml"></param>
         /// <returns></returns>

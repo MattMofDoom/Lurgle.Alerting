@@ -21,6 +21,9 @@ namespace Lurgle.Alerting
         High = Priority.High
     }
 
+    /// <summary>
+    /// Renderer type to use with email templates
+    /// </summary>
     public enum RendererType
     {
         Razor,

@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Fluent Email,Alert,Alerts,Alerting,Razor,Fluid,Smtp</PackageTags>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -19,15 +19,44 @@ namespace Lurgle.Alerting
         /// App version will be determined from the binary version, but can be overriden
         /// </summary>
         public string AppVersion { get; set; }
+        /// <summary>
+        /// Set the MailRenderer to use for templates - Razor, Fluid, or Replace
+        /// </summary>
         public RendererType MailRenderer { get; set; }
+        /// <summary>
+        /// Set the mail template path. If not specified, will attempt to automatically set to [ExePath]\Templates
+        /// </summary>
         public string MailTemplatePath { get; set; }
+        /// <summary>
+        /// Set the SMTP mail host. Must be specified.
+        /// </summary>
         public string MailHost { get; set; }
+        /// <summary>
+        /// Set the TCP port for SMTP mail - defaults to 25
+        /// </summary>
         public int MailPort { get; set; }
+        /// <summary>
+        /// Enable TLS over SMTP - defaults to false
+        /// </summary>
         public bool MailUseTls { get; set; }
+        /// <summary>
+        /// Set the timeout for SMTP sends - defaults to 60 seconds
+        /// </summary>
         public int MailTimeout { get; set; }
+        /// <summary>
+        /// Default From address for emails. Must be set.
+        /// </summary>
         public string MailFrom { get; set; }
+        /// <summary>
+        /// Default To address for emails. Must be set.
+        /// </summary>
         public string MailTo { get; set; }
 
+        /// <summary>
+        /// Get a config. Optionally a logging config can be passed.
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
         public static AlertConfig GetConfig(AlertConfig config = null)
         {
             AlertConfig alertConfig;
@@ -172,6 +201,11 @@ namespace Lurgle.Alerting
             return tryTimeout;
         }
 
+        /// <summary>
+        /// Parse a config value to a <see cref="RendererType"/>
+        /// </summary>
+        /// <param name="configValue"></param>
+        /// <returns></returns>
         private static RendererType GetRenderer(string configValue)
         {
             if (!string.IsNullOrEmpty(configValue))

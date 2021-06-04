@@ -13,12 +13,19 @@ namespace Lurgle.Alerting
 {
     public static class Alerting
     {
+        /// <summary>
+        /// Current Lurgle.Alerting configuration
+        /// </summary>
         public static AlertConfig Config { get; private set; }
+        /// <summary>
+        /// Default alert subject if not specified
+        /// </summary>
         public static readonly string defaultSubject = "Alert!";
 
         /// <summary>
-        /// Set the alerting config. 
+        /// Set the <see cref="Config"/> by passing an <see cref="AlertConfig"/> or reading from app config
         /// </summary>
+        /// <param name="alertConfig"></param>
         public static void SetConfig(AlertConfig alertConfig = null)
         {
             Config = AlertConfig.GetConfig(alertConfig);
@@ -37,6 +44,9 @@ namespace Lurgle.Alerting
             }
         }
 
+        /// <summary>
+        /// Initialise alerting and test availability of SMTP
+        /// </summary>
         public static void Init()
         {
             if (Config == null)
