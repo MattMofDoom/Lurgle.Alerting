@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace Lurgle.Alerting
 {
+    /// <summary>
+    /// Send an alert with Lurgle.Alerting
+    /// </summary>
     public sealed class Alert : IAlert, IEnvelope
     {
         private bool IsMethod { get; set; }
@@ -104,10 +107,11 @@ namespace Lurgle.Alerting
         /// <summary>
         /// Resolve email addresses using the given <see cref="AddressType"/> <para/>
         /// 
-        /// If <see cref="isDebug"/> is true, emails will automatically be replaced with the configured debug email address.<para/>        
+        /// If isDebug is true, emails will automatically be replaced with the configured debug email address.<para/>        
         /// </summary>
         /// <param name="emailType">Email config item or email address</param>
         /// <param name="addressType">Type of email being passed</param>
+        /// <param name="isDebug">If true, emails will be replaced with the default <see cref="AlertConfig.MailTo" /></param>
         /// <returns></returns>
         private static string GetEmailAddress(string emailType, AddressType addressType, bool isDebug)
         {
@@ -137,14 +141,14 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Instantiate a new email with the desired <see cref="fromAddress"/>  address. <para />
+        /// Instantiate a new email with the desired From address. <para />
         /// 
         /// Uses <see cref="AlertConfig.MailFrom"/> if an email is not specified.
         /// </summary>
         /// <param name="fromAddress">Email address to send the email from</param>
         /// <param name="fromName">Display name of the sender</param>
         /// <param name="addressType">Type of email address - defaults to <see cref="AddressType.Email"/> but accepts <see cref="AddressType.FromConfig"/> to read from config</param>
-        /// <param name="isDebug">If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default <see cref="Alerting.Config.MailTo"/> email</param>
+        /// <param name="isDebug">If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default <see cref="AlertConfig.MailTo"/> email</param>
         /// <param name="isMethod">Add the calling method to the message text if using <see cref="Send"/> to send an email</param>
         /// <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
         /// <returns></returns>
@@ -176,12 +180,12 @@ namespace Lurgle.Alerting
         /// <summary>
         /// Instantiate a new Alert class using the default from address and specified toAddress. You can chain additional recipients to this.<para />
         /// 
-        /// Uses <see cref="Alerting.Config.MailFrom"/>, and <see cref="Alerting.Config.MailTo"/> if an email is not specified.
+        /// Uses <see cref="AlertConfig.MailFrom"/>, and <see cref="AlertConfig.MailTo"/> if an email is not specified.
         /// </summary>
         /// <param name="toAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
         /// <param name="toName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
         /// <param name="addressType">Type of email address - defaults to <see cref="AddressType.Email"/> but accepts <see cref="AddressType.FromConfig"/> to read from config</param>
-        /// <param name="isDebug">If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default <see cref="Alerting.Config.MailTo"/> email</param>
+        /// <param name="isDebug">If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default <see cref="AlertConfig.MailTo"/> email</param>
         /// <param name="isMethod">Add the calling method to the message text if using <see cref="Send"/> to send an email</param>
         /// <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
         /// <returns></returns>
@@ -515,7 +519,7 @@ namespace Lurgle.Alerting
         /// <summary>
         /// Set the Reply To address for the alert.<para /> 
         /// 
-        /// If no address is specified, <see cref="Alerting.Config.MailFrom"/> value will be used.
+        /// If no address is specified, <see cref="AlertConfig.MailFrom"/> value will be used.
         /// </summary>
         /// <param name="replyToAddress">Email address to send replies to.</param>
         /// <param name="replyToName">Display name of the recipient.</param>
@@ -824,6 +828,7 @@ namespace Lurgle.Alerting
         /// <typeparam name="T"></typeparam>
         /// <param name="template">Body of the email, using Razor template format</param>
         /// <param name="templateModel">The Model to apply to this template</param>
+        /// <param name="isHtml"></param>
         public bool SendTemplate<T>(string template, T templateModel, bool isHtml = true)
         {
             IFluentEmail email = Email.From(from.EmailAddress, from.Name)
@@ -870,6 +875,7 @@ namespace Lurgle.Alerting
         /// <typeparam name="T"></typeparam>
         /// <param name="template">Body of the email, using Razor template format</param>
         /// <param name="templateModel">The Model to apply to this template</param>
+        /// <param name="isHtml"></param>
         public async Task<bool> SendTemplateAsync<T>(string template, T templateModel, bool isHtml = true)
         {
             IFluentEmail email = Email.From(from.EmailAddress, from.Name)
@@ -918,6 +924,7 @@ namespace Lurgle.Alerting
         /// <typeparam name="T"></typeparam>
         /// <param name="templateConfig">Config item to load for the Razor template file</param>
         /// <param name="templateModel">The Model to apply to this  template</param>
+        /// <param name="isHtml"></param>
         public bool SendTemplateFile<T>(string templateConfig, T templateModel, bool isHtml = true)
         {
             string templatePath = Path.Combine(Alerting.Config.MailTemplatePath, Alerting.GetEmailTemplate(templateConfig));
@@ -968,6 +975,7 @@ namespace Lurgle.Alerting
         /// <typeparam name="T"></typeparam>
         /// <param name="templateConfig">Config item to load for the Razor template file</param>
         /// <param name="templateModel">The Model to apply to this  template</param>
+        /// <param name="isHtml"></param>
         public async Task<bool> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool isHtml)
         {
             string templatePath = Path.Combine(Alerting.Config.MailTemplatePath, Alerting.GetEmailTemplate(templateConfig));

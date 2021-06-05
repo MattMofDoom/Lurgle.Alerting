@@ -11,6 +11,9 @@ using System.Text.Encodings.Web;
 
 namespace Lurgle.Alerting
 {
+    /// <summary>
+    /// Static Lurgle.Alerting instance that provides an interface to properties and methods for alerting
+    /// </summary>
     public static class Alerting
     {
         /// <summary>
@@ -36,6 +39,7 @@ namespace Lurgle.Alerting
                     Email.DefaultRenderer = new RazorRenderer();
                     break;
                 case RendererType.Fluid:
+                case RendererType.Liquid:
                     Email.DefaultRenderer = new LiquidRenderer(Options.Create(new LiquidRendererOptions() { TextEncoder = HtmlEncoder.Default, FileProvider = new PhysicalFileProvider(Config.MailTemplatePath) }));
                     break;
                 default:

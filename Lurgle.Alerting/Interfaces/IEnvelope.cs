@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Lurgle.Alerting
 {
+    /// <summary>
+    /// Envelope interface
+    /// </summary>
     public interface IEnvelope : IHideObjectMembers
     {
         /// <summary>
@@ -125,7 +128,7 @@ namespace Lurgle.Alerting
         /// <summary>
         /// Set the Reply To address for the alert.<para /> 
         /// 
-        /// If no address is specified, <see cref="Alerting.Config.MailFrom"/> value will be used.
+        /// If no address is specified, <see cref="AlertConfig.MailFrom"/> value will be used.
         /// </summary>
         /// <param name="replyToAddress">Email address to send replies to.</param>
         /// <param name="replyToName">Display name of the recipient.</param>
@@ -229,6 +232,7 @@ namespace Lurgle.Alerting
         /// <typeparam name="T"></typeparam>
         /// <param name="template">Body of the email, using Razor template format</param>
         /// <param name="templateModel">The Model to apply to this template</param>
+        /// <param name="isHtml"></param>
         bool SendTemplate<T>(string template, T templateModel, bool isHtml = true);
 
         /// <summary>
@@ -237,6 +241,7 @@ namespace Lurgle.Alerting
         /// <typeparam name="T"></typeparam>
         /// <param name="template">Body of the email, using Razor template format</param>
         /// <param name="templateModel">The Model to apply to this template</param>
+        /// <param name="isHtml"></param>
         Task<bool> SendTemplateAsync<T>(string template, T templateModel, bool isHtml = true);
 
         /// <summary>
@@ -247,6 +252,7 @@ namespace Lurgle.Alerting
         /// <typeparam name="T"></typeparam>
         /// <param name="templateConfig">Config item to load for the Razor template file</param>
         /// <param name="templateModel">The Model to apply to this  template</param>
+        /// <param name="isHtml"></param>
         bool SendTemplateFile<T>(string templateConfig, T templateModel, bool isHtml = true);
 
         /// <summary>
@@ -257,6 +263,7 @@ namespace Lurgle.Alerting
         /// <typeparam name="T"></typeparam>
         /// <param name="templateConfig">Config item to load for the Razor template file</param>
         /// <param name="templateModel">The Model to apply to this  template</param>
+        /// <param name="isHtml"></param>
         Task<bool> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool isHtml = true);
     }
 }

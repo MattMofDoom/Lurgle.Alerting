@@ -5,6 +5,9 @@ using System.Reflection;
 
 namespace Lurgle.Alerting
 {
+    /// <summary>
+    /// Alerting configuration. Loaded from AppSettings if available but can be configured from code.
+    /// </summary>
     public class AlertConfig
     {
         private const int timeoutDefault = 60;
@@ -264,7 +267,8 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Resolve an email template filename given the specified <see cref="EmailTemplate"/>
+        /// Resolve an email template filename from config, given the specified email template name<para/>
+        /// Config format is EmailTemplate{template}/>
         /// </summary>
         /// <param name="template">Email template to return the filename for</param>
         public static string GetEmailTemplate(string template)

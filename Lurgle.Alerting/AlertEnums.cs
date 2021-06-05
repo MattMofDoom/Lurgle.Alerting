@@ -3,11 +3,17 @@
 namespace Lurgle.Alerting
 {
     /// <summary>
-    /// Indicate whether an email address passing in to <see cref="Alerting.Alert"/> is an actual email address, or if it should be queried from the config
+    /// Indicate whether an email address passing in to <see cref="Alert"/> is an actual email address, or if it should be queried from the config
     /// </summary>
     public enum AddressType
     {
+        /// <summary>
+        /// Email address
+        /// </summary>
         Email = 0,
+        /// <summary>
+        /// Read from config
+        /// </summary>
         FromConfig = 1
     }
 
@@ -16,8 +22,17 @@ namespace Lurgle.Alerting
     /// </summary>
     public enum AlertLevel
     {
+        /// <summary>
+        /// Normal
+        /// </summary>
         Normal = Priority.Normal,
+        /// <summary>
+        /// Low
+        /// </summary>
         Low = Priority.Low,
+        /// <summary>
+        /// High
+        /// </summary>
         High = Priority.High
     }
 
@@ -26,8 +41,21 @@ namespace Lurgle.Alerting
     /// </summary>
     public enum RendererType
     {
+        /// <summary>
+        /// Use the Razor renderer
+        /// </summary>
         Razor,
+        /// <summary>
+        /// Use the Liquid (Fluid) renderer
+        /// </summary>
         Fluid,
+        /// <summary>
+        /// Use the Liquid (Fluid) renderer
+        /// </summary>
+        Liquid,
+        /// <summary>
+        /// Use the default Replace renderer
+        /// </summary>
         Replace
     }
 
@@ -36,7 +64,13 @@ namespace Lurgle.Alerting
     /// </summary>
     public enum SenderType
     {
+        /// <summary>
+        /// Use the .NET SmtpClient (deprecate)
+        /// </summary>
         SmtpClient,
+        /// <summary>
+        /// Use MailKit
+        /// </summary>
         MailKit
     }
 }

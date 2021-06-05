@@ -12,14 +12,23 @@
     <PackageProjectUrl>https://github.com/MattMofDoom/Lurgle.Alerting</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <PackageTags>Fluent Email,Alert,Alerts,Alerting,Razor,Fluid,Smtp</PackageTags>
-    <Version>1.1.0</Version>
+    <PackageTags>Fluent,Email,FluentEmail,Alert,Alerts,Alerting,Razor,Fluid,Liquid,Smtp,MailKit</PackageTags>
+    <Version>1.1.2</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <PackageReleaseNotes>- Add MailKit as default sender
 - Add mail host authentication
 - Add additional targets
-- Add test Razor template</PackageReleaseNotes>
+- Add test Razor template
+- Add XML docs</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>C:\Users\mattm\source\repos\Lurgle.Alerting\Lurgle.Alerting\Lurgle.Alerting.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
