@@ -1,13 +1,15 @@
 ﻿using FluentEmail.Core;
+using FluentEmail.Core.Interfaces;
 using FluentEmail.Core.Models;
+using FluentEmail.MailKitSmtp;
 using FluentEmail.Smtp;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-
 
 namespace Lurgle.Alerting
 {
@@ -32,6 +34,44 @@ namespace Lurgle.Alerting
             if (string.IsNullOrEmpty(subject))
             {
                 subject = Alerting.defaultSubject;
+            }
+        }
+
+        private static ISender GetSender()
+        {
+            switch (Alerting.Config.MailSender)
+            {
+                case SenderType.SmtpClient:
+                    if (Alerting.Config.MailUseAuthentication)
+                    {
+                        return new SmtpSender(new SmtpClient(Alerting.Config.MailHost, Alerting.Config.MailPort)
+                        {
+                            Timeout = Alerting.Config.MailTimeout,
+                            EnableSsl = Alerting.Config.MailUseTls,
+                            Credentials = new NetworkCredential(Alerting.Config.MailUsername, Alerting.Config.MailPassword)
+                        });
+                    }
+                    else
+                    {
+                        return new SmtpSender(new SmtpClient(Alerting.Config.MailHost, Alerting.Config.MailPort)
+                        {
+                            Timeout = Alerting.Config.MailTimeout,
+                            EnableSsl = Alerting.Config.MailUseTls
+                        });
+                    }
+
+                default:
+                    return new MailKitSender(new SmtpClientOptions()
+                    {
+                        Server = Alerting.Config.MailHost,
+                        Port = Alerting.Config.MailPort,
+                        UseSsl = Alerting.Config.MailUseTls,
+                        RequiresAuthentication = Alerting.Config.MailUseAuthentication,
+                        User = Alerting.Config.MailUsername,
+                        Password = Alerting.Config.MailPassword,
+                        SocketOptions = MailKit.Security.SecureSocketOptions.Auto
+                    });
+
             }
         }
 
@@ -704,7 +744,7 @@ namespace Lurgle.Alerting
             }
 
             email.Data.IsHtml = IsHtml;
-            email.Sender = new SmtpSender(new SmtpClient(Alerting.Config.MailHost, Alerting.Config.MailPort) { Timeout = Alerting.Config.MailTimeout, EnableSsl = Alerting.Config.MailUseTls });
+            email.Sender = GetSender();
             SendResponse result = email.Send();
 
             //Cleanup - close any open file streams and clear the list
@@ -763,7 +803,7 @@ namespace Lurgle.Alerting
             }
 
             email.Data.IsHtml = IsHtml;
-            email.Sender = new SmtpSender(new SmtpClient(Alerting.Config.MailHost, Alerting.Config.MailPort) { Timeout = Alerting.Config.MailTimeout, EnableSsl = Alerting.Config.MailUseTls });
+            email.Sender = GetSender();
             SendResponse result = await email.SendAsync();
 
             //Cleanup - close any open file streams and clear the list
@@ -809,7 +849,7 @@ namespace Lurgle.Alerting
                     break;
             }
 
-            email.Sender = new SmtpSender(new SmtpClient(Alerting.Config.MailHost, Alerting.Config.MailPort) { Timeout = Alerting.Config.MailTimeout, EnableSsl = Alerting.Config.MailUseTls });
+            email.Sender = GetSender();
             SendResponse result = email.Send();
 
             //Cleanup - close any open file streams and clear the list
@@ -855,7 +895,7 @@ namespace Lurgle.Alerting
                     break;
             }
 
-            email.Sender = new SmtpSender(new SmtpClient(Alerting.Config.MailHost, Alerting.Config.MailPort) { Timeout = Alerting.Config.MailTimeout, EnableSsl = Alerting.Config.MailUseTls });
+            email.Sender = GetSender();
             SendResponse result = await email.SendAsync();
 
             //Cleanup - close any open file streams and clear the list
@@ -905,7 +945,7 @@ namespace Lurgle.Alerting
                     break;
             }
 
-            email.Sender = new SmtpSender(new SmtpClient(Alerting.Config.MailHost, Alerting.Config.MailPort) { Timeout = Alerting.Config.MailTimeout, EnableSsl = Alerting.Config.MailUseTls });
+            email.Sender = GetSender();
             SendResponse response = email.Send();
 
             //Cleanup - close any open file streams and clear the list
@@ -955,7 +995,7 @@ namespace Lurgle.Alerting
                     break;
             }
 
-            email.Sender = new SmtpSender(new SmtpClient(Alerting.Config.MailHost, Alerting.Config.MailPort) { Timeout = Alerting.Config.MailTimeout, EnableSsl = Alerting.Config.MailUseTls });
+            email.Sender = GetSender();
             SendResponse result = await email.SendAsync();
 
             //Cleanup - close any open file streams and clear the list

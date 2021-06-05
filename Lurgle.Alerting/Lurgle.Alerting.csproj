@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461;net47;net48;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461;net47;net48;net5.0;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Matt Marlor</Authors>
     <Description>Alerting library that accelerates getting projects up and running with FluentEmail. Use text/HTML or Razor/Fluid templates!</Description>
@@ -13,13 +13,18 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Fluent Email,Alert,Alerts,Alerting,Razor,Fluid,Smtp</PackageTags>
-    <Version>1.0.9</Version>
+    <Version>1.1.0</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+    <PackageReleaseNotes>- Add MailKit as default sender
+- Add mail host authentication
+- Add additional targets
+- Add test Razor template</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentEmail.Liquid" Version="3.0.0" />
+    <PackageReference Include="FluentEmail.MailKit" Version="3.0.0" />
     <PackageReference Include="FluentEmail.Razor" Version="3.0.0" />
     <PackageReference Include="FluentEmail.Smtp" Version="3.0.0" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />

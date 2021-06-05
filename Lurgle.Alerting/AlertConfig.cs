@@ -24,6 +24,10 @@ namespace Lurgle.Alerting
         /// </summary>
         public RendererType MailRenderer { get; set; }
         /// <summary>
+        /// Set the MailSender to use - SmtpClient or MailKit
+        /// </summary>
+        public SenderType MailSender { get; set; }
+        /// <summary>
         /// Set the mail template path. If not specified, will attempt to automatically set to [ExePath]\Templates
         /// </summary>
         public string MailTemplatePath { get; set; }
@@ -35,6 +39,18 @@ namespace Lurgle.Alerting
         /// Set the TCP port for SMTP mail - defaults to 25
         /// </summary>
         public int MailPort { get; set; }
+        /// <summary>
+        /// Set whether the mail host needs authentication
+        /// </summary>
+        public bool MailUseAuthentication { get; set; }
+        /// <summary>
+        /// Username for mail host authentication
+        /// </summary>
+        public string MailUsername { get; set; }
+        /// <summary>
+        /// Password for mail host authentication
+        /// </summary>
+        public string MailPassword { get; set; }
         /// <summary>
         /// Enable TLS over SMTP - defaults to false
         /// </summary>
@@ -66,9 +82,13 @@ namespace Lurgle.Alerting
                 {
                     AppName = ConfigurationManager.AppSettings["AppName"],
                     MailRenderer = GetRenderer(ConfigurationManager.AppSettings["MailRenderer"]),
+                    MailSender = GetSender(ConfigurationManager.AppSettings["MailSender"]),
                     MailTemplatePath = ConfigurationManager.AppSettings["MailTemplatePath"],
                     MailHost = ConfigurationManager.AppSettings["MailHost"],
                     MailPort = GetInt(ConfigurationManager.AppSettings["MailPort"]),
+                    MailUseAuthentication = GetBool(ConfigurationManager.AppSettings["MailUseAuthentication"]),
+                    MailUsername = ConfigurationManager.AppSettings["MailUsername"],
+                    MailPassword = ConfigurationManager.AppSettings["MailPassword"],
                     MailUseTls = GetBool(ConfigurationManager.AppSettings["MailUseTls"]),
                     MailTimeout = GetTimeout(ConfigurationManager.AppSettings["MailTimeout"]),
                     MailFrom = ConfigurationManager.AppSettings["MailFrom"],
@@ -124,6 +144,11 @@ namespace Lurgle.Alerting
             if (alertConfig.MailPort <= 0)
             {
                 alertConfig.MailPort = 25;
+            }
+
+            if (alertConfig.MailUseAuthentication && string.IsNullOrEmpty(alertConfig.MailUsername))
+            {
+                alertConfig.MailUseAuthentication = false;
             }
 
             return alertConfig;
@@ -217,6 +242,25 @@ namespace Lurgle.Alerting
             }
 
             return RendererType.Replace;
+        }
+
+        /// <summary>
+        /// Parse a config value to a <see cref="SenderType"/>
+        /// </summary>
+        /// <param name="configValue"></param>
+        /// <returns></returns>
+        private static SenderType GetSender(string configValue)
+        {
+            if (!string.IsNullOrEmpty(configValue))
+            {
+                if (Enum.TryParse(configValue, true, out SenderType sender))
+                {
+                    return sender;
+                }
+            }
+
+            return SenderType.MailKit;
+
         }
 
         /// <summary>

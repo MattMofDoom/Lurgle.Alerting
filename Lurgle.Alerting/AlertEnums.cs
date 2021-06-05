@@ -30,4 +30,13 @@ namespace Lurgle.Alerting
         Fluid,
         Replace
     }
+
+    /// <summary>
+    /// Send using the old SmtpClient (deprecated) or MailKit
+    /// </summary>
+    public enum SenderType
+    {
+        SmtpClient,
+        MailKit
+    }
 }

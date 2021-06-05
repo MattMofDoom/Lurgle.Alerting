@@ -1,4 +1,5 @@
 ﻿using Lurgle.Alerting;
+using System;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -11,7 +12,12 @@ namespace LurgleTest
         {
             //Disable remote certificate validation
             ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateCertificate);
+            Console.WriteLine("Send simple body ...");
             Alert.To().Subject("Test").Send("Can you fix it?");
+            Console.WriteLine("Send Razor template ...");
+            Alerting.Config.MailRenderer = RendererType.Razor;
+            Alerting.SetConfig(Alerting.Config);
+            Alert.To().Subject("Test Template").SendTemplateFile("Razor", new { });
         }
 
 

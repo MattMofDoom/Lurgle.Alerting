@@ -1,0 +1,34 @@
+﻿@using Lurgle.Alerting
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css">
+        p, td {
+            font-size: 11.0pt;
+            font-family: "Calibri",sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <p style="font-weight:bold; font-size:14pt;">@Alerting.Config.AppName v@(Alerting.Config.AppVersion)</p>
+    <p>
+    <table style="border: 0;">
+    <tr><td style="font-weight:bold;">Renderer:</td><td>@Alerting.Config.MailRenderer</td></tr>
+    <tr><td style="font-weight:bold;">Sender:</td><td>@Alerting.Config.MailSender</td></tr>
+    <tr><td style="font-weight:bold;">Template Path:</td><td>@Alerting.Config.MailTemplatePath</td></tr>
+    <tr><td style="font-weight:bold;">Mail Host:</td><td>@Alerting.Config.MailHost</td></tr>
+    <tr><td style="font-weight:bold;">Mail Port:</td><td>@Alerting.Config.MailPort</td></tr>
+    <tr><td style="font-weight:bold;">Use Authentication:</td><td>@Alerting.Config.MailUseAuthentication</td></tr>
+    <tr><td style="font-weight:bold;">Username:</td><td>@Alerting.Config.MailUsername</td></tr>
+    <tr><td style="font-weight:bold;">Password:</td><td>@Alerting.Config.MailPassword</td></tr>
+    <tr><td style="font-weight:bold;">Use TLS:</td><td>@Alerting.Config.MailUseTls</td></tr>
+    <tr><td style="font-weight:bold;">SMTP Timeout:</td><td>@(Alerting.Config.MailTimeout/1000)</td></tr>
+    <tr><td style="font-weight:bold;">Mail From:</td><td>@Alerting.Config.MailFrom</td></tr>
+    <tr><td style="font-weight:bold;">Mail To:</td><td>@Alerting.Config.MailTo</td></tr>
+    </table>
+    </p>
+</body>
+</html>
