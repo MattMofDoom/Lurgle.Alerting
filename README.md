@@ -10,7 +10,7 @@
 
 - Includes MailKit and SmtpClient implementations, with MailKit as default, and config options to switch and configure
 - Integrated SMTP mail host connectivity test
-- Includes Razor and Fluid template functionality
+- Includes Razor and Liquid template functionality
 - Implemented with fluent methods that complement and extend FluentEmail methods
 - Implements default mail from and mail to addresses, allowing quick alerts to be implemented
 - Implements an ability to retrieve email address from config files
