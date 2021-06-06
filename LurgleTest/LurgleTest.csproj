@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Templates\alertLiquid.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Templates\alertRazor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

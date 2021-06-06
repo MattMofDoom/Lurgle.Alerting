@@ -17,7 +17,27 @@ namespace LurgleTest
             Console.WriteLine("Send Razor template ...");
             Alerting.Config.MailRenderer = RendererType.Razor;
             Alerting.SetConfig(Alerting.Config);
-            Alert.To().Subject("Test Template").SendTemplateFile("Razor", new { });
+            Alert.To().Subject("Test Razor Template").SendTemplateFile("Razor", new { });
+            Console.WriteLine("Send Liquid template ...");
+            Alerting.Config.MailRenderer = RendererType.Liquid;
+            Alerting.SetConfig(Alerting.Config);
+            Alert.To().Subject("Test Liquid Template").SendTemplateFile("Liquid", new
+            {
+                Alerting.Config.AppName,
+                Alerting.Config.AppVersion,
+                MailRenderer = Alerting.Config.MailRenderer.ToString(),
+                MailSender = Alerting.Config.MailSender.ToString(),
+                Alerting.Config.MailTemplatePath,
+                Alerting.Config.MailHost,
+                Alerting.Config.MailPort,
+                Alerting.Config.MailUseAuthentication,
+                Alerting.Config.MailUsername,
+                Alerting.Config.MailPassword,
+                Alerting.Config.MailUseTls,
+                MailTimeout = Alerting.Config.MailTimeout / 1000,
+                Alerting.Config.MailFrom,
+                Alerting.Config.MailTo
+            });
         }
 
 
