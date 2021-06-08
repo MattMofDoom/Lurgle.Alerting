@@ -6,12 +6,301 @@
     <members>
         <member name="T:Lurgle.Alerting.Alert">
             <summary>
-            Send an alert with Lurgle.Alerting
+                Send an alert with Lurgle.Alerting
             </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.To(System.String,System.String,Lurgle.Alerting.AddressType)">
+            <summary>
+                Add a single recipient email address to the alert. You can chain this multiple times.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email.
+                <para />
+                You can optionally supply key names to retrieve email addresses from the app config.
+            </summary>
+            <param name="toAddress">
+                Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but
+                toName will then be ignored.
+            </param>
+            <param name="toName">
+                Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is
+                passed
+            </param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.To(System.String[])">
+            <summary>
+                Add an array of email addresses to the recipient field for the alert.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
+            </summary>
+            <param name="emailList">List of email addresses in array form</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.To(System.Collections.Generic.List{System.String})">
+            <summary>
+                Add a list of email addresses to the recipient  field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
+            </summary>
+            <param name="emailList">List of email addresses as a List of type string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.To(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+                Add a list of paired email address and name values to the recipient field for the alert.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
+            </summary>
+            <param name="emailList">List of email addresses and display names as a Dictionary of Key = string, Value = string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Cc(System.String,System.String,Lurgle.Alerting.AddressType)">
+            <summary>
+                Add a single CC  address to the alert. You can chain this multiple times.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email.
+            </summary>
+            <param name="ccAddress">
+                Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but
+                toName will then be ignored.
+            </param>
+            <param name="ccName">
+                Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is
+                passed
+            </param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Cc(System.String[])">
+            <summary>
+                Add an array of email addresses to the CC field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
+            </summary>
+            <param name="emailList">List of email addresses in array form</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Cc(System.Collections.Generic.List{System.String})">
+            <summary>
+                Add a list of email addresses to the CC field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
+            </summary>
+            <param name="emailList">List of email addresses as a List of type string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Cc(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+                Add a list of paired email address and name values to the CC field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
+            </summary>
+            <param name="emailList">List of email addresses and display names as a Dictionary of Key = string, Value = string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Bcc(System.String,System.String,Lurgle.Alerting.AddressType)">
+            <summary>
+                Add a single BCC address to the alert. You can chain this multiple times.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email.
+            </summary>
+            <param name="bccAddress">
+                Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but
+                toName will then be ignored.
+            </param>
+            <param name="bccName">
+                Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is
+                passed
+            </param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Bcc(System.String[])">
+            <summary>
+                Add an array of email addresses to the BCC field for this alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
+            </summary>
+            <param name="emailList">List of email addresses in array form</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Bcc(System.Collections.Generic.List{System.String})">
+            <summary>
+                Add a list of email addresses to the <see cref="F:Lurgle.Alerting.Alert.bcc" /> field for this alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
+            </summary>
+            <param name="emailList">List of email addresses as a List of type string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Bcc(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+                Add a list of paired email address and name values to the <see cref="F:Lurgle.Alerting.Alert.bcc" /> field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
+            </summary>
+            <param name="emailList">List of email addresses and display names as a Dictionary of Key = string, Value = string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.ReplyTo(System.String,System.String,Lurgle.Alerting.AddressType)">
+            <summary>
+                Set the Reply To address for the alert.
+                <para />
+                If no address is specified, <see cref="P:Lurgle.Alerting.AlertConfig.MailFrom" /> value will be used.
+            </summary>
+            <param name="replyToAddress">Email address to send replies to.</param>
+            <param name="replyToName">Display name of the recipient.</param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Subject(System.String,System.Object[])">
+            <summary>
+                Set the subject for the alert email.
+                <para />
+                Passing an empty subjectText will use the <see cref="F:Lurgle.Alerting.Alerting.DefaultSubject" /> .
+            </summary>
+            <param name="subjectText">Subject to use for the email</param>
+            <param name="args">Optional arguments for string replacement"</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Priority(Lurgle.Alerting.AlertLevel)">
+            <summary>
+                Set the Priority for the alert email.
+                <para />
+                Emails default to <see cref="F:Lurgle.Alerting.AlertLevel.Normal" />
+            </summary>
+            <param name="alertLevel">The priority that this email should be sent with</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.SetHtml(System.Boolean)">
+            <summary>
+                Sets the current email to HTML if true (default)
+            </summary>
+            <param name="html"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.AddAlternateView(System.String,System.Collections.Generic.List{System.Net.Mail.LinkedResource})">
+            <summary>
+                Add the Alt view for the HTML contents
+            </summary>
+            <param name="messageBody"> Message body as string</param>
+            <param name="linkedResourceList">List of linked resources</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Attach(System.String,System.String)">
+            <summary>
+                Attach a file to the alert. You can chain this multiple times.
+                <para />
+                If the file does not exist, it will be ignored
+            </summary>
+            <param name="filePath">Path to the file</param>
+            <param name="contentType">ContentType, if known (optional)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.AttachInline(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+                Attach an array of files to the alert as inline attachments
+                <para />
+                If any file does not exist, it will be ignored
+            </summary>
+            <param name="fileList">Array of paths to files that will be attached</param>
+            <param name="folderLocation">Path to folder containing files</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Attach(System.String[])">
+            <summary>
+                Attach an array of files to the alert
+                <para />
+                If any file does not exist, it will be ignored
+            </summary>
+            <param name="fileList">Array of paths to files that will be attached</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Attach(System.Collections.Generic.List{System.String})">
+            <summary>
+                Attach a list of files to the alert
+                <para />
+                If any file does not exist, it will be ignored
+            </summary>
+            <param name="fileList">List of paths to files that will be attached</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Send(System.String,System.Object[])">
+            <summary>
+                Send the alert with the specified message text
+                You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+                applied.
+            </summary>
+            <param name="msg">Body of the email. Can contain format items for string replacement.</param>
+            <param name="args">Optional arguments for string replacement</param>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.SendAsync(System.String,System.Object[])">
+            <summary>
+                Send the alert with the specified message text
+                You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+                applied.
+            </summary>
+            <param name="msg">Body of the email. Can contain format items for string replacement.</param>
+            <param name="args">Optional arguments for string replacement</param>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.SendTemplate``1(System.String,``0,System.Boolean)">
+            <summary>
+                Send the alert using the specified Razor template and model
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="template">Body of the email, using Razor template format</param>
+            <param name="templateModel">The Model to apply to this template</param>
+            <param name="html"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.SendTemplateAsync``1(System.String,``0,System.Boolean)">
+            <summary>
+                Send the alert using the specified Razor template and model
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="template">Body of the email, using Razor template format</param>
+            <param name="templateModel">The Model to apply to this template</param>
+            <param name="html"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.SendTemplateFile``1(System.String,``0,System.Boolean)">
+            <summary>
+                Send the alert using the specified Razor template (as configured in the application config) and model
+                <para />
+                This does not check for the file existence, so a non-existent config item or missing file will cause an exception
+                that can be caught.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="templateConfig">Config item to load for the Razor template file</param>
+            <param name="templateModel">The Model to apply to this  template</param>
+            <param name="html"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.SendTemplateFileAsync``1(System.String,``0,System.Boolean)">
+            <summary>
+                Send the alert using the specified Razor template (as configured in the application config) and model
+                <para />
+                This does not check for the file existence, so a non-existent config item or missing file will cause an exception
+                that can be caught.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="templateConfig">Config item to load for the Razor template file</param>
+            <param name="templateModel">The Model to apply to this  template</param>
+            <param name="html"></param>
         </member>
         <member name="M:Lurgle.Alerting.Alert.GetInlineFile(System.String,System.String,System.String@,System.String@,System.String@)">
             <summary>
-            Retrieve a file spec for attachment as an inline file
+                Retrieve a file spec for attachment as an inline file
             </summary>
             <param name="inlineFile"></param>
             <param name="folderLocation"></param>
@@ -21,9 +310,10 @@
         </member>
         <member name="M:Lurgle.Alerting.Alert.GetEmailAddress(System.String,Lurgle.Alerting.AddressType,System.Boolean)">
             <summary>
-            Resolve email addresses using the given <see cref="T:Lurgle.Alerting.AddressType"/> <para/>
-            
-            If isDebug is true, emails will automatically be replaced with the configured debug email address.<para/>        
+                Resolve email addresses using the given <see cref="T:Lurgle.Alerting.AddressType" />
+                <para />
+                If isDebug is true, emails will automatically be replaced with the configured debug email address.
+                <para />
             </summary>
             <param name="emailType">Email config item or email address</param>
             <param name="addressType">Type of email being passed</param>
@@ -32,842 +322,688 @@
         </member>
         <member name="M:Lurgle.Alerting.Alert.From(System.String,System.String,Lurgle.Alerting.AddressType,System.Boolean,System.Boolean,System.String)">
             <summary>
-            Instantiate a new email with the desired From address. <para />
-            
-            Uses <see cref="P:Lurgle.Alerting.AlertConfig.MailFrom"/> if an email is not specified.
+                Instantiate a new email with the desired From address.
+                <para />
+                Uses <see cref="P:Lurgle.Alerting.AlertConfig.MailFrom" /> if an email is not specified.
             </summary>
             <param name="fromAddress">Email address to send the email from</param>
             <param name="fromName">Display name of the sender</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
-            <param name="isDebug">If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default <see cref="P:Lurgle.Alerting.AlertConfig.MailTo"/> email</param>
-            <param name="isMethod">Add the calling method to the message text if using <see cref="M:Lurgle.Alerting.Alert.Send(System.String,System.Object[])"/> to send an email</param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
+            <param name="isDebug">
+                If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default
+                <see cref="P:Lurgle.Alerting.AlertConfig.MailTo" /> email
+            </param>
+            <param name="isMethod">Add the calling method to the message text if using <see cref="M:Lurgle.Alerting.Alert.Send(System.String,System.Object[])" /> to send an email</param>
             <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alert.To(System.String,System.String,Lurgle.Alerting.AddressType,System.Boolean,System.Boolean,System.String)">
             <summary>
-            Instantiate a new Alert class using the default from address and specified toAddress. You can chain additional recipients to this.<para />
-            
-            Uses <see cref="P:Lurgle.Alerting.AlertConfig.MailFrom"/>, and <see cref="P:Lurgle.Alerting.AlertConfig.MailTo"/> if an email is not specified.
+                Instantiate a new Alert class using the default from address and specified toAddress. You can chain additional
+                recipients to this.
+                <para />
+                Uses <see cref="P:Lurgle.Alerting.AlertConfig.MailFrom" />, and <see cref="P:Lurgle.Alerting.AlertConfig.MailTo" /> if an email is not specified.
             </summary>
-            <param name="toAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
-            <param name="toName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
-            <param name="isDebug">If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default <see cref="P:Lurgle.Alerting.AlertConfig.MailTo"/> email</param>
-            <param name="isMethod">Add the calling method to the message text if using <see cref="M:Lurgle.Alerting.Alert.Send(System.String,System.Object[])"/> to send an email</param>
+            <param name="toAddress">
+                Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but
+                toName will then be ignored.
+            </param>
+            <param name="toName">
+                Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is
+                passed
+            </param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
+            <param name="isDebug">
+                If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default
+                <see cref="P:Lurgle.Alerting.AlertConfig.MailTo" /> email
+            </param>
+            <param name="isMethod">Add the calling method to the message text if using <see cref="M:Lurgle.Alerting.Alert.Send(System.String,System.Object[])" /> to send an email</param>
             <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.To(System.String,System.String,Lurgle.Alerting.AddressType)">
-            <summary>
-            Add a single recipient email address to the alert. You can chain this multiple times.<para /> 
-            
-            As an optional parameter, this method will not add empty or null addresses to the email.<para/>
-            
-            You can optionally supply key names to retrieve email addresses from the app config.
-            </summary>
-            <param name="toAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
-            <param name="toName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.To(System.String[])">
-            <summary>
-            Add an array of email addresses to the recipient field for the alert.<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses in array form</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.To(System.Collections.Generic.List{System.String})">
-            <summary>
-            Add a list of email addresses to the recipient  field for the alert<para/> 
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses as a List of type string</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.To(System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Add a list of paired email address and name values to the recipient field for the alert.<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses and display names as a Dictionary of Key = string, Value = string</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Cc(System.String,System.String,Lurgle.Alerting.AddressType)">
-            <summary>
-            Add a single CC  address to the alert. You can chain this multiple times.<para /> 
-            
-            As an optional parameter, this method will not add empty or null addresses to the email.
-            </summary>
-            <param name="ccAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
-            <param name="ccName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Cc(System.String[])">
-            <summary>
-            Add an array of email addresses to the CC field for the alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses in array form</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Cc(System.Collections.Generic.List{System.String})">
-            <summary>
-            Add a list of email addresses to the CC field for the alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses as a List of type string</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Cc(System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Add a list of paired email address and name values to the CC field for the alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses and display names as a Dictionary of Key = string, Value = string</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Bcc(System.String,System.String,Lurgle.Alerting.AddressType)">
-            <summary>
-            Add a single BCC address to the alert. You can chain this multiple times.<para /> 
-            
-            As an optional parameter, this method will not add empty or null addresses to the email.
-            </summary>
-            <param name="bccAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
-            <param name="bccName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Bcc(System.String[])">
-            <summary>
-            Add an array of email addresses to the BCC field for this alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses in array form</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Bcc(System.Collections.Generic.List{System.String})">
-            <summary>
-            Add a list of email addresses to the <see cref="F:Lurgle.Alerting.Alert.bcc"/> field for this alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses as a List of type string</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Bcc(System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Add a list of paired email address and name values to the <see cref="F:Lurgle.Alerting.Alert.bcc"/> field for the alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses and display names as a Dictionary of Key = string, Value = string</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.ReplyTo(System.String,System.String,Lurgle.Alerting.AddressType)">
-            <summary>
-            Set the Reply To address for the alert.<para /> 
-            
-            If no address is specified, <see cref="P:Lurgle.Alerting.AlertConfig.MailFrom"/> value will be used.
-            </summary>
-            <param name="replyToAddress">Email address to send replies to.</param>
-            <param name="replyToName">Display name of the recipient.</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Subject(System.String,System.Object[])">
-            <summary>
-            Set the subject for the alert email.<para/>
-            
-            Passing an empty subjectText will use the <see cref="F:Lurgle.Alerting.Alerting.defaultSubject"/> .
-            </summary>
-            <param name="subjectText">Subject to use for the email</param>
-            <param name="args">Optional arguments for string replacement"</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Priority(Lurgle.Alerting.AlertLevel)">
-            <summary>
-            Set the Priority for the alert email.<para/>
-            
-            Emails default to <see cref="F:Lurgle.Alerting.AlertLevel.Normal"/> 
-            </summary>
-            <param name="alertLevel">The priority that this email should be sent with</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.SetHtml(System.Boolean)">
-            <summary>
-            Sets the current email to HTML if true (default)
-            </summary>
-            <param name="isHtml"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.AddAlternateView(System.String,System.Collections.Generic.List{System.Net.Mail.LinkedResource})">
-            <summary>
-            Add the Alt view for the HTML contents
-            </summary>
-            <param name="messageBody"> Message body as string</param>
-            <param name="linkedResourceList">List of linked resources</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Attach(System.String,System.String)">
-            <summary>
-            Attach a file to the alert. You can chain this multiple times.<para/>
-            
-            If the file does not exist, it will be ignored
-            </summary>
-            <param name="filePath">Path to the file</param>
-            <param name="contentType">ContentType, if known (optional)</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.AttachInline(System.Collections.Generic.List{System.String},System.String)">
-            <summary>
-            Attach an array of files to the alert as inline attachments<para/>
-            
-            If any file does not exist, it will be ignored
-            </summary>
-            <param name="fileList">Array of paths to files that will be attached</param>
-            <param name="folderLocation">Path to folder containing files</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Attach(System.String[])">
-            <summary>
-            Attach an array of files to the alert<para/>
-            
-            If any file does not exist, it will be ignored
-            </summary>
-            <param name="fileList">Array of paths to files that will be attached</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Attach(System.Collections.Generic.List{System.String})">
-            <summary>
-            Attach a list of files to the alert<para/>
-            
-            If any file does not exist, it will be ignored
-            </summary>
-            <param name="fileList">List of paths to files that will be attached</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Send(System.String,System.Object[])">
-            <summary>
-            Send the alert with the specified message text
-            
-            You can optionally pass a string containing format items, and the replacement objects, and a string.format will be applied.
-            </summary>
-            <param name="msg">Body of the email. Can contain format items for string replacement.</param>
-            <param name="args">Optional arguments for string replacement</param>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.SendAsync(System.String,System.Object[])">
-            <summary>
-            Send the alert with the specified message text
-            
-            You can optionally pass a string containing format items, and the replacement objects, and a string.format will be applied.
-            </summary>
-            <param name="msg">Body of the email. Can contain format items for string replacement.</param>
-            <param name="args">Optional arguments for string replacement</param>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.SendTemplate``1(System.String,``0,System.Boolean)">
-            <summary>
-            Send the alert using the specified Razor template and model
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="template">Body of the email, using Razor template format</param>
-            <param name="templateModel">The Model to apply to this template</param>
-            <param name="isHtml"></param>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.SendTemplateAsync``1(System.String,``0,System.Boolean)">
-            <summary>
-            Send the alert using the specified Razor template and model
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="template">Body of the email, using Razor template format</param>
-            <param name="templateModel">The Model to apply to this template</param>
-            <param name="isHtml"></param>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.SendTemplateFile``1(System.String,``0,System.Boolean)">
-            <summary>
-            Send the alert using the specified Razor template (as configured in the application config) and model<para/> 
-            
-            This does not check for the file existence, so a non-existent config item or missing file will cause an exception that can be caught.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="templateConfig">Config item to load for the Razor template file</param>
-            <param name="templateModel">The Model to apply to this  template</param>
-            <param name="isHtml"></param>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.SendTemplateFileAsync``1(System.String,``0,System.Boolean)">
-            <summary>
-            Send the alert using the specified Razor template (as configured in the application config) and model<para/> 
-            
-            This does not check for the file existence, so a non-existent config item or missing file will cause an exception that can be caught.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="templateConfig">Config item to load for the Razor template file</param>
-            <param name="templateModel">The Model to apply to this  template</param>
-            <param name="isHtml"></param>
-        </member>
         <member name="T:Lurgle.Alerting.AlertConfig">
             <summary>
-            Alerting configuration. Loaded from AppSettings if available but can be configured from code.
+                Alerting configuration. Loaded from AppSettings if available but can be configured from code.
             </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.AlertConfig.#ctor">
+            <summary>
+                AlertConfig constructor
+            </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.AlertConfig.#ctor(Lurgle.Alerting.AlertConfig,System.String,System.String,System.Nullable{Lurgle.Alerting.RendererType},System.Nullable{Lurgle.Alerting.SenderType},System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String)">
+            <summary>
+                Constructor that permits passing a config and optional overrides of any property
+            </summary>
+            <param name="config"></param>
+            <param name="appName"></param>
+            <param name="appVersion"></param>
+            <param name="mailRenderer"></param>
+            <param name="mailSender"></param>
+            <param name="mailTemplatePath"></param>
+            <param name="mailHost"></param>
+            <param name="mailPort"></param>
+            <param name="mailTestTimeout"></param>
+            <param name="mailUseAuthentication"></param>
+            <param name="mailUsername"></param>
+            <param name="mailPassword"></param>
+            <param name="mailUseTls"></param>
+            <param name="mailTimeout"></param>
+            <param name="mailFrom"></param>
+            <param name="mailTo"></param>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.AppName">
             <summary>
-            Meaningful app name that is used for alerting. Will be auto-set if not specified.
+                Meaningful app name that is used for alerting. Will be auto-set if not specified.
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.AppVersion">
             <summary>
-            App version will be determined from the binary version, but can be overriden
+                App version will be determined from the binary version, but can be overriden
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailRenderer">
             <summary>
-            Set the MailRenderer to use for templates - Razor, Fluid, or Replace
+                Set the MailRenderer to use for templates - Razor, Fluid, or Replace
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailSender">
             <summary>
-            Set the MailSender to use - SmtpClient or MailKit
+                Set the MailSender to use - SmtpClient or MailKit
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailTemplatePath">
             <summary>
-            Set the mail template path. If not specified, will attempt to automatically set to [ExePath]\Templates
+                Set the mail template path. If not specified, will attempt to automatically set to [ExePath]\Templates
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailHost">
             <summary>
-            Set the SMTP mail host. Must be specified.
+                Set the SMTP mail host. Must be specified.
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailPort">
             <summary>
-            Set the TCP port for SMTP mail - defaults to 25
+                Set the TCP port for SMTP mail - defaults to 25
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.AlertConfig.MailTestTimeout">
+            <summary>
+            Interval in seconds for the SMTP test to timeout
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailUseAuthentication">
             <summary>
-            Set whether the mail host needs authentication
+                Set whether the mail host needs authentication
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailUsername">
             <summary>
-            Username for mail host authentication
+                Username for mail host authentication
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailPassword">
             <summary>
-            Password for mail host authentication
+                Password for mail host authentication
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailUseTls">
             <summary>
-            Enable TLS over SMTP - defaults to false
+                Enable TLS over SMTP - defaults to false
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailTimeout">
             <summary>
-            Set the timeout for SMTP sends - defaults to 60 seconds
+                Set the timeout for SMTP sends - defaults to 60 seconds
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailFrom">
             <summary>
-            Default From address for emails. Must be set.
+                Default From address for emails. Must be set.
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailTo">
             <summary>
-            Default To address for emails. Must be set.
+                Default To address for emails. Must be set.
             </summary>
         </member>
         <member name="M:Lurgle.Alerting.AlertConfig.GetConfig(Lurgle.Alerting.AlertConfig)">
             <summary>
-            Get a config. Optionally a logging config can be passed.
+                Get a config. Optionally a logging config can be passed.
             </summary>
             <param name="config"></param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.AlertConfig.GetInt(System.Object)">
             <summary>
-            Convert the supplied <see cref="T:System.Object"/> to an <see cref="T:System.Int32"/><para/>
-            This will filter out nulls that could otherwise cause exceptions
+                Convert the supplied <see cref="T:System.Object" /> to an <see cref="T:System.Int32" />
+                <para />
+                This will filter out nulls that could otherwise cause exceptions
             </summary>
             <param name="sourceObject">An object that can be converted to an int</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.AlertConfig.GetBool(System.Object)">
             <summary>
-            Convert the supplied <see cref="T:System.Object"/> to a <see cref="T:System.Boolean"/><para/>
-            This will filter out nulls that could otherwise cause exceptions
+                Convert the supplied <see cref="T:System.Object" /> to a <see cref="T:System.Boolean" />
+                <para />
+                This will filter out nulls that could otherwise cause exceptions
             </summary>
             <param name="sourceObject">An object that can be converted to a bool</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.AlertConfig.GetTimeout(System.String)">
             <summary>
-            Translate a <see cref="T:System.String"/> setting representing seconds to an <see cref="T:System.Int32"/>  timeout value representing milliseconds
+                Translate a <see cref="T:System.String" /> setting representing seconds to an <see cref="T:System.Int32" />  timeout value representing
+                milliseconds
             </summary>
             <param name="timeoutSetting">Timeout setting in seconds</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.AlertConfig.GetRenderer(System.String)">
             <summary>
-            Parse a config value to a <see cref="T:Lurgle.Alerting.RendererType"/>
+                Parse a config value to a <see cref="T:Lurgle.Alerting.RendererType" />
             </summary>
             <param name="configValue"></param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.AlertConfig.GetSender(System.String)">
             <summary>
-            Parse a config value to a <see cref="T:Lurgle.Alerting.SenderType"/>
+                Parse a config value to a <see cref="T:Lurgle.Alerting.SenderType" />
             </summary>
             <param name="configValue"></param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.AlertConfig.GetEmailTemplate(System.String)">
             <summary>
-            Resolve an email template filename from config, given the specified email template name<para/>
-            Config format is EmailTemplate{template}/>
+                Resolve an email template filename from config, given the specified email template name
+                <para />
+                Config format is EmailTemplate{template}/>
             </summary>
             <param name="template">Email template to return the filename for</param>
         </member>
         <member name="M:Lurgle.Alerting.AlertConfig.GetEmailConfig(System.String)">
             <summary>
-            Resolve the email config for a given email type <see cref="T:System.String"/> 
+                Resolve the email config for a given email type <see cref="T:System.String" />
             </summary>
             <param name="emailType">Email type to retrieve</param>
             <returns></returns>
         </member>
-        <member name="T:Lurgle.Alerting.AddressType">
-            <summary>
-            Indicate whether an email address passing in to <see cref="T:Lurgle.Alerting.Alert"/> is an actual email address, or if it should be queried from the config
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.AddressType.Email">
-            <summary>
-            Email address
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.AddressType.FromConfig">
-            <summary>
-            Read from config
-            </summary>
-        </member>
-        <member name="T:Lurgle.Alerting.AlertLevel">
-            <summary>
-            The priority of the email that will be sent. Abstracts FluentEmail's <see cref="T:FluentEmail.Core.Models.Priority"/>  enum so that it does not need to be referenced outside of the <see cref="T:Lurgle.Alerting.Alert"/>  class.
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.AlertLevel.Normal">
-            <summary>
-            Normal
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.AlertLevel.Low">
-            <summary>
-            Low
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.AlertLevel.High">
-            <summary>
-            High
-            </summary>
-        </member>
-        <member name="T:Lurgle.Alerting.RendererType">
-            <summary>
-            Renderer type to use with email templates
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.RendererType.Razor">
-            <summary>
-            Use the Razor renderer
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.RendererType.Fluid">
-            <summary>
-            Use the Liquid (Fluid) renderer
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.RendererType.Liquid">
-            <summary>
-            Use the Liquid (Fluid) renderer
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.RendererType.Replace">
-            <summary>
-            Use the default Replace renderer
-            </summary>
-        </member>
-        <member name="T:Lurgle.Alerting.SenderType">
-            <summary>
-            Send using the old SmtpClient (deprecated) or MailKit
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.SenderType.SmtpClient">
-            <summary>
-            Use the .NET SmtpClient (deprecate)
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.SenderType.MailKit">
-            <summary>
-            Use MailKit
-            </summary>
-        </member>
         <member name="T:Lurgle.Alerting.Alerting">
             <summary>
-            Static Lurgle.Alerting instance that provides an interface to properties and methods for alerting
+                Static Lurgle.Alerting instance that provides an interface to properties and methods for alerting
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.Alerting.DefaultSubject">
+            <summary>
+                Default alert subject if not specified
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Alerting.Config">
             <summary>
-            Current Lurgle.Alerting configuration
-            </summary>
-        </member>
-        <member name="F:Lurgle.Alerting.Alerting.defaultSubject">
-            <summary>
-            Default alert subject if not specified
+                Current Lurgle.Alerting configuration
             </summary>
         </member>
         <member name="M:Lurgle.Alerting.Alerting.SetConfig(Lurgle.Alerting.AlertConfig)">
             <summary>
-            Set the <see cref="P:Lurgle.Alerting.Alerting.Config"/> by passing an <see cref="T:Lurgle.Alerting.AlertConfig"/> or reading from app config
+                Set the <see cref="P:Lurgle.Alerting.Alerting.Config" /> by passing an <see cref="T:Lurgle.Alerting.AlertConfig" /> or reading from app config
             </summary>
             <param name="alertConfig"></param>
         </member>
         <member name="M:Lurgle.Alerting.Alerting.Init">
             <summary>
-            Initialise alerting and test availability of SMTP
+                Initialise alerting and test availability of SMTP
             </summary>
         </member>
         <member name="M:Lurgle.Alerting.Alerting.TestSmtp">
             <summary>
-            Test that the SMTP server is reachable
+                Test that the SMTP server is reachable
             </summary>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alerting.IsValidEmail(System.String)">
             <summary>
-            Attempt to resolve an email address as a valid <see cref="T:System.Net.Mail.MailAddress"/>
+                Attempt to resolve an email address as a valid <see cref="T:System.Net.Mail.MailAddress" />
             </summary>
             <param name="emailAddress">Email address to resolve</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alerting.HasValidEmails(System.String[])">
             <summary>
-            Attempt to resolve an array of email addresses as valid <see cref="T:System.Net.Mail.MailAddress"/>
+                Attempt to resolve an array of email addresses as valid <see cref="T:System.Net.Mail.MailAddress" />
             </summary>
             <param name="emailAddresses">Array of email addresses to resolve</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alerting.GetEmailTemplate(System.String)">
             <summary>
-            Resolve an email template filename given the specified template string />
+                Resolve an email template filename given the specified template string />
             </summary>
             <param name="template">Email template to return the filename for</param>
         </member>
-        <member name="T:Lurgle.Alerting.IAlert">
+        <member name="T:Lurgle.Alerting.AddressType">
             <summary>
-            Base Alert interface
+                Indicate whether an email address passing in to <see cref="T:Lurgle.Alerting.Alert" /> is an actual email address, or if it should be
+                queried from the config
             </summary>
         </member>
-        <member name="T:Lurgle.Alerting.IEnvelope">
+        <member name="F:Lurgle.Alerting.AddressType.Email">
             <summary>
-            Envelope interface
+                Email address
             </summary>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.To(System.String,System.String,Lurgle.Alerting.AddressType)">
+        <member name="F:Lurgle.Alerting.AddressType.FromConfig">
             <summary>
-            Add a single recipient email address to the alert. You can chain this multiple times.<para /> 
-            
-            As an optional parameter, this method will not add empty or null addresses to the email.<para/>
-            
-            You can optionally supply key names to retrieve email addresses from the app config.
+                Read from config
             </summary>
-            <param name="toAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
-            <param name="toName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
+        </member>
+        <member name="T:Lurgle.Alerting.AlertLevel">
+            <summary>
+                The priority of the email that will be sent. Abstracts FluentEmail's <see cref="T:FluentEmail.Core.Models.Priority" />  enum so that it does
+                not need to be referenced outside of the <see cref="T:Lurgle.Alerting.Alert" />  class.
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.AlertLevel.Normal">
+            <summary>
+                Normal
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.AlertLevel.Low">
+            <summary>
+                Low
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.AlertLevel.High">
+            <summary>
+                High
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.InitResult">
+            <summary>
+                Return a reason why initialisation failed
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.InitResult.Success">
+            <summary>
+                Successful initialisation
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.InitResult.SmtpTestFailed">
+            <summary>
+                SMTP host test failure
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.RendererType">
+            <summary>
+                Renderer type to use with email templates
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.RendererType.Razor">
+            <summary>
+                Use the Razor renderer
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.RendererType.Fluid">
+            <summary>
+                Use the Liquid (Fluid) renderer
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.RendererType.Liquid">
+            <summary>
+                Use the Liquid (Fluid) renderer
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.RendererType.Replace">
+            <summary>
+                Use the default Replace renderer
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.SenderType">
+            <summary>
+                Send using the old SmtpClient (deprecated) or MailKit
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.SenderType.SmtpClient">
+            <summary>
+                Use the .NET SmtpClient (deprecate)
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.SenderType.MailKit">
+            <summary>
+                Use MailKit
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.Interfaces.IAlert">
+            <summary>
+                Base Alert interface
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.Interfaces.IEnvelope">
+            <summary>
+                Envelope interface
+            </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.To(System.String,System.String,Lurgle.Alerting.AddressType)">
+            <summary>
+                Add a single recipient email address to the alert. You can chain this multiple times.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email.
+                <para />
+                You can optionally supply key names to retrieve email addresses from the app config.
+            </summary>
+            <param name="toAddress">
+                Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but
+                toName will then be ignored.
+            </param>
+            <param name="toName">
+                Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is
+                passed
+            </param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.To(System.String[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.To(System.String[])">
             <summary>
-            Add an array of email addresses to the recipient field for the alert.<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
+                Add an array of email addresses to the recipient field for the alert.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses in array form</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.To(System.Collections.Generic.List{System.String})">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.To(System.Collections.Generic.List{System.String})">
             <summary>
-            Add a list of email addresses to the recipient  field for the alert<para/> 
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
+                Add a list of email addresses to the recipient  field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses as a List of type string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.To(System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.To(System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
-            Add a list of paired email address and name values to the recipient field for the alert.<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
+                Add a list of paired email address and name values to the recipient field for the alert.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses and display names as a Dictionary of Key = string, Value = string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Cc(System.String,System.String,Lurgle.Alerting.AddressType)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Cc(System.String,System.String,Lurgle.Alerting.AddressType)">
             <summary>
-            Add a single CC address to the alert. You can chain this multiple times.<para /> 
-            
-            As an optional parameter, this method will not add empty or null addresses to the email.
+                Add a single CC address to the alert. You can chain this multiple times.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email.
             </summary>
-            <param name="ccAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
-            <param name="ccName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
+            <param name="ccAddress">
+                Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but
+                toName will then be ignored.
+            </param>
+            <param name="ccName">
+                Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is
+                passed
+            </param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Cc(System.String[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Cc(System.String[])">
             <summary>
-            Add an array of email addresses to the CC field for the alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
+                Add an array of email addresses to the CC field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses in array form</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Cc(System.Collections.Generic.List{System.String})">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Cc(System.Collections.Generic.List{System.String})">
             <summary>
-            Add a list of email addresses to the CC field for the alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
+                Add a list of email addresses to the CC field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses as a List of type string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Cc(System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Cc(System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
-            Add a list of paired email address and name values to the CC field for the alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
+                Add a list of paired email address and name values to the CC field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses and display names as a Dictionary of Key = string, Value = string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Bcc(System.String,System.String,Lurgle.Alerting.AddressType)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Bcc(System.String,System.String,Lurgle.Alerting.AddressType)">
             <summary>
-            Add a single BCC address to the alert. You can chain this multiple times.<para /> 
-            
-            As an optional parameter, this method will not add empty or null addresses to the email.
+                Add a single BCC address to the alert. You can chain this multiple times.
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email.
             </summary>
-            <param name="bccAddress">Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but toName will then be ignored.</param>
-            <param name="bccName">Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is passed</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
+            <param name="bccAddress">
+                Email address to send the email to. Comma- and semicolon-delimited lists can be parsed, but
+                toName will then be ignored.
+            </param>
+            <param name="bccName">
+                Display name of the recipient. Will be ignored if a comma- or semicolon-delimited toAddress is
+                passed
+            </param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Bcc(System.String[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Bcc(System.String[])">
             <summary>
-            Add an array of email addresses to the BCC field for this alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
+                Add an array of email addresses to the BCC field for this alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses in array form</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Bcc(System.Collections.Generic.List{System.String})">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Bcc(System.Collections.Generic.List{System.String})">
             <summary>
-            Add a list of email addresses to the BCC field for this alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
+                Add a list of email addresses to the BCC field for this alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses as a List of type string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Bcc(System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Bcc(System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
-            Add a list of paired email address and name values to the BCC field for the alert<para/>
-            
-            As an optional parameter, this method will not add empty or null addresses to the email
+                Add a list of paired email address and name values to the BCC field for the alert
+                <para />
+                As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses and display names as a Dictionary of Key = string, Value = string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.ReplyTo(System.String,System.String,Lurgle.Alerting.AddressType)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.ReplyTo(System.String,System.String,Lurgle.Alerting.AddressType)">
             <summary>
-            Set the Reply To address for the alert.<para /> 
-            
-            If no address is specified, <see cref="P:Lurgle.Alerting.AlertConfig.MailFrom"/> value will be used.
+                Set the Reply To address for the alert.
+                <para />
+                If no address is specified, <see cref="P:Lurgle.Alerting.AlertConfig.MailFrom" /> value will be used.
             </summary>
             <param name="replyToAddress">Email address to send replies to.</param>
             <param name="replyToName">Display name of the recipient.</param>
-            <param name="addressType">Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email"/> but accepts <see cref="F:Lurgle.Alerting.AddressType.FromConfig"/> to read from config</param>
+            <param name="addressType">
+                Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
+                <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
+            </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Subject(System.String,System.Object[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Subject(System.String,System.Object[])">
             <summary>
-            Set the subject for the alert email.<para/>
-            
-            Passing an empty subjectText will use the <see cref="F:Lurgle.Alerting.Alerting.defaultSubject"/> .
+                Set the subject for the alert email.
+                <para />
+                Passing an empty subjectText will use the <see cref="F:Lurgle.Alerting.Alerting.DefaultSubject" /> .
             </summary>
             <param name="subjectText">Subject to use for the email</param>
             <param name="args">Optional arguments for string replacement"</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Priority(Lurgle.Alerting.AlertLevel)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Priority(Lurgle.Alerting.AlertLevel)">
             <summary>
-            Set the Priority for the alert email.<para/>
-            
-            Emails default to <see cref="F:Lurgle.Alerting.AlertLevel.Normal"/> 
+                Set the Priority for the alert email.
+                <para />
+                Emails default to <see cref="F:Lurgle.Alerting.AlertLevel.Normal" />
             </summary>
             <param name="alertLevel">The priority that this email should be sent with</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.SetHtml(System.Boolean)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.SetHtml(System.Boolean)">
             <summary>
-            Sets the current email to HTML if true (default)
+                Sets the current email to HTML if true (default)
             </summary>
             <param name="isHtml"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.AddAlternateView(System.String,System.Collections.Generic.List{System.Net.Mail.LinkedResource})">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.AddAlternateView(System.String,System.Collections.Generic.List{System.Net.Mail.LinkedResource})">
             <summary>
-            Add the Alt view for the HTML contents
+                Add the Alt view for the HTML contents
             </summary>
             <param name="messageBody"> Message body as string</param>
             <param name="linkedResourceList">List of linked resources</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Attach(System.String,System.String)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.String,System.String)">
             <summary>
-            Attach a file to the alert. You can chain this multiple times.<para/>
-            
-            If the file does not exist, it will be ignored
+                Attach a file to the alert. You can chain this multiple times.
+                <para />
+                If the file does not exist, it will be ignored
             </summary>
             <param name="filePath">Path to the file</param>
             <param name="contentType">ContentType, if known (optional)</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.AttachInline(System.Collections.Generic.List{System.String},System.String)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.AttachInline(System.Collections.Generic.List{System.String},System.String)">
             <summary>
-            Attach an array of files to the alert as inline attachments<para/>
-            
-            If any file does not exist, it will be ignored
+                Attach an array of files to the alert as inline attachments
+                <para />
+                If any file does not exist, it will be ignored
             </summary>
             <param name="fileList">Array of paths to files that will be attached</param>
             <param name="folderLocation">Path to folder containing files</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Attach(System.String[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.String[])">
             <summary>
-            Attach an array of files to the alert<para/>
-            
-            If any file does not exist, it will be ignored
+                Attach an array of files to the alert
+                <para />
+                If any file does not exist, it will be ignored
             </summary>
             <param name="fileList">Array of paths to files that will be attached</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Attach(System.Collections.Generic.List{System.String})">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.Collections.Generic.List{System.String})">
             <summary>
-            Attach a list of files to the alert<para/>
-            
-            If any file does not exist, it will be ignored
+                Attach a list of files to the alert
+                <para />
+                If any file does not exist, it will be ignored
             </summary>
             <param name="fileList">List of paths to files that will be attached</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.Send(System.String,System.Object[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Send(System.String,System.Object[])">
             <summary>
-            Send the alert with the specified message text
-            
-            You can optionally pass a string containing format items, and the replacement objects, and a string.format will be applied.
+                Send the alert with the specified message text
+                You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+                applied.
             </summary>
             <param name="msg">Body of the email. Can contain format items for string replacement.</param>
             <param name="args">Optional arguments for string replacement</param>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.SendAsync(System.String,System.Object[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.SendAsync(System.String,System.Object[])">
             <summary>
-            Send the alert with the specified message text
-            
-            You can optionally pass a string containing format items, and the replacement objects, and a string.format will be applied.
+                Send the alert with the specified message text
+                You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+                applied.
             </summary>
             <param name="msg">Body of the email. Can contain format items for string replacement.</param>
             <param name="args">Optional arguments for string replacement</param>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.SendTemplate``1(System.String,``0,System.Boolean)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.SendTemplate``1(System.String,``0,System.Boolean)">
             <summary>
-            Send the alert using the specified Razor template and model
+                Send the alert using the specified Razor template and model
             </summary>
             <typeparam name="T"></typeparam>
             <param name="template">Body of the email, using Razor template format</param>
             <param name="templateModel">The Model to apply to this template</param>
             <param name="isHtml"></param>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.SendTemplateAsync``1(System.String,``0,System.Boolean)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.SendTemplateAsync``1(System.String,``0,System.Boolean)">
             <summary>
-            Send the alert using the specified Razor template and model
+                Send the alert using the specified Razor template and model
             </summary>
             <typeparam name="T"></typeparam>
             <param name="template">Body of the email, using Razor template format</param>
             <param name="templateModel">The Model to apply to this template</param>
             <param name="isHtml"></param>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.SendTemplateFile``1(System.String,``0,System.Boolean)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.SendTemplateFile``1(System.String,``0,System.Boolean)">
             <summary>
-            Send the alert using the specified Razor template (as configured in the application config) and model<para/> 
-            
-            This does not check for the file existence, so a non-existent config item or missing file will cause an exception that can be caught.
+                Send the alert using the specified Razor template (as configured in the application config) and model
+                <para />
+                This does not check for the file existence, so a non-existent config item or missing file will cause an exception
+                that can be caught.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="templateConfig">Config item to load for the Razor template file</param>
             <param name="templateModel">The Model to apply to this  template</param>
             <param name="isHtml"></param>
         </member>
-        <member name="M:Lurgle.Alerting.IEnvelope.SendTemplateFileAsync``1(System.String,``0,System.Boolean)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.SendTemplateFileAsync``1(System.String,``0,System.Boolean)">
             <summary>
-            Send the alert using the specified Razor template (as configured in the application config) and model<para/> 
-            
-            This does not check for the file existence, so a non-existent config item or missing file will cause an exception that can be caught.
+                Send the alert using the specified Razor template (as configured in the application config) and model
+                <para />
+                This does not check for the file existence, so a non-existent config item or missing file will cause an exception
+                that can be caught.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="templateConfig">Config item to load for the Razor template file</param>
             <param name="templateModel">The Model to apply to this  template</param>
             <param name="isHtml"></param>
         </member>
-        <member name="T:Lurgle.Alerting.IHideObjectMembers">
+        <member name="T:Lurgle.Alerting.Interfaces.IHideObjectMembers">
             <summary>
-            Hide object members
+                Hide object members
             </summary>
         </member>
-        <member name="M:Lurgle.Alerting.IHideObjectMembers.GetType">
+        <member name="M:Lurgle.Alerting.Interfaces.IHideObjectMembers.GetType">
             <summary>
-            Override GetType visibility
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.IHideObjectMembers.GetHashCode">
-            <summary>
-            Override GetHashCode visibility
+                Override GetType visibility
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IHideObjectMembers.ToString">
+        <member name="M:Lurgle.Alerting.Interfaces.IHideObjectMembers.GetHashCode">
             <summary>
-            Override ToString visibility
+                Override GetHashCode visibility
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.IHideObjectMembers.Equals(System.Object)">
+        <member name="M:Lurgle.Alerting.Interfaces.IHideObjectMembers.ToString">
             <summary>
-            Override Equals visibility
+                Override ToString visibility
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Interfaces.IHideObjectMembers.Equals(System.Object)">
+            <summary>
+                Override Equals visibility
             </summary>
             <param name="obj"></param>
             <returns></returns>
