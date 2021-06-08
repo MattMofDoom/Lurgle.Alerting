@@ -1,7 +1,7 @@
-﻿namespace Lurgle.Alerting
+﻿namespace Lurgle.Alerting.Interfaces
 {
     /// <summary>
-    /// Base Alert interface
+    ///     Base Alert interface
     /// </summary>
     public interface IAlert : IHideObjectMembers
     {
