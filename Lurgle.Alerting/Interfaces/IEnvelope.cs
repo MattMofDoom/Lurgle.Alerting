@@ -9,6 +9,9 @@ namespace Lurgle.Alerting.Interfaces
     /// </summary>
     public interface IEnvelope : IHideObjectMembers
     {
+        // ReSharper disable UnusedMember.Global
+        // ReSharper disable UnusedMemberInSuper.Global
+
         /// <summary>
         ///     Add a single recipient email address to the alert. You can chain this multiple times.
         ///     <para />
@@ -32,22 +35,13 @@ namespace Lurgle.Alerting.Interfaces
         IEnvelope To(string toAddress, string toName = null, AddressType addressType = AddressType.Email);
 
         /// <summary>
-        ///     Add an array of email addresses to the recipient field for the alert.
+        ///     Add an list of email addresses to the recipient field for the alert.
         ///     <para />
         ///     As an optional parameter, this method will not add empty or null addresses to the email
         /// </summary>
-        /// <param name="emailList">List of email addresses in array form</param>
+        /// <param name="emailList">List of email addresses</param>
         /// <returns></returns>
-        IEnvelope To(string[] emailList);
-
-        /// <summary>
-        ///     Add a list of email addresses to the recipient  field for the alert
-        ///     <para />
-        ///     As an optional parameter, this method will not add empty or null addresses to the email
-        /// </summary>
-        /// <param name="emailList">List of email addresses as a List of type string</param>
-        /// <returns></returns>
-        IEnvelope To(List<string> emailList);
+        IEnvelope To(IEnumerable<string> emailList);
 
         /// <summary>
         ///     Add a list of paired email address and name values to the recipient field for the alert.
@@ -85,16 +79,7 @@ namespace Lurgle.Alerting.Interfaces
         /// </summary>
         /// <param name="emailList">List of email addresses in array form</param>
         /// <returns></returns>
-        IEnvelope Cc(string[] emailList);
-
-        /// <summary>
-        ///     Add a list of email addresses to the CC field for the alert
-        ///     <para />
-        ///     As an optional parameter, this method will not add empty or null addresses to the email
-        /// </summary>
-        /// <param name="emailList">List of email addresses as a List of type string</param>
-        /// <returns></returns>
-        IEnvelope Cc(List<string> emailList);
+        IEnvelope Cc(IEnumerable<string> emailList);
 
         /// <summary>
         ///     Add a list of paired email address and name values to the CC field for the alert
@@ -132,16 +117,7 @@ namespace Lurgle.Alerting.Interfaces
         /// </summary>
         /// <param name="emailList">List of email addresses in array form</param>
         /// <returns></returns>
-        IEnvelope Bcc(string[] emailList);
-
-        /// <summary>
-        ///     Add a list of email addresses to the BCC field for this alert
-        ///     <para />
-        ///     As an optional parameter, this method will not add empty or null addresses to the email
-        /// </summary>
-        /// <param name="emailList">List of email addresses as a List of type string</param>
-        /// <returns></returns>
-        IEnvelope Bcc(List<string> emailList);
+        IEnvelope Bcc(IEnumerable<string> emailList);
 
         /// <summary>
         ///     Add a list of paired email address and name values to the BCC field for the alert
@@ -170,7 +146,7 @@ namespace Lurgle.Alerting.Interfaces
         /// <summary>
         ///     Set the subject for the alert email.
         ///     <para />
-        ///     Passing an empty subjectText will use the <see cref="Alerting.DefaultSubject" /> .
+        ///     Passing an empty subjectText will use the <see cref="AlertConfig.MailSubject" /> .
         /// </summary>
         /// <param name="subjectText">Subject to use for the email</param>
         /// <param name="args">Optional arguments for string replacement"</param>
@@ -212,6 +188,15 @@ namespace Lurgle.Alerting.Interfaces
         IEnvelope Attach(string filePath, string contentType = null);
 
         /// <summary>
+        ///     Attach a list of files to the alert
+        ///     <para />
+        ///     If any file does not exist, it will be ignored
+        /// </summary>
+        /// <param name="fileList">List of paths to files that will be attached</param>
+        /// <returns></returns>
+        IEnvelope Attach(IEnumerable<string> fileList);
+
+        /// <summary>
         ///     Attach an array of files to the alert as inline attachments
         ///     <para />
         ///     If any file does not exist, it will be ignored
@@ -219,25 +204,7 @@ namespace Lurgle.Alerting.Interfaces
         /// <param name="fileList">Array of paths to files that will be attached</param>
         /// <param name="folderLocation">Path to folder containing files</param>
         /// <returns></returns>
-        IEnvelope AttachInline(List<string> fileList, string folderLocation);
-
-        /// <summary>
-        ///     Attach an array of files to the alert
-        ///     <para />
-        ///     If any file does not exist, it will be ignored
-        /// </summary>
-        /// <param name="fileList">Array of paths to files that will be attached</param>
-        /// <returns></returns>
-        IEnvelope Attach(string[] fileList);
-
-        /// <summary>
-        ///     Attach a list of files to the alert
-        ///     <para />
-        ///     If any file does not exist, it will be ignored
-        /// </summary>
-        /// <param name="fileList">List of paths to files that will be attached</param>
-        /// <returns></returns>
-        IEnvelope Attach(List<string> fileList);
+        IEnvelope AttachInline(IEnumerable<string> fileList, string folderLocation);
 
         /// <summary>
         ///     Send the alert with the specified message text

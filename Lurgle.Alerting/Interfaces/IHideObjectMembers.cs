@@ -9,6 +9,8 @@ namespace Lurgle.Alerting.Interfaces
     [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IHideObjectMembers
     {
+        // ReSharper disable UnusedMember.Global
+
         /// <summary>
         ///     Override GetType visibility
         /// </summary>

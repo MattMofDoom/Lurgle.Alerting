@@ -15,7 +15,7 @@ namespace Lurgle.Alerting
         private const int SmtpTestTimeoutMax = 20000;
         private const int TimeoutDefault = 60000;
         private const int TimeoutMin = 30000;
-        private const int TimeoutMax = 600000;
+        private const int TimeoutMax = 600000; // ReSharper disable UnusedMember.Global
 
         /// <summary>
         ///     AlertConfig constructor
@@ -43,12 +43,14 @@ namespace Lurgle.Alerting
         /// <param name="mailTimeout"></param>
         /// <param name="mailFrom"></param>
         /// <param name="mailTo"></param>
+        /// <param name="mailSubject"></param>
         public AlertConfig(AlertConfig config = null, string appName = null, string appVersion = null,
             RendererType? mailRenderer = null,
             SenderType? mailSender = null, string mailTemplatePath = null, string mailHost = null,
-            int? mailPort = null, int? mailTestTimeout = null, bool? mailUseAuthentication = null, string mailUsername = null,
+            int? mailPort = null, int? mailTestTimeout = null, bool? mailUseAuthentication = null,
+            string mailUsername = null,
             string mailPassword = null, bool? mailUseTls = null, int? mailTimeout = null, string mailFrom = null,
-            string mailTo = null)
+            string mailTo = null, string mailSubject = null)
         {
             if (config != null)
             {
@@ -67,6 +69,7 @@ namespace Lurgle.Alerting
                 MailTimeout = config.MailTimeout;
                 MailFrom = config.MailFrom;
                 MailTo = config.MailTo;
+                MailSubject = config.MailSubject;
             }
 
             if (!string.IsNullOrEmpty(appName))
@@ -82,9 +85,9 @@ namespace Lurgle.Alerting
             if (!string.IsNullOrEmpty(mailHost))
                 MailHost = mailHost;
             if (mailPort != null)
-                MailPort = (int)mailPort;
+                MailPort = (int) mailPort;
             if (mailTestTimeout != null)
-                MailTestTimeout = (int)mailTestTimeout;
+                MailTestTimeout = (int) mailTestTimeout;
             if (mailUseAuthentication != null)
                 MailUseAuthentication = (bool) mailUseAuthentication;
             if (!string.IsNullOrEmpty(mailUsername))
@@ -99,18 +102,24 @@ namespace Lurgle.Alerting
                 MailFrom = mailFrom;
             if (!string.IsNullOrEmpty(mailTo))
                 MailTo = mailTo;
-            
+            if (!string.IsNullOrEmpty(mailSubject))
+                MailSubject = mailSubject;
+
             //Don't allow invalid TCP port
             if (MailPort <= 0 || MailPort > 65535)
                 MailPort = 25;
 
             //Don't accept timeouts less than 1 second (unless 0, which disables the test), negatives, or higher than 20 seconds
-            if (MailTestTimeout > SmtpTestTimeoutMax || MailTestTimeout < SmtpTestTimeoutMin || (MailTestTimeout > 0 && MailTestTimeout < 1000))
+            if (MailTestTimeout > SmtpTestTimeoutMax || MailTestTimeout < SmtpTestTimeoutMin ||
+                MailTestTimeout > 0 && MailTestTimeout < 1000)
                 MailTestTimeout = SmtpTestTimeoutDefault;
 
             //Disable authentication if a username isn't specified
             if (MailUseAuthentication && string.IsNullOrEmpty(MailUsername))
                 MailUseAuthentication = false;
+
+            if (string.IsNullOrEmpty(MailSubject))
+                MailSubject = "Alert!";
         }
 
         /// <summary>
@@ -151,7 +160,7 @@ namespace Lurgle.Alerting
         public int MailPort { get; private set; }
 
         /// <summary>
-        /// Interval in seconds for the SMTP test to timeout
+        ///     Interval in seconds for the SMTP test to timeout
         /// </summary>
         public int MailTestTimeout { get; private set; }
 
@@ -191,6 +200,11 @@ namespace Lurgle.Alerting
         public string MailTo { get; private set; }
 
         /// <summary>
+        ///     Default subject for emails. Defaults to "Alert!"
+        /// </summary>
+        public string MailSubject { get; private set; }
+
+        /// <summary>
         ///     Get a config. Optionally a logging config can be passed.
         /// </summary>
         /// <param name="config"></param>
@@ -214,7 +228,8 @@ namespace Lurgle.Alerting
                     MailUseTls = GetBool(ConfigurationManager.AppSettings["MailUseTls"]),
                     MailTimeout = GetTimeout(ConfigurationManager.AppSettings["MailTimeout"]),
                     MailFrom = ConfigurationManager.AppSettings["MailFrom"],
-                    MailTo = ConfigurationManager.AppSettings["MailTo"]
+                    MailTo = ConfigurationManager.AppSettings["MailTo"],
+                    MailSubject = ConfigurationManager.AppSettings["MailSubject"]
                 };
             else
                 alertConfig = config;
@@ -251,7 +266,8 @@ namespace Lurgle.Alerting
             //Attempt to set the templates if it's not specified 
             if (string.IsNullOrEmpty(alertConfig.MailTemplatePath) || !Directory.Exists(alertConfig.MailTemplatePath))
                 alertConfig.MailTemplatePath =
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Templates");
+                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty,
+                        "Templates");
 
             if (alertConfig.MailPort <= 0 || alertConfig.MailPort > 65535) alertConfig.MailPort = 25;
 
@@ -292,9 +308,7 @@ namespace Lurgle.Alerting
 
             if (!Convert.IsDBNull(sourceObject)) sourceString = (string) sourceObject;
 
-            if (bool.TryParse(sourceString, out var destBool)) return destBool;
-
-            return false;
+            return bool.TryParse(sourceString, out var destBool) && destBool;
         }
 
         /// <summary>
@@ -327,7 +341,8 @@ namespace Lurgle.Alerting
                 //Convert to milliseconds
                 tryTimeout *= 1000;
 
-                if ((tryTimeout > SmtpTestTimeoutMax) | (tryTimeout < SmtpTestTimeoutMin)) tryTimeout = SmtpTestTimeoutDefault;
+                if ((tryTimeout > SmtpTestTimeoutMax) | (tryTimeout < SmtpTestTimeoutMin))
+                    tryTimeout = SmtpTestTimeoutDefault;
             }
             else
             {
@@ -344,11 +359,8 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         private static RendererType GetRenderer(string configValue)
         {
-            if (!string.IsNullOrEmpty(configValue))
-                if (Enum.TryParse(configValue, true, out RendererType renderer))
-                    return renderer;
-
-            return RendererType.Replace;
+            if (string.IsNullOrEmpty(configValue)) return RendererType.Replace;
+            return Enum.TryParse(configValue, true, out RendererType renderer) ? renderer : RendererType.Replace;
         }
 
         /// <summary>
@@ -358,11 +370,8 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         private static SenderType GetSender(string configValue)
         {
-            if (!string.IsNullOrEmpty(configValue))
-                if (Enum.TryParse(configValue, true, out SenderType sender))
-                    return sender;
-
-            return SenderType.MailKit;
+            if (string.IsNullOrEmpty(configValue)) return SenderType.MailKit;
+            return Enum.TryParse(configValue, true, out SenderType sender) ? sender : SenderType.MailKit;
         }
 
         /// <summary>

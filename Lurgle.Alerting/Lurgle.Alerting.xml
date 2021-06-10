@@ -31,22 +31,13 @@
             </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.To(System.String[])">
+        <member name="M:Lurgle.Alerting.Alert.To(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Add an array of email addresses to the recipient field for the alert.
                 <para />
                 As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses in array form</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.To(System.Collections.Generic.List{System.String})">
-            <summary>
-                Add a list of email addresses to the recipient  field for the alert
-                <para />
-                As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses as a List of type string</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alert.To(System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -78,22 +69,13 @@
             </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.Cc(System.String[])">
+        <member name="M:Lurgle.Alerting.Alert.Cc(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Add an array of email addresses to the CC field for the alert
                 <para />
                 As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses in array form</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Cc(System.Collections.Generic.List{System.String})">
-            <summary>
-                Add a list of email addresses to the CC field for the alert
-                <para />
-                As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses as a List of type string</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alert.Cc(System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -125,22 +107,13 @@
             </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.Bcc(System.String[])">
+        <member name="M:Lurgle.Alerting.Alert.Bcc(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Add an array of email addresses to the BCC field for this alert
                 <para />
                 As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses in array form</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Bcc(System.Collections.Generic.List{System.String})">
-            <summary>
-                Add a list of email addresses to the <see cref="F:Lurgle.Alerting.Alert.bcc" /> field for this alert
-                <para />
-                As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses as a List of type string</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alert.Bcc(System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -170,7 +143,7 @@
             <summary>
                 Set the subject for the alert email.
                 <para />
-                Passing an empty subjectText will use the <see cref="F:Lurgle.Alerting.Alerting.DefaultSubject" /> .
+                Passing an empty subjectText will use the <see cref="P:Lurgle.Alerting.AlertConfig.MailSubject" /> .
             </summary>
             <param name="subjectText">Subject to use for the email</param>
             <param name="args">Optional arguments for string replacement"</param>
@@ -210,17 +183,7 @@
             <param name="contentType">ContentType, if known (optional)</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.AttachInline(System.Collections.Generic.List{System.String},System.String)">
-            <summary>
-                Attach an array of files to the alert as inline attachments
-                <para />
-                If any file does not exist, it will be ignored
-            </summary>
-            <param name="fileList">Array of paths to files that will be attached</param>
-            <param name="folderLocation">Path to folder containing files</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Attach(System.String[])">
+        <member name="M:Lurgle.Alerting.Alert.Attach(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Attach an array of files to the alert
                 <para />
@@ -229,13 +192,14 @@
             <param name="fileList">Array of paths to files that will be attached</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.Attach(System.Collections.Generic.List{System.String})">
+        <member name="M:Lurgle.Alerting.Alert.AttachInline(System.Collections.Generic.IEnumerable{System.String},System.String)">
             <summary>
-                Attach a list of files to the alert
+                Attach an array of files to the alert as inline attachments
                 <para />
                 If any file does not exist, it will be ignored
             </summary>
-            <param name="fileList">List of paths to files that will be attached</param>
+            <param name="fileList">Array of paths to files that will be attached</param>
+            <param name="folderLocation">Path to folder containing files</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alert.Send(System.String,System.Object[])">
@@ -297,6 +261,15 @@
             <param name="templateConfig">Config item to load for the Razor template file</param>
             <param name="templateModel">The Model to apply to this  template</param>
             <param name="html"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.Attach(System.Collections.Generic.List{System.String})">
+            <summary>
+                Attach a list of files to the alert
+                <para />
+                If any file does not exist, it will be ignored
+            </summary>
+            <param name="fileList">List of paths to files that will be attached</param>
+            <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alert.GetInlineFile(System.String,System.String,System.String@,System.String@,System.String@)">
             <summary>
@@ -377,7 +350,7 @@
                 AlertConfig constructor
             </summary>
         </member>
-        <member name="M:Lurgle.Alerting.AlertConfig.#ctor(Lurgle.Alerting.AlertConfig,System.String,System.String,System.Nullable{Lurgle.Alerting.RendererType},System.Nullable{Lurgle.Alerting.SenderType},System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String)">
+        <member name="M:Lurgle.Alerting.AlertConfig.#ctor(Lurgle.Alerting.AlertConfig,System.String,System.String,System.Nullable{Lurgle.Alerting.RendererType},System.Nullable{Lurgle.Alerting.SenderType},System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String)">
             <summary>
                 Constructor that permits passing a config and optional overrides of any property
             </summary>
@@ -397,6 +370,7 @@
             <param name="mailTimeout"></param>
             <param name="mailFrom"></param>
             <param name="mailTo"></param>
+            <param name="mailSubject"></param>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.AppName">
             <summary>
@@ -435,7 +409,7 @@
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailTestTimeout">
             <summary>
-            Interval in seconds for the SMTP test to timeout
+                Interval in seconds for the SMTP test to timeout
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailUseAuthentication">
@@ -471,6 +445,11 @@
         <member name="P:Lurgle.Alerting.AlertConfig.MailTo">
             <summary>
                 Default To address for emails. Must be set.
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.AlertConfig.MailSubject">
+            <summary>
+                Default subject for emails. Defaults to "Alert!"
             </summary>
         </member>
         <member name="M:Lurgle.Alerting.AlertConfig.GetConfig(Lurgle.Alerting.AlertConfig)">
@@ -540,11 +519,6 @@
                 Static Lurgle.Alerting instance that provides an interface to properties and methods for alerting
             </summary>
         </member>
-        <member name="F:Lurgle.Alerting.Alerting.DefaultSubject">
-            <summary>
-                Default alert subject if not specified
-            </summary>
-        </member>
         <member name="P:Lurgle.Alerting.Alerting.Config">
             <summary>
                 Current Lurgle.Alerting configuration
@@ -574,7 +548,7 @@
             <param name="emailAddress">Email address to resolve</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alerting.HasValidEmails(System.String[])">
+        <member name="M:Lurgle.Alerting.Alerting.HasValidEmails(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Attempt to resolve an array of email addresses as valid <see cref="T:System.Net.Mail.MailAddress" />
             </summary>
@@ -711,22 +685,13 @@
             </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.To(System.String[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.To(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-                Add an array of email addresses to the recipient field for the alert.
+                Add an list of email addresses to the recipient field for the alert.
                 <para />
                 As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
-            <param name="emailList">List of email addresses in array form</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.To(System.Collections.Generic.List{System.String})">
-            <summary>
-                Add a list of email addresses to the recipient  field for the alert
-                <para />
-                As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses as a List of type string</param>
+            <param name="emailList">List of email addresses</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.To(System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -758,22 +723,13 @@
             </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Cc(System.String[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Cc(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Add an array of email addresses to the CC field for the alert
                 <para />
                 As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses in array form</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Cc(System.Collections.Generic.List{System.String})">
-            <summary>
-                Add a list of email addresses to the CC field for the alert
-                <para />
-                As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses as a List of type string</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Cc(System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -805,22 +761,13 @@
             </param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Bcc(System.String[])">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Bcc(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Add an array of email addresses to the BCC field for this alert
                 <para />
                 As an optional parameter, this method will not add empty or null addresses to the email
             </summary>
             <param name="emailList">List of email addresses in array form</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Bcc(System.Collections.Generic.List{System.String})">
-            <summary>
-                Add a list of email addresses to the BCC field for this alert
-                <para />
-                As an optional parameter, this method will not add empty or null addresses to the email
-            </summary>
-            <param name="emailList">List of email addresses as a List of type string</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Bcc(System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -850,7 +797,7 @@
             <summary>
                 Set the subject for the alert email.
                 <para />
-                Passing an empty subjectText will use the <see cref="F:Lurgle.Alerting.Alerting.DefaultSubject" /> .
+                Passing an empty subjectText will use the <see cref="P:Lurgle.Alerting.AlertConfig.MailSubject" /> .
             </summary>
             <param name="subjectText">Subject to use for the email</param>
             <param name="args">Optional arguments for string replacement"</param>
@@ -890,7 +837,16 @@
             <param name="contentType">ContentType, if known (optional)</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.AttachInline(System.Collections.Generic.List{System.String},System.String)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Attach a list of files to the alert
+                <para />
+                If any file does not exist, it will be ignored
+            </summary>
+            <param name="fileList">List of paths to files that will be attached</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.AttachInline(System.Collections.Generic.IEnumerable{System.String},System.String)">
             <summary>
                 Attach an array of files to the alert as inline attachments
                 <para />
@@ -898,24 +854,6 @@
             </summary>
             <param name="fileList">Array of paths to files that will be attached</param>
             <param name="folderLocation">Path to folder containing files</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.String[])">
-            <summary>
-                Attach an array of files to the alert
-                <para />
-                If any file does not exist, it will be ignored
-            </summary>
-            <param name="fileList">Array of paths to files that will be attached</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.Collections.Generic.List{System.String})">
-            <summary>
-                Attach a list of files to the alert
-                <para />
-                If any file does not exist, it will be ignored
-            </summary>
-            <param name="fileList">List of paths to files that will be attached</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Send(System.String,System.Object[])">
