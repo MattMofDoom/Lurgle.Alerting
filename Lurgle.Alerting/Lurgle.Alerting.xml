@@ -192,6 +192,14 @@
             <param name="fileList">Array of paths to files that will be attached</param>
             <returns></returns>
         </member>
+        <member name="M:Lurgle.Alerting.Alert.Attach(System.IO.Stream,System.String)">
+            <summary>
+            Attach a file opened as a stream to the alert
+            </summary>
+            <param name="fileStream"></param>
+            <param name="fileName"></param>
+            <returns></returns>
+        </member>
         <member name="M:Lurgle.Alerting.Alert.AttachInline(System.Collections.Generic.IEnumerable{System.String},System.String)">
             <summary>
                 Attach an array of files to the alert as inline attachments
@@ -844,6 +852,14 @@
                 If any file does not exist, it will be ignored
             </summary>
             <param name="fileList">List of paths to files that will be attached</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.IO.Stream,System.String)">
+            <summary>
+            Attach a file opened as a stream to the alert
+            </summary>
+            <param name="fileStream"></param>
+            <param name="fileName"></param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.AttachInline(System.Collections.Generic.IEnumerable{System.String},System.String)">

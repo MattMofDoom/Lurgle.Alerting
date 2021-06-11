@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Fluent,Email,FluentEmail,Alert,Alerts,Alerting,Razor,Fluid,Liquid,Smtp,MailKit</PackageTags>
-    <Version>1.1.4</Version>
+    <Version>1.1.6</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <PackageReleaseNotes>- Add MailKit as default sender
@@ -24,7 +24,8 @@
 - Code refactor
 - Add AlertConfig constructor for passing config and optional overrides
 - Expose MailTestTimeout to allow configuring the SMTP mail host test timeout (or disable with 0)
-- Add MailSubject config to allow configuring a default subject</PackageReleaseNotes>
+- Add MailSubject config to allow configuring a default subject
+- Add sending an attachment from a stream</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
