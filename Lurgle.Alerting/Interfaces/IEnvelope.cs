@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
@@ -195,6 +196,14 @@ namespace Lurgle.Alerting.Interfaces
         /// <param name="fileList">List of paths to files that will be attached</param>
         /// <returns></returns>
         IEnvelope Attach(IEnumerable<string> fileList);
+
+        /// <summary>
+        /// Attach a file opened as a stream to the alert
+        /// </summary>
+        /// <param name="fileStream"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        IEnvelope Attach(Stream fileStream, string fileName);
 
         /// <summary>
         ///     Attach an array of files to the alert as inline attachments

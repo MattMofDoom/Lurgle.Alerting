@@ -380,6 +380,19 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
+        /// Attach a file opened as a stream to the alert
+        /// </summary>
+        /// <param name="fileStream"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public IEnvelope Attach(Stream fileStream, string fileName)
+        {
+            attachments.Add(new Attachment { Data = fileStream, Filename = fileName, ContentType = null});
+
+            return this;
+        }
+
+        /// <summary>
         ///     Attach an array of files to the alert as inline attachments
         ///     <para />
         ///     If any file does not exist, it will be ignored
