@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -16,6 +17,11 @@ using Attachment = FluentEmail.Core.Models.Attachment;
 
 namespace Lurgle.Alerting
 {
+    // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
+    // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable UnusedType.Global
+
     /// <summary>
     ///     Send an alert with Lurgle.Alerting
     /// </summary>
@@ -34,7 +40,7 @@ namespace Lurgle.Alerting
 
         private Alert()
         {
-            if (string.IsNullOrEmpty(subject)) subject = Alerting.DefaultSubject;
+            if (string.IsNullOrEmpty(subject)) subject = Alerting.Config.MailSubject;
         }
 
         private bool IsMethod { get; set; }
@@ -85,23 +91,7 @@ namespace Lurgle.Alerting
         /// </summary>
         /// <param name="emailList">List of email addresses in array form</param>
         /// <returns></returns>
-        public IEnvelope To(string[] emailList)
-        {
-            foreach (var toAddress in emailList)
-                if (!string.IsNullOrEmpty(toAddress))
-                    to.Add(new Address(GetEmailAddress(toAddress, AddressType.Email, IsDebug)));
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Add a list of email addresses to the recipient  field for the alert
-        ///     <para />
-        ///     As an optional parameter, this method will not add empty or null addresses to the email
-        /// </summary>
-        /// <param name="emailList">List of email addresses as a List of type string</param>
-        /// <returns></returns>
-        public IEnvelope To(List<string> emailList)
+        public IEnvelope To(IEnumerable<string> emailList)
         {
             foreach (var toAddress in emailList)
                 if (!string.IsNullOrEmpty(toAddress))
@@ -169,25 +159,7 @@ namespace Lurgle.Alerting
         /// </summary>
         /// <param name="emailList">List of email addresses in array form</param>
         /// <returns></returns>
-        public IEnvelope Cc(string[] emailList)
-        {
-            foreach (var ccAddress in emailList)
-            {
-                var emailAddress = GetEmailAddress(ccAddress, AddressType.Email, IsDebug);
-                if (!string.IsNullOrEmpty(emailAddress)) cc.Add(new Address(emailAddress));
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Add a list of email addresses to the CC field for the alert
-        ///     <para />
-        ///     As an optional parameter, this method will not add empty or null addresses to the email
-        /// </summary>
-        /// <param name="emailList">List of email addresses as a List of type string</param>
-        /// <returns></returns>
-        public IEnvelope Cc(List<string> emailList)
+        public IEnvelope Cc(IEnumerable<string> emailList)
         {
             foreach (var ccAddress in emailList)
             {
@@ -256,25 +228,7 @@ namespace Lurgle.Alerting
         /// </summary>
         /// <param name="emailList">List of email addresses in array form</param>
         /// <returns></returns>
-        public IEnvelope Bcc(string[] emailList)
-        {
-            foreach (var bccAddress in emailList)
-            {
-                var emailAddress = GetEmailAddress(bccAddress, AddressType.Email, IsDebug);
-                if (!string.IsNullOrEmpty(emailAddress)) bcc.Add(new Address(emailAddress));
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Add a list of email addresses to the <see cref="bcc" /> field for this alert
-        ///     <para />
-        ///     As an optional parameter, this method will not add empty or null addresses to the email
-        /// </summary>
-        /// <param name="emailList">List of email addresses as a List of type string</param>
-        /// <returns></returns>
-        public IEnvelope Bcc(List<string> emailList)
+        public IEnvelope Bcc(IEnumerable<string> emailList)
         {
             foreach (var bccAddress in emailList)
             {
@@ -294,11 +248,10 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         public IEnvelope Bcc(Dictionary<string, string> emailList)
         {
-            foreach (var email in emailList)
-            {
-                var emailAddress = GetEmailAddress(email.Key, AddressType.Email, IsDebug);
-                if (!string.IsNullOrEmpty(emailAddress)) bcc.Add(new Address(email.Key, email.Value));
-            }
+            foreach (var email in from email in emailList
+                let emailAddress = GetEmailAddress(email.Key, AddressType.Email, IsDebug)
+                where !string.IsNullOrEmpty(emailAddress)
+                select email) bcc.Add(new Address(email.Key, email.Value));
 
             return this;
         }
@@ -330,7 +283,7 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     Set the subject for the alert email.
         ///     <para />
-        ///     Passing an empty subjectText will use the <see cref="Alerting.DefaultSubject" /> .
+        ///     Passing an empty subjectText will use the <see cref="AlertConfig.MailSubject" /> .
         /// </summary>
         /// <param name="subjectText">Subject to use for the email</param>
         /// <param name="args">Optional arguments for string replacement"</param>
@@ -338,7 +291,7 @@ namespace Lurgle.Alerting
         public IEnvelope Subject(string subjectText = null, params object[] args)
         {
             if (string.IsNullOrEmpty(subjectText))
-                subject = Alerting.DefaultSubject;
+                subject = Alerting.Config.MailSubject;
             else if (!string.IsNullOrEmpty(subjectText) && !args.Length.Equals(0))
                 subject = string.Format(subjectText, args);
             else
@@ -380,12 +333,10 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         public IEnvelope AddAlternateView(string messageBody, List<LinkedResource> linkedResourceList)
         {
-            if (!string.IsNullOrEmpty(messageBody) && linkedResourceList.Count > 0)
-            {
-                alternateView =
-                    AlternateView.CreateAlternateViewFromString(messageBody, null, MediaTypeNames.Text.Html);
-                foreach (var linkedResource in linkedResourceList) alternateView.LinkedResources.Add(linkedResource);
-            }
+            if (string.IsNullOrEmpty(messageBody) || linkedResourceList.Count <= 0) return this;
+            alternateView =
+                AlternateView.CreateAlternateViewFromString(messageBody, null, MediaTypeNames.Text.Html);
+            foreach (var linkedResource in linkedResourceList) alternateView.LinkedResources.Add(linkedResource);
 
             return this;
         }
@@ -400,12 +351,30 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         public IEnvelope Attach(string filePath, string contentType = null)
         {
-            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-            {
-                var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-                attachments.Add(new Attachment
-                    {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = contentType});
-            }
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) return this;
+            var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
+            attachments.Add(new Attachment
+                {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = contentType});
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Attach an array of files to the alert
+        ///     <para />
+        ///     If any file does not exist, it will be ignored
+        /// </summary>
+        /// <param name="fileList">Array of paths to files that will be attached</param>
+        /// <returns></returns>
+        public IEnvelope Attach(IEnumerable<string> fileList)
+        {
+            foreach (var filePath in fileList)
+                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                {
+                    var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
+                    attachments.Add(new Attachment
+                        {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = null});
+                }
 
             return this;
         }
@@ -418,64 +387,21 @@ namespace Lurgle.Alerting
         /// <param name="fileList">Array of paths to files that will be attached</param>
         /// <param name="folderLocation">Path to folder containing files</param>
         /// <returns></returns>
-        public IEnvelope AttachInline(List<string> fileList, string folderLocation)
+        public IEnvelope AttachInline(IEnumerable<string> fileList, string folderLocation)
         {
             foreach (var inlineFile in fileList)
             {
                 GetInlineFile(inlineFile, folderLocation, out var contentId, out var filePath, out var contentType);
 
-                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) continue;
+                var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
+                var fileName = Path.GetFileName(filePath);
+                attachments.Add(new Attachment
                 {
-                    var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-                    var fileName = Path.GetFileName(filePath);
-                    attachments.Add(new Attachment
-                    {
-                        Data = attachment, Filename = fileName, ContentType = contentType, IsInline = true,
-                        ContentId = contentId
-                    });
-                }
+                    Data = attachment, Filename = fileName, ContentType = contentType, IsInline = true,
+                    ContentId = contentId
+                });
             }
-
-            return this;
-        }
-
-
-        /// <summary>
-        ///     Attach an array of files to the alert
-        ///     <para />
-        ///     If any file does not exist, it will be ignored
-        /// </summary>
-        /// <param name="fileList">Array of paths to files that will be attached</param>
-        /// <returns></returns>
-        public IEnvelope Attach(string[] fileList)
-        {
-            foreach (var filePath in fileList)
-                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-                {
-                    var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-                    attachments.Add(new Attachment
-                        {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = null});
-                }
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Attach a list of files to the alert
-        ///     <para />
-        ///     If any file does not exist, it will be ignored
-        /// </summary>
-        /// <param name="fileList">List of paths to files that will be attached</param>
-        /// <returns></returns>
-        public IEnvelope Attach(List<string> fileList)
-        {
-            foreach (var filePath in fileList)
-                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-                {
-                    var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-                    attachments.Add(new Attachment
-                        {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = null});
-                }
 
             return this;
         }
@@ -768,6 +694,26 @@ namespace Lurgle.Alerting
             return result.Successful;
         }
 
+        /// <summary>
+        ///     Attach a list of files to the alert
+        ///     <para />
+        ///     If any file does not exist, it will be ignored
+        /// </summary>
+        /// <param name="fileList">List of paths to files that will be attached</param>
+        /// <returns></returns>
+        public IEnvelope Attach(List<string> fileList)
+        {
+            foreach (var filePath in fileList)
+                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                {
+                    var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
+                    attachments.Add(new Attachment
+                        {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = null});
+                }
+
+            return this;
+        }
+
         private static ISender GetSender()
         {
             switch (Alerting.Config.MailSender)
@@ -817,16 +763,14 @@ namespace Lurgle.Alerting
             filePath = string.Empty;
             contentType = string.Empty;
 
-            if (!string.IsNullOrEmpty(inlineFile))
-            {
-                var fileId = inlineFile.Split('=');
+            if (string.IsNullOrEmpty(inlineFile)) return;
+            var fileId = inlineFile.Split('=');
 
-                contentId = fileId[0];
-                filePath = fileId[1];
-                contentType = fileId[2];
+            contentId = fileId[0];
+            filePath = fileId[1];
+            contentType = fileId[2];
 
-                filePath = Path.Combine(folderLocation, filePath);
-            }
+            filePath = Path.Combine(folderLocation, filePath);
         }
 
         /// <summary>
@@ -881,7 +825,7 @@ namespace Lurgle.Alerting
             string emailAddress;
 
             if (string.IsNullOrEmpty(fromAddress))
-                emailAddress = Alerting.Config.MailFrom;
+                emailAddress = Alerting.Config?.MailFrom;
             else if (addressType.Equals(AddressType.FromConfig))
                 emailAddress = AlertConfig.GetEmailConfig(fromAddress);
             else
@@ -919,34 +863,30 @@ namespace Lurgle.Alerting
         /// <param name="isMethod">Add the calling method to the message text if using <see cref="Send" /> to send an email</param>
         /// <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
         /// <returns></returns>
-        // ReSharper disable once MethodOverloadWithOptionalParameter
         public static IEnvelope To(string toAddress = null, string toName = null,
+            // ReSharper disable once MethodOverloadWithOptionalParameter
             AddressType addressType = AddressType.Email, bool isDebug = false, bool isMethod = false,
             [CallerMemberName] string methodName = null)
         {
             if (Alerting.Config == null) Alerting.Init();
 
             var emailAddress = string.IsNullOrEmpty(toAddress)
-                ? GetEmailAddress(Alerting.Config.MailTo, AddressType.Email, isDebug)
+                ? GetEmailAddress(Alerting.Config?.MailTo, AddressType.Email, isDebug)
                 : GetEmailAddress(toAddress, addressType, isDebug);
 
             var emailList = string.Join(",", emailAddress.Split(';')).Split(',');
 
             var toList = new List<Address>();
             if (emailList.Length > 1)
-            {
-                foreach (var toEmail in emailList)
-                    if (!string.IsNullOrEmpty(toEmail))
-                        toList.Add(new Address(toEmail));
-            }
+                toList.AddRange(from toEmail in emailList
+                    where !string.IsNullOrEmpty(toEmail)
+                    select new Address(toEmail));
             else
-            {
                 toList.Add(new Address(emailAddress, toName));
-            }
 
             return new Alert
             {
-                from = new Address(Alerting.Config.MailFrom), to = toList, MethodName = methodName, IsDebug = isDebug,
+                from = new Address(Alerting.Config?.MailFrom), to = toList, MethodName = methodName, IsDebug = isDebug,
                 IsMethod = isMethod
             };
         }

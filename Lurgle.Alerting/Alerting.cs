@@ -1,4 +1,6 @@
-﻿using System.Net.Mail;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text.Encodings.Web;
 using FluentEmail.Core;
@@ -15,10 +17,9 @@ namespace Lurgle.Alerting
     /// </summary>
     public static class Alerting
     {
-        /// <summary>
-        ///     Default alert subject if not specified
-        /// </summary>
-        public const string DefaultSubject = "Alert!";
+        // ReSharper disable MemberCanBePrivate.Global
+        // ReSharper disable UnusedMember.Global
+        // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
         /// <summary>
         ///     Current Lurgle.Alerting configuration
@@ -56,6 +57,7 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     Initialise alerting and test availability of SMTP
         /// </summary>
+        // ReSharper disable once UnusedMethodReturnValue.Global
         public static InitResult Init()
         {
             if (Config == null) SetConfig();
@@ -70,13 +72,13 @@ namespace Lurgle.Alerting
         public static bool TestSmtp()
         {
             //If MailTestTimeout is 0, the test is disabled
-            if (Alerting.Config.MailTestTimeout.Equals(0))
+            if (Config.MailTestTimeout.Equals(0))
                 return true;
-            
+
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             var result = socket.BeginConnect(Config.MailHost, Config.MailPort, null, null);
-            // Five second timeout
-            var isSuccess = result.AsyncWaitHandle.WaitOne(Alerting.Config.MailTestTimeout, true);
+            // X second timeout
+            var isSuccess = result.AsyncWaitHandle.WaitOne(Config.MailTestTimeout, true);
             socket.Close();
 
             return isSuccess;
@@ -92,7 +94,7 @@ namespace Lurgle.Alerting
             //Make sure email address is valid
             try
             {
-                var mailAddress = new MailAddress(emailAddress);
+                var unused = new MailAddress(emailAddress);
             }
             catch
             {
@@ -107,14 +109,10 @@ namespace Lurgle.Alerting
         /// </summary>
         /// <param name="emailAddresses">Array of email addresses to resolve</param>
         /// <returns></returns>
-        public static bool HasValidEmails(string[] emailAddresses)
+        public static bool HasValidEmails(IEnumerable<string> emailAddresses)
         {
             //Make sure email addresses are valid
-            foreach (var emailAddress in emailAddresses)
-                if (!IsValidEmail(emailAddress))
-                    return false;
-
-            return true;
+            return emailAddresses.All(IsValidEmail);
         }
 
         /// <summary>
