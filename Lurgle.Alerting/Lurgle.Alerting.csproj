@@ -23,7 +23,8 @@
 - Add XML docs
 - Code refactor
 - Add AlertConfig constructor for passing config and optional overrides
-- Expose MailTestTimeout to allow configuring the SMTP mail host test timeout (or disable with 0)</PackageReleaseNotes>
+- Expose MailTestTimeout to allow configuring the SMTP mail host test timeout (or disable with 0)
+- Add MailSubject config to allow configuring a default subject</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
