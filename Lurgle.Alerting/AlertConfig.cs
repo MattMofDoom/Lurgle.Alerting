@@ -43,6 +43,7 @@ namespace Lurgle.Alerting
         /// <param name="mailTimeout"></param>
         /// <param name="mailFrom"></param>
         /// <param name="mailTo"></param>
+        /// <param name="mailDebug"></param>
         /// <param name="mailSubject"></param>
         public AlertConfig(AlertConfig config = null, string appName = null, string appVersion = null,
             RendererType? mailRenderer = null,
@@ -50,7 +51,7 @@ namespace Lurgle.Alerting
             int? mailPort = null, int? mailTestTimeout = null, bool? mailUseAuthentication = null,
             string mailUsername = null,
             string mailPassword = null, bool? mailUseTls = null, int? mailTimeout = null, string mailFrom = null,
-            string mailTo = null, string mailSubject = null)
+            string mailTo = null, string mailDebug = null, string mailSubject = null)
         {
             if (config != null)
             {
@@ -69,6 +70,7 @@ namespace Lurgle.Alerting
                 MailTimeout = config.MailTimeout;
                 MailFrom = config.MailFrom;
                 MailTo = config.MailTo;
+                MailDebug = config.MailDebug;
                 MailSubject = config.MailSubject;
             }
 
@@ -102,6 +104,8 @@ namespace Lurgle.Alerting
                 MailFrom = mailFrom;
             if (!string.IsNullOrEmpty(mailTo))
                 MailTo = mailTo;
+            if (!string.IsNullOrEmpty(mailDebug))
+                MailDebug = mailDebug;
             if (!string.IsNullOrEmpty(mailSubject))
                 MailSubject = mailSubject;
 
@@ -200,6 +204,11 @@ namespace Lurgle.Alerting
         public string MailTo { get; private set; }
 
         /// <summary>
+        ///     Default recipient address to substitute if IsDebug is enabled.
+        /// </summary>
+        public string MailDebug { get; private set; }
+
+        /// <summary>
         ///     Default subject for emails. Defaults to "Alert!"
         /// </summary>
         public string MailSubject { get; private set; }
@@ -229,6 +238,7 @@ namespace Lurgle.Alerting
                     MailTimeout = GetTimeout(ConfigurationManager.AppSettings["MailTimeout"]),
                     MailFrom = ConfigurationManager.AppSettings["MailFrom"],
                     MailTo = ConfigurationManager.AppSettings["MailTo"],
+                    MailDebug = ConfigurationManager.AppSettings["MailDebug"],
                     MailSubject = ConfigurationManager.AppSettings["MailSubject"]
                 };
             else

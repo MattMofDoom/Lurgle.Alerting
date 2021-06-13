@@ -22,6 +22,11 @@ namespace Lurgle.Alerting
         // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
         /// <summary>
+        ///     If enabled, recipient addresses will be substituted with the configured debug address
+        /// </summary>
+        public static bool IsDebug { get; private set; }
+
+        /// <summary>
         ///     Current Lurgle.Alerting configuration
         /// </summary>
         public static AlertConfig Config { get; private set; }
@@ -53,6 +58,14 @@ namespace Lurgle.Alerting
             }
         }
 
+        /// <summary>
+        ///     Enable debug mode for email substitution
+        /// </summary>
+        /// <param name="isDebug"></param>
+        public static void SetDebug(bool isDebug)
+        {
+            IsDebug = isDebug;
+        }
 
         /// <summary>
         ///     Initialise alerting and test availability of SMTP
@@ -82,6 +95,30 @@ namespace Lurgle.Alerting
             socket.Close();
 
             return isSuccess;
+        }
+
+        /// <summary>
+        ///     Resolve email addresses using the given <see cref="AddressType" />
+        ///     <para />
+        ///     If isDebug is true, emails will automatically be replaced with the configured debug email address.
+        ///     <para />
+        /// </summary>
+        /// <param name="emailType">Email config item or email address</param>
+        /// <param name="addressType">Type of email being passed</param>
+        /// <returns></returns>
+        public static string GetEmailAddress(string emailType, AddressType addressType = AddressType.Email)
+        {
+            //If we have an empty string, we won't be able to resolve this, so return an empty string
+            if (string.IsNullOrEmpty(emailType)) return string.Empty;
+
+            var emailAddress = addressType.Equals(AddressType.FromConfig)
+                ? AlertConfig.GetEmailConfig(emailType)
+                : emailType;
+
+            //Automatically substitute for a debug email address if the debug flag is set
+            if (IsDebug) return Config.MailDebug;
+
+            return emailAddress;
         }
 
         /// <summary>

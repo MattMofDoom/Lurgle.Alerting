@@ -44,7 +44,6 @@ namespace Lurgle.Alerting
         }
 
         private bool IsMethod { get; set; }
-        private bool IsDebug { get; set; }
         private string MethodName { get; set; }
 
         /// <summary>
@@ -70,8 +69,8 @@ namespace Lurgle.Alerting
         public IEnvelope To(string toAddress, string toName = null, AddressType addressType = AddressType.Email)
         {
             var emailAddress = string.IsNullOrEmpty(toAddress)
-                ? GetEmailAddress(Alerting.Config.MailTo, AddressType.Email, IsDebug)
-                : GetEmailAddress(toAddress, addressType, IsDebug);
+                ? Alerting.GetEmailAddress(Alerting.Config.MailTo, addressType)
+                : Alerting.GetEmailAddress(toAddress, addressType);
 
             {
                 var emailList = string.Join(",", emailAddress.Split(';')).Split(',');
@@ -95,7 +94,7 @@ namespace Lurgle.Alerting
         {
             foreach (var toAddress in emailList)
                 if (!string.IsNullOrEmpty(toAddress))
-                    to.Add(new Address(GetEmailAddress(toAddress, AddressType.Email, IsDebug)));
+                    to.Add(new Address(Alerting.GetEmailAddress(toAddress)));
 
             return this;
         }
@@ -112,7 +111,7 @@ namespace Lurgle.Alerting
             foreach (var email in emailList)
                 if (!string.IsNullOrEmpty(email.Key))
                 {
-                    var emailAddress = GetEmailAddress(email.Key, AddressType.Email, IsDebug);
+                    var emailAddress = Alerting.GetEmailAddress(email.Key);
                     if (!string.IsNullOrEmpty(emailAddress)) to.Add(new Address(emailAddress, email.Value));
                 }
 
@@ -146,7 +145,7 @@ namespace Lurgle.Alerting
                 if (emailList.Length > 1) return Cc(emailList);
             }
 
-            var emailAddress = GetEmailAddress(ccAddress, addressType, IsDebug);
+            var emailAddress = Alerting.GetEmailAddress(ccAddress, addressType);
             if (!string.IsNullOrEmpty(emailAddress)) cc.Add(new Address(emailAddress, ccName));
 
             return this;
@@ -163,7 +162,7 @@ namespace Lurgle.Alerting
         {
             foreach (var ccAddress in emailList)
             {
-                var emailAddress = GetEmailAddress(ccAddress, AddressType.Email, IsDebug);
+                var emailAddress = Alerting.GetEmailAddress(ccAddress);
                 if (!string.IsNullOrEmpty(emailAddress)) cc.Add(new Address(emailAddress));
             }
 
@@ -181,7 +180,7 @@ namespace Lurgle.Alerting
         {
             foreach (var email in emailList)
             {
-                var emailAddress = GetEmailAddress(email.Key, AddressType.Email, IsDebug);
+                var emailAddress = Alerting.GetEmailAddress(email.Key);
                 if (!string.IsNullOrEmpty(emailAddress)) cc.Add(new Address(emailAddress, email.Value));
             }
 
@@ -215,7 +214,7 @@ namespace Lurgle.Alerting
                 if (emailList.Length > 1) return Bcc(emailList);
             }
 
-            var emailAddress = GetEmailAddress(bccAddress, addressType, IsDebug);
+            var emailAddress = Alerting.GetEmailAddress(bccAddress, addressType);
             if (!string.IsNullOrEmpty(emailAddress)) bcc.Add(new Address(emailAddress, bccName));
 
             return this;
@@ -232,7 +231,7 @@ namespace Lurgle.Alerting
         {
             foreach (var bccAddress in emailList)
             {
-                var emailAddress = GetEmailAddress(bccAddress, AddressType.Email, IsDebug);
+                var emailAddress = Alerting.GetEmailAddress(bccAddress);
                 if (!string.IsNullOrEmpty(emailAddress)) bcc.Add(new Address(emailAddress));
             }
 
@@ -249,7 +248,7 @@ namespace Lurgle.Alerting
         public IEnvelope Bcc(Dictionary<string, string> emailList)
         {
             foreach (var email in from email in emailList
-                let emailAddress = GetEmailAddress(email.Key, AddressType.Email, IsDebug)
+                let emailAddress = Alerting.GetEmailAddress(email.Key)
                 where !string.IsNullOrEmpty(emailAddress)
                 select email) bcc.Add(new Address(email.Key, email.Value));
 
@@ -272,8 +271,8 @@ namespace Lurgle.Alerting
             AddressType addressType = AddressType.Email)
         {
             var emailAddress = string.IsNullOrEmpty(replyToAddress)
-                ? GetEmailAddress(Alerting.Config.MailFrom, AddressType.Email, IsDebug)
-                : GetEmailAddress(replyToAddress, addressType, IsDebug);
+                ? Alerting.GetEmailAddress(Alerting.Config.MailFrom, addressType)
+                : Alerting.GetEmailAddress(replyToAddress, addressType);
 
             if (!string.IsNullOrEmpty(emailAddress)) replyTo = new Address(emailAddress, replyToName);
 
@@ -380,14 +379,14 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Attach a file opened as a stream to the alert
+        ///     Attach a file opened as a stream to the alert
         /// </summary>
         /// <param name="fileStream"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
         public IEnvelope Attach(Stream fileStream, string fileName)
         {
-            attachments.Add(new Attachment { Data = fileStream, Filename = fileName, ContentType = null});
+            attachments.Add(new Attachment {Data = fileStream, Filename = fileName, ContentType = null});
 
             return this;
         }
@@ -787,31 +786,6 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        ///     Resolve email addresses using the given <see cref="AddressType" />
-        ///     <para />
-        ///     If isDebug is true, emails will automatically be replaced with the configured debug email address.
-        ///     <para />
-        /// </summary>
-        /// <param name="emailType">Email config item or email address</param>
-        /// <param name="addressType">Type of email being passed</param>
-        /// <param name="isDebug">If true, emails will be replaced with the default <see cref="AlertConfig.MailTo" /></param>
-        /// <returns></returns>
-        private static string GetEmailAddress(string emailType, AddressType addressType, bool isDebug)
-        {
-            //If we have an empty string, we won't be able to resolve this, so return an empty string
-            if (string.IsNullOrEmpty(emailType)) return string.Empty;
-
-            var emailAddress = addressType.Equals(AddressType.FromConfig)
-                ? AlertConfig.GetEmailConfig(emailType)
-                : emailType;
-
-            //Automatically substitute for a debug email address if the debug flag is set
-            if (isDebug) emailAddress = AlertConfig.GetEmailConfig("emailDebug");
-
-            return emailAddress;
-        }
-
-        /// <summary>
         ///     Instantiate a new email with the desired From address.
         ///     <para />
         ///     Uses <see cref="AlertConfig.MailFrom" /> if an email is not specified.
@@ -846,8 +820,7 @@ namespace Lurgle.Alerting
 
             return new Alert
             {
-                from = new Address(emailAddress, fromName), MethodName = methodName, IsDebug = isDebug,
-                IsMethod = isMethod
+                from = new Address(emailAddress, fromName), MethodName = methodName, IsMethod = isMethod
             };
         }
 
@@ -884,8 +857,8 @@ namespace Lurgle.Alerting
             if (Alerting.Config == null) Alerting.Init();
 
             var emailAddress = string.IsNullOrEmpty(toAddress)
-                ? GetEmailAddress(Alerting.Config?.MailTo, AddressType.Email, isDebug)
-                : GetEmailAddress(toAddress, addressType, isDebug);
+                ? Alerting.GetEmailAddress(Alerting.Config?.MailTo)
+                : Alerting.GetEmailAddress(toAddress, addressType);
 
             var emailList = string.Join(",", emailAddress.Split(';')).Split(',');
 
@@ -899,8 +872,7 @@ namespace Lurgle.Alerting
 
             return new Alert
             {
-                from = new Address(Alerting.Config?.MailFrom), to = toList, MethodName = methodName, IsDebug = isDebug,
-                IsMethod = isMethod
+                from = new Address(Alerting.Config?.MailFrom), to = toList, MethodName = methodName, IsMethod = isMethod
             };
         }
     }

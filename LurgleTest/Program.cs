@@ -43,7 +43,9 @@ namespace LurgleTest
                     Alerting.Config.MailUseTls,
                     MailTimeout = Alerting.Config.MailTimeout / 1000,
                     Alerting.Config.MailFrom,
-                    Alerting.Config.MailTo
+                    Alerting.Config.MailTo,
+                    Alerting.Config.MailDebug,
+                    Alerting.Config.MailSubject
                 });
             }
         }

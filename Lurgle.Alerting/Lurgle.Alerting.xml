@@ -194,7 +194,7 @@
         </member>
         <member name="M:Lurgle.Alerting.Alert.Attach(System.IO.Stream,System.String)">
             <summary>
-            Attach a file opened as a stream to the alert
+                Attach a file opened as a stream to the alert
             </summary>
             <param name="fileStream"></param>
             <param name="fileName"></param>
@@ -289,18 +289,6 @@
             <param name="filePath"></param>
             <param name="contentType"></param>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.GetEmailAddress(System.String,Lurgle.Alerting.AddressType,System.Boolean)">
-            <summary>
-                Resolve email addresses using the given <see cref="T:Lurgle.Alerting.AddressType" />
-                <para />
-                If isDebug is true, emails will automatically be replaced with the configured debug email address.
-                <para />
-            </summary>
-            <param name="emailType">Email config item or email address</param>
-            <param name="addressType">Type of email being passed</param>
-            <param name="isDebug">If true, emails will be replaced with the default <see cref="P:Lurgle.Alerting.AlertConfig.MailTo" /></param>
-            <returns></returns>
-        </member>
         <member name="M:Lurgle.Alerting.Alert.From(System.String,System.String,Lurgle.Alerting.AddressType,System.Boolean,System.Boolean,System.String)">
             <summary>
                 Instantiate a new email with the desired From address.
@@ -358,7 +346,7 @@
                 AlertConfig constructor
             </summary>
         </member>
-        <member name="M:Lurgle.Alerting.AlertConfig.#ctor(Lurgle.Alerting.AlertConfig,System.String,System.String,System.Nullable{Lurgle.Alerting.RendererType},System.Nullable{Lurgle.Alerting.SenderType},System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String)">
+        <member name="M:Lurgle.Alerting.AlertConfig.#ctor(Lurgle.Alerting.AlertConfig,System.String,System.String,System.Nullable{Lurgle.Alerting.RendererType},System.Nullable{Lurgle.Alerting.SenderType},System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
             <summary>
                 Constructor that permits passing a config and optional overrides of any property
             </summary>
@@ -378,6 +366,7 @@
             <param name="mailTimeout"></param>
             <param name="mailFrom"></param>
             <param name="mailTo"></param>
+            <param name="mailDebug"></param>
             <param name="mailSubject"></param>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.AppName">
@@ -455,6 +444,11 @@
                 Default To address for emails. Must be set.
             </summary>
         </member>
+        <member name="P:Lurgle.Alerting.AlertConfig.MailDebug">
+            <summary>
+                Default recipient address to substitute if IsDebug is enabled.
+            </summary>
+        </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailSubject">
             <summary>
                 Default subject for emails. Defaults to "Alert!"
@@ -527,6 +521,11 @@
                 Static Lurgle.Alerting instance that provides an interface to properties and methods for alerting
             </summary>
         </member>
+        <member name="P:Lurgle.Alerting.Alerting.IsDebug">
+            <summary>
+                If enabled, recipient addresses will be substituted with the configured debug address
+            </summary>
+        </member>
         <member name="P:Lurgle.Alerting.Alerting.Config">
             <summary>
                 Current Lurgle.Alerting configuration
@@ -538,6 +537,12 @@
             </summary>
             <param name="alertConfig"></param>
         </member>
+        <member name="M:Lurgle.Alerting.Alerting.SetDebug(System.Boolean)">
+            <summary>
+                Enable debug mode for email substitution
+            </summary>
+            <param name="isDebug"></param>
+        </member>
         <member name="M:Lurgle.Alerting.Alerting.Init">
             <summary>
                 Initialise alerting and test availability of SMTP
@@ -547,6 +552,17 @@
             <summary>
                 Test that the SMTP server is reachable
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Alerting.GetEmailAddress(System.String,Lurgle.Alerting.AddressType)">
+            <summary>
+                Resolve email addresses using the given <see cref="T:Lurgle.Alerting.AddressType" />
+                <para />
+                If isDebug is true, emails will automatically be replaced with the configured debug email address.
+                <para />
+            </summary>
+            <param name="emailType">Email config item or email address</param>
+            <param name="addressType">Type of email being passed</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alerting.IsValidEmail(System.String)">
@@ -856,7 +872,7 @@
         </member>
         <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.IO.Stream,System.String)">
             <summary>
-            Attach a file opened as a stream to the alert
+                Attach a file opened as a stream to the alert
             </summary>
             <param name="fileStream"></param>
             <param name="fileName"></param>
