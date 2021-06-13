@@ -116,9 +116,7 @@ namespace Lurgle.Alerting
                 : emailType;
 
             //Automatically substitute for a debug email address if the debug flag is set
-            if (IsDebug) return Config.MailDebug;
-
-            return emailAddress;
+            return IsDebug ? Config.MailDebug : emailAddress;
         }
 
         /// <summary>

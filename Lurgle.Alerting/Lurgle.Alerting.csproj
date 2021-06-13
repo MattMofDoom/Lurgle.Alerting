@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Fluent,Email,FluentEmail,Alert,Alerts,Alerting,Razor,Fluid,Liquid,Smtp,MailKit</PackageTags>
-    <Version>1.1.7</Version>
+    <Version>1.1.8</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <PackageReleaseNotes>- Add MailKit as default sender

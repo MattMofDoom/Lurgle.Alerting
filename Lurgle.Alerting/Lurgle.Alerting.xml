@@ -289,7 +289,7 @@
             <param name="filePath"></param>
             <param name="contentType"></param>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.From(System.String,System.String,Lurgle.Alerting.AddressType,System.Boolean,System.Boolean,System.String)">
+        <member name="M:Lurgle.Alerting.Alert.From(System.String,System.String,Lurgle.Alerting.AddressType,System.Boolean,System.String)">
             <summary>
                 Instantiate a new email with the desired From address.
                 <para />
@@ -301,15 +301,11 @@
                 Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
                 <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
             </param>
-            <param name="isDebug">
-                If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default
-                <see cref="P:Lurgle.Alerting.AlertConfig.MailTo" /> email
-            </param>
             <param name="isMethod">Add the calling method to the message text if using <see cref="M:Lurgle.Alerting.Alert.Send(System.String,System.Object[])" /> to send an email</param>
             <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.To(System.String,System.String,Lurgle.Alerting.AddressType,System.Boolean,System.Boolean,System.String)">
+        <member name="M:Lurgle.Alerting.Alert.To(System.String,System.String,Lurgle.Alerting.AddressType,System.Boolean,System.String)">
             <summary>
                 Instantiate a new Alert class using the default from address and specified toAddress. You can chain additional
                 recipients to this.
@@ -327,10 +323,6 @@
             <param name="addressType">
                 Type of email address - defaults to <see cref="F:Lurgle.Alerting.AddressType.Email" /> but accepts
                 <see cref="F:Lurgle.Alerting.AddressType.FromConfig" /> to read from config
-            </param>
-            <param name="isDebug">
-                If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default
-                <see cref="P:Lurgle.Alerting.AlertConfig.MailTo" /> email
             </param>
             <param name="isMethod">Add the calling method to the message text if using <see cref="M:Lurgle.Alerting.Alert.Send(System.String,System.Object[])" /> to send an email</param>
             <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>

@@ -796,15 +796,11 @@ namespace Lurgle.Alerting
         ///     Type of email address - defaults to <see cref="AddressType.Email" /> but accepts
         ///     <see cref="AddressType.FromConfig" /> to read from config
         /// </param>
-        /// <param name="isDebug">
-        ///     If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default
-        ///     <see cref="AlertConfig.MailTo" /> email
-        /// </param>
         /// <param name="isMethod">Add the calling method to the message text if using <see cref="Send" /> to send an email</param>
         /// <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
         /// <returns></returns>
         public static IEnvelope From(string fromAddress = null, string fromName = null,
-            AddressType addressType = AddressType.Email, bool isDebug = false, bool isMethod = false,
+            AddressType addressType = AddressType.Email, bool isMethod = false,
             [CallerMemberName] string methodName = null)
         {
             if (Alerting.Config == null) Alerting.Init();
@@ -842,16 +838,12 @@ namespace Lurgle.Alerting
         ///     Type of email address - defaults to <see cref="AddressType.Email" /> but accepts
         ///     <see cref="AddressType.FromConfig" /> to read from config
         /// </param>
-        /// <param name="isDebug">
-        ///     If set to True, To, Cc, Bcc, and ReplyTo addresses will be overridden with the default
-        ///     <see cref="AlertConfig.MailTo" /> email
-        /// </param>
         /// <param name="isMethod">Add the calling method to the message text if using <see cref="Send" /> to send an email</param>
         /// <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
         /// <returns></returns>
         public static IEnvelope To(string toAddress = null, string toName = null,
             // ReSharper disable once MethodOverloadWithOptionalParameter
-            AddressType addressType = AddressType.Email, bool isDebug = false, bool isMethod = false,
+            AddressType addressType = AddressType.Email, bool isMethod = false,
             [CallerMemberName] string methodName = null)
         {
             if (Alerting.Config == null) Alerting.Init();
