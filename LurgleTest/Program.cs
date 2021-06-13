@@ -24,11 +24,9 @@ namespace LurgleTest
                 Alert.To().Subject("Test").Send("Can you fix it?");
                 Console.WriteLine("Send Razor template ...");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Razor));
-                Alerting.SetConfig(Alerting.Config);
                 Alert.To().Subject("Test Razor Template").SendTemplateFile("Razor", new { });
                 Console.WriteLine("Send Liquid template ...");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Liquid));
-                Alerting.SetConfig(Alerting.Config);
                 Alert.To().Subject("Test Liquid Template").SendTemplateFile("Liquid", new
                 {
                     Alerting.Config.AppName,
