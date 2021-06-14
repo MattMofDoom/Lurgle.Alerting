@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Fluent,Email,FluentEmail,Alert,Alerts,Alerting,Razor,Fluid,Liquid,Smtp,MailKit</PackageTags>
-    <Version>1.1.8</Version>
+    <Version>1.1.9</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <PackageReleaseNotes>- Add MailKit as default sender
@@ -27,11 +27,16 @@
 - Add MailSubject config to allow configuring a default subject
 - Add sending an attachment from a stream
 - Add Alerting.SetDebug for global debug mode
-- Add MailDebug setting</PackageReleaseNotes>
+- Add MailDebug setting
+- Consistently handle comma delimited email address strings
+- Filter out invalid email addresses
+- Validate default MailHost, From, To, Debug, Subject configs and return results to Alerting.AlertFailures</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyVersion>1.1.9.0</AssemblyVersion>
+    <FileVersion>1.1.9.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">

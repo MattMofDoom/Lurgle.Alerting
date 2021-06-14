@@ -14,9 +14,9 @@ namespace LurgleTest
             ServicePointManager.ServerCertificateValidationCallback += ValidateCertificate;
             var initResult = Alerting.Init();
 
-            if (!initResult.Equals(InitResult.Success))
+            if (!initResult)
             {
-                Console.WriteLine("Error! Init failed with {0}", initResult);
+                Console.WriteLine("Error! Init failed with {0}", string.Join(",", Alerting.AlertFailures.ToArray()));
             }
             else
             {
@@ -47,6 +47,14 @@ namespace LurgleTest
                     Alerting.Config.MailDebug,
                     Alerting.Config.MailSubject
                 });
+                Console.WriteLine("Test sending with no subject");
+                Alert.To().Send("Test No Subject");
+                Console.WriteLine("Test FromConfig ...");
+                Alert.To("EmailTest", addressType: AddressType.FromConfig).Subject("Test FromConfig")
+                    .Send("Pre-configured email address");
+                Console.WriteLine("Test Debug mode ...");
+                Alerting.SetDebug(true);
+                Alert.To().Subject("Test Debug").Send("Aaaah it's a debug mode");
             }
         }
 

@@ -270,6 +270,14 @@
             <param name="templateModel">The Model to apply to this  template</param>
             <param name="html"></param>
         </member>
+        <member name="M:Lurgle.Alerting.Alert.ToAddressList(System.String,System.String)">
+            <summary>
+                Return a list of valid email addresses
+            </summary>
+            <param name="emailValue"></param>
+            <param name="toName"></param>
+            <returns></returns>
+        </member>
         <member name="M:Lurgle.Alerting.Alert.Attach(System.Collections.Generic.List{System.String})">
             <summary>
                 Attach a list of files to the alert
@@ -523,6 +531,11 @@
                 Current Lurgle.Alerting configuration
             </summary>
         </member>
+        <member name="P:Lurgle.Alerting.Alerting.AlertFailures">
+            <summary>
+                List of issues found during alerting initialisation
+            </summary>
+        </member>
         <member name="M:Lurgle.Alerting.Alerting.SetConfig(Lurgle.Alerting.AlertConfig)">
             <summary>
                 Set the <see cref="P:Lurgle.Alerting.Alerting.Config" /> by passing an <see cref="T:Lurgle.Alerting.AlertConfig" /> or reading from app config
@@ -540,7 +553,7 @@
                 Initialise alerting and test availability of SMTP
             </summary>
         </member>
-        <member name="M:Lurgle.Alerting.Alerting.TestSmtp">
+        <member name="M:Lurgle.Alerting.Alerting.TestSmtp(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
                 Test that the SMTP server is reachable
             </summary>
@@ -619,9 +632,29 @@
                 Return a reason why initialisation failed
             </summary>
         </member>
-        <member name="F:Lurgle.Alerting.InitResult.Success">
+        <member name="F:Lurgle.Alerting.InitResult.MailHostNotConfigured">
             <summary>
-                Successful initialisation
+                Mail host is not configured
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.InitResult.FromAddressEmpty">
+            <summary>
+                Default From address not configured
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.InitResult.ToAddressEmpty">
+            <summary>
+                Default To Address not configured
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.InitResult.DebugAddressEmpty">
+            <summary>
+                Default Debug address not configured
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.InitResult.SubjectEmpty">
+            <summary>
+                Default subject not configured
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.InitResult.SmtpTestFailed">
