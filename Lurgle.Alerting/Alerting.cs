@@ -22,9 +22,19 @@ namespace Lurgle.Alerting
         // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
         /// <summary>
+        ///     If enabled, recipient addresses will be substituted with the configured debug address
+        /// </summary>
+        public static bool IsDebug { get; private set; }
+
+        /// <summary>
         ///     Current Lurgle.Alerting configuration
         /// </summary>
         public static AlertConfig Config { get; private set; }
+
+        /// <summary>
+        ///     List of issues found during alerting initialisation
+        /// </summary>
+        public static List<InitResult> AlertFailures { get; private set; }
 
         /// <summary>
         ///     Set the <see cref="Config" /> by passing an <see cref="AlertConfig" /> or reading from app config
@@ -53,35 +63,92 @@ namespace Lurgle.Alerting
             }
         }
 
+        /// <summary>
+        ///     Enable debug mode for email substitution
+        /// </summary>
+        /// <param name="isDebug"></param>
+        public static void SetDebug(bool isDebug)
+        {
+            IsDebug = isDebug;
+        }
 
         /// <summary>
         ///     Initialise alerting and test availability of SMTP
         /// </summary>
         // ReSharper disable once UnusedMethodReturnValue.Global
-        public static InitResult Init()
+        public static bool Init()
         {
             if (Config == null) SetConfig();
 
-            return !TestSmtp() ? InitResult.SmtpTestFailed : InitResult.Success;
+            AlertFailures = new List<InitResult>();
+
+            if (string.IsNullOrEmpty(Config?.MailHost))
+                AlertFailures.Add(InitResult.MailHostNotConfigured);
+
+            if (string.IsNullOrEmpty(Config?.MailFrom) || !Alert.ToAddressList(Config.MailFrom).Any())
+                AlertFailures.Add(InitResult.FromAddressEmpty);
+
+            if (string.IsNullOrEmpty(Config?.MailTo) || !Alert.ToAddressList(Config.MailTo).Any())
+                AlertFailures.Add(InitResult.ToAddressEmpty);
+
+            if (string.IsNullOrEmpty(Config?.MailDebug) || !Alert.ToAddressList(Config.MailDebug).Any())
+                AlertFailures.Add(InitResult.DebugAddressEmpty);
+
+            if (string.IsNullOrEmpty(Config?.MailSubject))
+                AlertFailures.Add(InitResult.SubjectEmpty);
+
+            //SMTP test should automatically fail if we don't have a mail host
+            if (string.IsNullOrEmpty(Config?.MailHost) || !TestSmtp())
+                AlertFailures.Add(InitResult.SmtpTestFailed);
+
+            return AlertFailures.Count.Equals(0);
         }
 
         /// <summary>
         ///     Test that the SMTP server is reachable
         /// </summary>
         /// <returns></returns>
-        public static bool TestSmtp()
+        public static bool TestSmtp(string mailHost = null, int? mailPort = null, int? timeout = null)
         {
             //If MailTestTimeout is 0, the test is disabled
-            if (Config.MailTestTimeout.Equals(0))
+            if ((timeout == null || (int) timeout == 0) && Config.MailTestTimeout.Equals(0))
                 return true;
 
+            var useTimeout = timeout ?? Config.MailTestTimeout;
+
+            var useMailHost = !string.IsNullOrEmpty(mailHost) ? mailHost : Config.MailHost;
+
+            var useMailPort = mailPort ?? Config.MailPort;
+
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            var result = socket.BeginConnect(Config.MailHost, Config.MailPort, null, null);
+            var result = socket.BeginConnect(useMailHost, useMailPort, null, null);
             // X second timeout
-            var isSuccess = result.AsyncWaitHandle.WaitOne(Config.MailTestTimeout, true);
+            var isSuccess = result.AsyncWaitHandle.WaitOne(useTimeout, true);
             socket.Close();
 
             return isSuccess;
+        }
+
+        /// <summary>
+        ///     Resolve email addresses using the given <see cref="AddressType" />
+        ///     <para />
+        ///     If isDebug is true, emails will automatically be replaced with the configured debug email address.
+        ///     <para />
+        /// </summary>
+        /// <param name="emailType">Email config item or email address</param>
+        /// <param name="addressType">Type of email being passed</param>
+        /// <returns></returns>
+        public static string GetEmailAddress(string emailType, AddressType addressType = AddressType.Email)
+        {
+            //If we have an empty string, we won't be able to resolve this, so return an empty string
+            if (string.IsNullOrEmpty(emailType)) return string.Empty;
+
+            var emailAddress = addressType.Equals(AddressType.FromConfig)
+                ? AlertConfig.GetEmailConfig(emailType)
+                : emailType;
+
+            //Automatically substitute for a debug email address if the debug flag is set
+            return IsDebug ? Config.MailDebug : emailAddress;
         }
 
         /// <summary>

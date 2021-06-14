@@ -14,9 +14,9 @@ namespace LurgleTest
             ServicePointManager.ServerCertificateValidationCallback += ValidateCertificate;
             var initResult = Alerting.Init();
 
-            if (!initResult.Equals(InitResult.Success))
+            if (!initResult)
             {
-                Console.WriteLine("Error! Init failed with {0}", initResult);
+                Console.WriteLine("Error! Init failed with {0}", string.Join(",", Alerting.AlertFailures.ToArray()));
             }
             else
             {
@@ -24,11 +24,9 @@ namespace LurgleTest
                 Alert.To().Subject("Test").Send("Can you fix it?");
                 Console.WriteLine("Send Razor template ...");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Razor));
-                Alerting.SetConfig(Alerting.Config);
                 Alert.To().Subject("Test Razor Template").SendTemplateFile("Razor", new { });
                 Console.WriteLine("Send Liquid template ...");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Liquid));
-                Alerting.SetConfig(Alerting.Config);
                 Alert.To().Subject("Test Liquid Template").SendTemplateFile("Liquid", new
                 {
                     Alerting.Config.AppName,
@@ -45,8 +43,18 @@ namespace LurgleTest
                     Alerting.Config.MailUseTls,
                     MailTimeout = Alerting.Config.MailTimeout / 1000,
                     Alerting.Config.MailFrom,
-                    Alerting.Config.MailTo
+                    Alerting.Config.MailTo,
+                    Alerting.Config.MailDebug,
+                    Alerting.Config.MailSubject
                 });
+                Console.WriteLine("Test sending with no subject");
+                Alert.To().Send("Test No Subject");
+                Console.WriteLine("Test FromConfig ...");
+                Alert.To("EmailTest", addressType: AddressType.FromConfig).Subject("Test FromConfig")
+                    .Send("Pre-configured email address");
+                Console.WriteLine("Test Debug mode ...");
+                Alerting.SetDebug(true);
+                Alert.To().Subject("Test Debug").Send("Aaaah it's a debug mode");
             }
         }
 

@@ -6,9 +6,29 @@
     public enum InitResult
     {
         /// <summary>
-        ///     Successful initialisation
+        ///     Mail host is not configured
         /// </summary>
-        Success,
+        MailHostNotConfigured,
+
+        /// <summary>
+        ///     Default From address not configured
+        /// </summary>
+        FromAddressEmpty,
+
+        /// <summary>
+        ///     Default To Address not configured
+        /// </summary>
+        ToAddressEmpty,
+
+        /// <summary>
+        ///     Default Debug address not configured
+        /// </summary>
+        DebugAddressEmpty,
+
+        /// <summary>
+        ///     Default subject not configured
+        /// </summary>
+        SubjectEmpty,
 
         /// <summary>
         ///     SMTP host test failure

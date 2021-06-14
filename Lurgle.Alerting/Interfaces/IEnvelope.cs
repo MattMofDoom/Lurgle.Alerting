@@ -198,7 +198,7 @@ namespace Lurgle.Alerting.Interfaces
         IEnvelope Attach(IEnumerable<string> fileList);
 
         /// <summary>
-        /// Attach a file opened as a stream to the alert
+        ///     Attach a file opened as a stream to the alert
         /// </summary>
         /// <param name="fileStream"></param>
         /// <param name="fileName"></param>
