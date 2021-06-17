@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Fluent,Email,FluentEmail,Alert,Alerts,Alerting,Razor,Fluid,Liquid,Smtp,MailKit</PackageTags>
-    <Version>1.1.9</Version>
+    <Version>1.1.10</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <PackageReleaseNotes>- Add MailKit as default sender
@@ -30,13 +30,13 @@
 - Add MailDebug setting
 - Consistently handle comma delimited email address strings
 - Filter out invalid email addresses
-- Validate default MailHost, From, To, Debug, Subject configs and return results to Alerting.AlertFailures</PackageReleaseNotes>
+- Validate default MailHost, From, To, Debug, Subject configs and return results to Alerting.AlertFailures
+- Add Handlebars renderer, based on https://github.com/matthewturner/FluentEmail.Handlebars
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyVersion>1.1.9.0</AssemblyVersion>
-    <FileVersion>1.1.9.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
@@ -48,6 +48,7 @@
     <PackageReference Include="FluentEmail.MailKit" Version="3.0.0" />
     <PackageReference Include="FluentEmail.Razor" Version="3.0.0" />
     <PackageReference Include="FluentEmail.Smtp" Version="3.0.0" />
+    <PackageReference Include="Handlebars.Net" Version="2.0.8" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
     <PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />

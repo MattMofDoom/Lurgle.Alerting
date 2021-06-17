@@ -47,6 +47,29 @@ namespace LurgleTest
                     Alerting.Config.MailDebug,
                     Alerting.Config.MailSubject
                 });
+                //Basic Handlebars templates are similar to Liquid so we re-use the Liquid template
+                Console.WriteLine("Send Handlebars template ...");
+                Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Handlebars));
+                Alert.To().Subject("Test Handlebars Template").SendTemplateFile("Liquid", new
+                {
+                    Alerting.Config.AppName,
+                    Alerting.Config.AppVersion,
+                    MailRenderer = Alerting.Config.MailRenderer.ToString(),
+                    MailSender = Alerting.Config.MailSender.ToString(),
+                    Alerting.Config.MailTemplatePath,
+                    Alerting.Config.MailHost,
+                    MailTestTimeout = Alerting.Config.MailTestTimeout / 1000,
+                    Alerting.Config.MailPort,
+                    Alerting.Config.MailUseAuthentication,
+                    Alerting.Config.MailUsername,
+                    Alerting.Config.MailPassword,
+                    Alerting.Config.MailUseTls,
+                    MailTimeout = Alerting.Config.MailTimeout / 1000,
+                    Alerting.Config.MailFrom,
+                    Alerting.Config.MailTo,
+                    Alerting.Config.MailDebug,
+                    Alerting.Config.MailSubject
+                });
                 Console.WriteLine("Test sending with no subject");
                 Alert.To().Send("Test No Subject");
                 Console.WriteLine("Test FromConfig ...");

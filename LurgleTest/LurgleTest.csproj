@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net461;net47;net48;</TargetFrameworks>
-    <Version>1.1.9</Version>
+    <Version>1.1.10</Version>
     <Authors>Matt Marlor</Authors>
     <Company>Matt Marlor</Company>
   </PropertyGroup>

@@ -21,6 +21,11 @@
         Liquid,
 
         /// <summary>
+        ///     Use the Handlebars renderer
+        /// </summary>
+        Handlebars,
+
+        /// <summary>
         ///     Use the default Replace renderer
         /// </summary>
         Replace

@@ -7,6 +7,7 @@ using FluentEmail.Core;
 using FluentEmail.Core.Defaults;
 using FluentEmail.Liquid;
 using FluentEmail.Razor;
+using Lurgle.Alerting.Renderers;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 
@@ -56,6 +57,9 @@ namespace Lurgle.Alerting
                         TextEncoder = HtmlEncoder.Default,
                         FileProvider = new PhysicalFileProvider(Config.MailTemplatePath)
                     }));
+                    break;
+                case RendererType.Handlebars:
+                    Email.DefaultRenderer = new HandlebarsRenderer();
                     break;
                 default:
                     Email.DefaultRenderer = new ReplaceRenderer();

@@ -682,6 +682,11 @@
                 Use the Liquid (Fluid) renderer
             </summary>
         </member>
+        <member name="F:Lurgle.Alerting.RendererType.Handlebars">
+            <summary>
+                Use the Handlebars renderer
+            </summary>
+        </member>
         <member name="F:Lurgle.Alerting.RendererType.Replace">
             <summary>
                 Use the default Replace renderer
@@ -1001,6 +1006,68 @@
                 Override Equals visibility
             </summary>
             <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Lurgle.Alerting.Renderers.HandlebarsRenderer">
+            <summary>
+                Handlebars Renderer, based off https://github.com/matthewturner/FluentEmail.Handlebars
+            </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.HandlebarsRenderer.#ctor">
+            <summary>
+                Handlebars Renderer constructor
+            </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.HandlebarsRenderer.#ctor(System.String)">
+            <summary>
+                Handlebars Renderer constructor
+            </summary>
+            <param name="templateRoot"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.HandlebarsRenderer.ParseAsync``1(System.String,``0,System.Boolean)">
+            <summary>
+                Async parse implementation
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="template"></param>
+            <param name="model"></param>
+            <param name="isHtml"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.HandlebarsRenderer.FluentEmail#Core#Interfaces#ITemplateRenderer#Parse``1(System.String,``0,System.Boolean)">
+            <summary>
+                Parse implementation
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="template"></param>
+            <param name="model"></param>
+            <param name="isHtml"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.HandlebarsRenderer.RegisterTemplatesFrom(System.String)">
+            <summary>
+                Register template implementation
+            </summary>
+            <param name="templateRoot"></param>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.FluentEmailHandlebarsBuilderExtensions">
+            <summary>
+                Handlebars builder extensions, based off https://github.com/matthewturner/FluentEmail.Handlebars
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.FluentEmailHandlebarsBuilderExtensions.AddHandlebarsRenderer(Microsoft.Extensions.DependencyInjection.FluentEmailServicesBuilder)">
+            <summary>
+                Add Handlebars renderer
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.FluentEmailHandlebarsBuilderExtensions.AddHandlebarsRenderer(Microsoft.Extensions.DependencyInjection.FluentEmailServicesBuilder,System.String)">
+            <summary>
+                Automatically loads templates from the specified directory
+            </summary>
+            <param name="builder"></param>
+            <param name="templateRoot"></param>
             <returns></returns>
         </member>
     </members>
