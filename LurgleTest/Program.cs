@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -47,6 +48,29 @@ namespace LurgleTest
                     Alerting.Config.MailDebug,
                     Alerting.Config.MailSubject
                 });
+                //Basic Handlebars templates are similar to Liquid so we re-use the Liquid template
+                Console.WriteLine("Send Handlebars template ...");
+                Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Handlebars));
+                Alert.To().Subject("Test Handlebars Template").SendTemplateFile("Liquid", new
+                {
+                    Alerting.Config.AppName,
+                    Alerting.Config.AppVersion,
+                    MailRenderer = Alerting.Config.MailRenderer.ToString(),
+                    MailSender = Alerting.Config.MailSender.ToString(),
+                    Alerting.Config.MailTemplatePath,
+                    Alerting.Config.MailHost,
+                    MailTestTimeout = Alerting.Config.MailTestTimeout / 1000,
+                    Alerting.Config.MailPort,
+                    Alerting.Config.MailUseAuthentication,
+                    Alerting.Config.MailUsername,
+                    Alerting.Config.MailPassword,
+                    Alerting.Config.MailUseTls,
+                    MailTimeout = Alerting.Config.MailTimeout / 1000,
+                    Alerting.Config.MailFrom,
+                    Alerting.Config.MailTo,
+                    Alerting.Config.MailDebug,
+                    Alerting.Config.MailSubject
+                });
                 Console.WriteLine("Test sending with no subject");
                 Alert.To().Send("Test No Subject");
                 Console.WriteLine("Test FromConfig ...");
@@ -55,6 +79,14 @@ namespace LurgleTest
                 Console.WriteLine("Test Debug mode ...");
                 Alerting.SetDebug(true);
                 Alert.To().Subject("Test Debug").Send("Aaaah it's a debug mode");
+                Console.WriteLine("Test attachment with SmtpClient");
+                Alerting.SetConfig(new AlertConfig(Alerting.Config, mailSender: SenderType.SmtpClient));
+                Alert.To().Subject("Test Attachment").Attach(Path.Combine(Alerting.Config.MailTemplatePath,
+                    Alerting.GetEmailTemplate("Liquid"))).Send("Test attachment");
+                Console.WriteLine("Test attachment with MailKit");
+                Alerting.SetConfig(new AlertConfig(Alerting.Config, mailSender: SenderType.MailKit));
+                Alert.To().Subject("Test Attachment").Attach(Path.Combine(Alerting.Config.MailTemplatePath,
+                    Alerting.GetEmailTemplate("Liquid"))).Send("Test attachment");
             }
         }
 

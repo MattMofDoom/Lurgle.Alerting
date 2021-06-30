@@ -202,8 +202,9 @@ namespace Lurgle.Alerting.Interfaces
         /// </summary>
         /// <param name="fileStream"></param>
         /// <param name="fileName"></param>
+        /// <param name="contentType"></param>
         /// <returns></returns>
-        IEnvelope Attach(Stream fileStream, string fileName);
+        IEnvelope Attach(Stream fileStream, string fileName, string contentType = null);
 
         /// <summary>
         ///     Attach an array of files to the alert as inline attachments
