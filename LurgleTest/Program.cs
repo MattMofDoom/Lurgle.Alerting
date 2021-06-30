@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -78,6 +79,14 @@ namespace LurgleTest
                 Console.WriteLine("Test Debug mode ...");
                 Alerting.SetDebug(true);
                 Alert.To().Subject("Test Debug").Send("Aaaah it's a debug mode");
+                Console.WriteLine("Test attachment with SmtpClient");
+                Alerting.SetConfig(new AlertConfig(Alerting.Config, mailSender: SenderType.SmtpClient));
+                Alert.To().Subject("Test Attachment").Attach(Path.Combine(Alerting.Config.MailTemplatePath,
+                    Alerting.GetEmailTemplate("Liquid"))).Send("Test attachment");
+                Console.WriteLine("Test attachment with MailKit");
+                Alerting.SetConfig(new AlertConfig(Alerting.Config, mailSender: SenderType.MailKit));
+                Alert.To().Subject("Test Attachment").Attach(Path.Combine(Alerting.Config.MailTemplatePath,
+                    Alerting.GetEmailTemplate("Liquid"))).Send("Test attachment");
             }
         }
 

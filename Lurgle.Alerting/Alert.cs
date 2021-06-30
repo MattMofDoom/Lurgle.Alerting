@@ -13,6 +13,7 @@ using FluentEmail.MailKitSmtp;
 using FluentEmail.Smtp;
 using Lurgle.Alerting.Interfaces;
 using MailKit.Security;
+using static MimeMapping.MimeUtility;
 using Attachment = FluentEmail.Core.Models.Attachment;
 
 namespace Lurgle.Alerting
@@ -336,7 +337,10 @@ namespace Lurgle.Alerting
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) return this;
             var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
             attachments.Add(new Attachment
-                {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = contentType});
+            {
+                Data = attachment, Filename = Path.GetFileName(filePath),
+                ContentType = string.IsNullOrEmpty(contentType) ? GetMimeMapping(filePath) : contentType
+            });
 
             return this;
         }
@@ -355,7 +359,9 @@ namespace Lurgle.Alerting
                 {
                     var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
                     attachments.Add(new Attachment
-                        {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = null});
+                    {
+                        Data = attachment, Filename = Path.GetFileName(filePath), ContentType = GetMimeMapping(filePath)
+                    });
                 }
 
             return this;
@@ -366,10 +372,15 @@ namespace Lurgle.Alerting
         /// </summary>
         /// <param name="fileStream"></param>
         /// <param name="fileName"></param>
+        /// <param name="contentType"></param>
         /// <returns></returns>
-        public IEnvelope Attach(Stream fileStream, string fileName)
+        public IEnvelope Attach(Stream fileStream, string fileName, string contentType = null)
         {
-            attachments.Add(new Attachment {Data = fileStream, Filename = fileName, ContentType = null});
+            attachments.Add(new Attachment
+            {
+                Data = fileStream, Filename = fileName,
+                ContentType = string.IsNullOrEmpty(contentType) ? GetMimeMapping(fileName) : contentType
+            });
 
             return this;
         }
@@ -776,7 +787,7 @@ namespace Lurgle.Alerting
 
             contentId = fileId[0];
             filePath = fileId[1];
-            contentType = fileId[2];
+            contentType = string.IsNullOrEmpty(fileId[2]) ? GetMimeMapping(filePath) : fileId[2];
 
             filePath = Path.Combine(folderLocation, filePath);
         }

@@ -192,12 +192,13 @@
             <param name="fileList">Array of paths to files that will be attached</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.Attach(System.IO.Stream,System.String)">
+        <member name="M:Lurgle.Alerting.Alert.Attach(System.IO.Stream,System.String,System.String)">
             <summary>
                 Attach a file opened as a stream to the alert
             </summary>
             <param name="fileStream"></param>
             <param name="fileName"></param>
+            <param name="contentType"></param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alert.AttachInline(System.Collections.Generic.IEnumerable{System.String},System.String)">
@@ -900,12 +901,13 @@
             <param name="fileList">List of paths to files that will be attached</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.IO.Stream,System.String)">
+        <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.Attach(System.IO.Stream,System.String,System.String)">
             <summary>
                 Attach a file opened as a stream to the alert
             </summary>
             <param name="fileStream"></param>
             <param name="fileName"></param>
+            <param name="contentType"></param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Interfaces.IEnvelope.AttachInline(System.Collections.Generic.IEnumerable{System.String},System.String)">

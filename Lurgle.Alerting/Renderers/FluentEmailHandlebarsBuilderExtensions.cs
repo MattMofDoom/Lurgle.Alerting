@@ -1,6 +1,7 @@
 ﻿using FluentEmail.Core.Interfaces;
 using Lurgle.Alerting.Renderers;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
