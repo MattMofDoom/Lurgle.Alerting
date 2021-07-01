@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31313.79
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lurgle.Alerting", "Lurgle.Alerting\Lurgle.Alerting.csproj", "{136F63D0-E4C8-41E7-B764-D87AC62A8D34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LurgleTest", "LurgleTest\LurgleTest.csproj", "{D894210D-B688-4D8F-BE34-CDD9D12DFDA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LurgleTest", "LurgleTest\LurgleTest.csproj", "{D894210D-B688-4D8F-BE34-CDD9D12DFDA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lurgle.Alerting.Tests", "Lurgle.Alerting.Tests\Lurgle.Alerting.Tests.csproj", "{63B2816A-69C7-4CFE-9D9A-FB89F18E1C70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D894210D-B688-4D8F-BE34-CDD9D12DFDA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D894210D-B688-4D8F-BE34-CDD9D12DFDA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D894210D-B688-4D8F-BE34-CDD9D12DFDA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63B2816A-69C7-4CFE-9D9A-FB89F18E1C70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63B2816A-69C7-4CFE-9D9A-FB89F18E1C70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63B2816A-69C7-4CFE-9D9A-FB89F18E1C70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63B2816A-69C7-4CFE-9D9A-FB89F18E1C70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

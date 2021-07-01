@@ -16,6 +16,9 @@ using MailKit.Security;
 using static MimeMapping.MimeUtility;
 using Attachment = FluentEmail.Core.Models.Attachment;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
+
 namespace Lurgle.Alerting
 {
     // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
@@ -28,26 +31,70 @@ namespace Lurgle.Alerting
     /// </summary>
     public sealed class Alert : IAlert, IEnvelope
     {
-        private readonly List<Attachment> attachments = new List<Attachment>();
-        private readonly List<Address> bcc = new List<Address>();
-        private readonly List<Address> cc = new List<Address>();
-        private AlternateView alternateView;
-        private Address from = new Address();
-        private bool isHtml = true;
-        private AlertLevel priority = AlertLevel.Normal;
-        private Address replyTo = new Address();
-        private string subject = string.Empty;
-
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        private List<Address> to = new List<Address>();
-
         private Alert()
         {
-            if (string.IsNullOrEmpty(subject)) subject = Alerting.Config.MailSubject;
+            if (string.IsNullOrEmpty(AlertSubject)) AlertSubject = Alerting.Config.MailSubject;
         }
 
-        private bool IsMethod { get; set; }
-        private string MethodName { get; set; }
+        /// <summary>
+        ///     List of attachments
+        /// </summary>
+        public List<Attachment> Attachments { get; private set; } = new List<Attachment>();
+
+        /// <summary>
+        ///     List of BCC addresses
+        /// </summary>
+        public List<Address> BccAddresses { get; private set; } = new List<Address>();
+
+        /// <summary>
+        ///     List of CC addresses
+        /// </summary>
+        public List<Address> CcAddresses { get; private set; } = new List<Address>();
+
+        /// <summary>
+        ///     Alternate view for email
+        /// </summary>
+        public AlternateView AlternateView { get; private set; }
+
+        /// <summary>
+        ///     From address
+        /// </summary>
+        public Address FromAddress { get; private set; } = new Address();
+
+        /// <summary>
+        ///     Is email HTML?
+        /// </summary>
+        public bool IsHtml { get; private set; } = true;
+
+        /// <summary>
+        ///     Email priority
+        /// </summary>
+        public AlertLevel AlertPriority { get; private set; } = AlertLevel.Normal;
+
+        /// <summary>
+        ///     Email reply to
+        /// </summary>
+        public Address ReplyToAddress { get; private set; } = new Address();
+
+        /// <summary>
+        ///     Email subject
+        /// </summary>
+        public string AlertSubject { get; private set; } = string.Empty;
+
+        /// <summary>
+        ///     List of To addresses
+        /// </summary>
+        public List<Address> ToAddresses { get; private set; } = new List<Address>();
+
+        /// <summary>
+        ///     Add method to body?
+        /// </summary>
+        public bool IsMethod { get; private set; }
+
+        /// <summary>
+        ///     Calling method name
+        /// </summary>
+        public string MethodName { get; private set; }
 
         /// <summary>
         ///     Add a single recipient email address to the alert. You can chain this multiple times.
@@ -75,7 +122,7 @@ namespace Lurgle.Alerting
                 ? Alerting.GetEmailAddress(Alerting.Config.MailTo, addressType)
                 : Alerting.GetEmailAddress(toAddress, addressType);
 
-            to.AddRange(ToAddressList(emailAddress, toName));
+            ToAddresses.AddRange(ToAddressList(emailAddress, toName));
 
             return this;
         }
@@ -91,7 +138,7 @@ namespace Lurgle.Alerting
         {
             foreach (var toAddress in emailList)
                 if (!string.IsNullOrEmpty(toAddress))
-                    to.AddRange(ToAddressList(Alerting.GetEmailAddress(toAddress)));
+                    ToAddresses.AddRange(ToAddressList(Alerting.GetEmailAddress(toAddress)));
 
             return this;
         }
@@ -109,7 +156,8 @@ namespace Lurgle.Alerting
                 if (!string.IsNullOrEmpty(email.Key))
                 {
                     var emailAddress = Alerting.GetEmailAddress(email.Key);
-                    if (!string.IsNullOrEmpty(emailAddress)) to.AddRange(ToAddressList(emailAddress, email.Value));
+                    if (!string.IsNullOrEmpty(emailAddress))
+                        ToAddresses.AddRange(ToAddressList(emailAddress, email.Value));
                 }
 
             return this;
@@ -136,7 +184,7 @@ namespace Lurgle.Alerting
         public IEnvelope Cc(string ccAddress, string ccName = null, AddressType addressType = AddressType.Email)
         {
             var emailAddress = Alerting.GetEmailAddress(ccAddress, addressType);
-            if (!string.IsNullOrEmpty(emailAddress)) cc.AddRange(ToAddressList(emailAddress, ccName));
+            if (!string.IsNullOrEmpty(emailAddress)) CcAddresses.AddRange(ToAddressList(emailAddress, ccName));
 
             return this;
         }
@@ -153,7 +201,7 @@ namespace Lurgle.Alerting
             foreach (var ccAddress in emailList)
             {
                 var emailAddress = Alerting.GetEmailAddress(ccAddress);
-                if (!string.IsNullOrEmpty(emailAddress)) cc.AddRange(ToAddressList(emailAddress));
+                if (!string.IsNullOrEmpty(emailAddress)) CcAddresses.AddRange(ToAddressList(emailAddress));
             }
 
             return this;
@@ -171,7 +219,7 @@ namespace Lurgle.Alerting
             foreach (var email in emailList)
             {
                 var emailAddress = Alerting.GetEmailAddress(email.Key);
-                if (!string.IsNullOrEmpty(emailAddress)) cc.AddRange(ToAddressList(emailAddress, email.Value));
+                if (!string.IsNullOrEmpty(emailAddress)) CcAddresses.AddRange(ToAddressList(emailAddress, email.Value));
             }
 
             return this;
@@ -198,7 +246,7 @@ namespace Lurgle.Alerting
         public IEnvelope Bcc(string bccAddress, string bccName = null, AddressType addressType = AddressType.Email)
         {
             var emailAddress = Alerting.GetEmailAddress(bccAddress, addressType);
-            if (!string.IsNullOrEmpty(emailAddress)) bcc.AddRange(ToAddressList(emailAddress, bccName));
+            if (!string.IsNullOrEmpty(emailAddress)) BccAddresses.AddRange(ToAddressList(emailAddress, bccName));
 
             return this;
         }
@@ -215,14 +263,14 @@ namespace Lurgle.Alerting
             foreach (var bccAddress in emailList)
             {
                 var emailAddress = Alerting.GetEmailAddress(bccAddress);
-                if (!string.IsNullOrEmpty(emailAddress)) bcc.AddRange(ToAddressList(emailAddress));
+                if (!string.IsNullOrEmpty(emailAddress)) BccAddresses.AddRange(ToAddressList(emailAddress));
             }
 
             return this;
         }
 
         /// <summary>
-        ///     Add a list of paired email address and name values to the <see cref="bcc" /> field for the alert
+        ///     Add a list of paired email address and name values to the <see cref="BccAddresses" /> field for the alert
         ///     <para />
         ///     As an optional parameter, this method will not add empty or null addresses to the email
         /// </summary>
@@ -233,7 +281,7 @@ namespace Lurgle.Alerting
             foreach (var email in from email in emailList
                 let emailAddress = Alerting.GetEmailAddress(email.Key)
                 where !string.IsNullOrEmpty(emailAddress)
-                select email) bcc.AddRange(ToAddressList(email.Key, email.Value));
+                select email) BccAddresses.AddRange(ToAddressList(email.Key, email.Value));
 
             return this;
         }
@@ -257,8 +305,8 @@ namespace Lurgle.Alerting
                 ? Alerting.GetEmailAddress(Alerting.Config.MailFrom, addressType)
                 : Alerting.GetEmailAddress(replyToAddress, addressType);
 
-            //We can only select one email address for replyTo, so pick the first
-            if (!string.IsNullOrEmpty(emailAddress)) replyTo = ToAddressList(emailAddress, replyToName).First();
+            //We can only select one email address for ReplyToAddress, so pick the first
+            if (!string.IsNullOrEmpty(emailAddress)) ReplyToAddress = ToAddressList(emailAddress, replyToName).First();
 
             return this;
         }
@@ -274,11 +322,11 @@ namespace Lurgle.Alerting
         public IEnvelope Subject(string subjectText = null, params object[] args)
         {
             if (string.IsNullOrEmpty(subjectText))
-                subject = Alerting.Config.MailSubject;
+                AlertSubject = Alerting.Config.MailSubject;
             else if (!string.IsNullOrEmpty(subjectText) && !args.Length.Equals(0))
-                subject = string.Format(subjectText, args);
+                AlertSubject = string.Format(subjectText, args);
             else
-                subject = subjectText;
+                AlertSubject = subjectText;
 
             return this;
         }
@@ -292,7 +340,7 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         public IEnvelope Priority(AlertLevel alertLevel)
         {
-            priority = alertLevel;
+            AlertPriority = alertLevel;
 
             return this;
         }
@@ -304,7 +352,7 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         public IEnvelope SetHtml(bool html)
         {
-            isHtml = html;
+            IsHtml = html;
             return this;
         }
 
@@ -317,9 +365,9 @@ namespace Lurgle.Alerting
         public IEnvelope AddAlternateView(string messageBody, List<LinkedResource> linkedResourceList)
         {
             if (string.IsNullOrEmpty(messageBody) || linkedResourceList.Count <= 0) return this;
-            alternateView =
+            AlternateView =
                 AlternateView.CreateAlternateViewFromString(messageBody, null, MediaTypeNames.Text.Html);
-            foreach (var linkedResource in linkedResourceList) alternateView.LinkedResources.Add(linkedResource);
+            foreach (var linkedResource in linkedResourceList) AlternateView.LinkedResources.Add(linkedResource);
 
             return this;
         }
@@ -336,7 +384,7 @@ namespace Lurgle.Alerting
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) return this;
             var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-            attachments.Add(new Attachment
+            Attachments.Add(new Attachment
             {
                 Data = attachment, Filename = Path.GetFileName(filePath),
                 ContentType = string.IsNullOrEmpty(contentType) ? GetMimeMapping(filePath) : contentType
@@ -358,7 +406,7 @@ namespace Lurgle.Alerting
                 if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
                 {
                     var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-                    attachments.Add(new Attachment
+                    Attachments.Add(new Attachment
                     {
                         Data = attachment, Filename = Path.GetFileName(filePath), ContentType = GetMimeMapping(filePath)
                     });
@@ -376,7 +424,7 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         public IEnvelope Attach(Stream fileStream, string fileName, string contentType = null)
         {
-            attachments.Add(new Attachment
+            Attachments.Add(new Attachment
             {
                 Data = fileStream, Filename = fileName,
                 ContentType = string.IsNullOrEmpty(contentType) ? GetMimeMapping(fileName) : contentType
@@ -402,7 +450,7 @@ namespace Lurgle.Alerting
                 if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) continue;
                 var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
                 var fileName = Path.GetFileName(filePath);
-                attachments.Add(new Attachment
+                Attachments.Add(new Attachment
                 {
                     Data = attachment, Filename = fileName, ContentType = contentType, IsInline = true,
                     ContentId = contentId
@@ -419,47 +467,25 @@ namespace Lurgle.Alerting
         /// </summary>
         /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
         /// <param name="args">Optional arguments for string replacement</param>
-        public bool Send(string msg, params object[] args)
+        public SendResponse Send(string msg, params object[] args)
         {
             var body = msg;
             if (!args.Length.Equals(0)) body = string.Format(msg, args);
 
             if (IsMethod) body = $"[{MethodName}] {body}";
 
-            var email = Email.From(from.EmailAddress, from.Name)
-                .To(to)
-                .CC(cc)
-                .BCC(bcc)
-                .Subject(subject)
-                .Attach(attachments)
-                .Body(body);
-
-            if (!string.IsNullOrEmpty(replyTo.EmailAddress)) email = email.ReplyTo(replyTo.EmailAddress, replyTo.Name);
-
-            switch (priority)
-            {
-                case AlertLevel.High:
-                    email = email.HighPriority();
-                    break;
-                case AlertLevel.Low:
-                    email = email.LowPriority();
-                    break;
-            }
-
-            email.Data.IsHtml = isHtml;
-            email.Sender = GetSender();
-            var result = email.Send();
+            var result = GetEnvelope().Body(body).Send();
 
             //Cleanup - close any open file streams and clear the list
-            foreach (var attachment in attachments)
+            foreach (var attachment in Attachments)
             {
                 attachment.Data.Close();
                 attachment.Data.Dispose();
             }
 
-            attachments.Clear();
+            Attachments.Clear();
 
-            return result.Successful;
+            return result;
         }
 
         /// <summary>
@@ -469,47 +495,17 @@ namespace Lurgle.Alerting
         /// </summary>
         /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
         /// <param name="args">Optional arguments for string replacement</param>
-        public async Task<bool> SendAsync(string msg, params object[] args)
+        public async Task<SendResponse> SendAsync(string msg, params object[] args)
         {
             var body = msg;
             if (!args.Length.Equals(0)) body = string.Format(msg, args);
 
             if (IsMethod) body = $"[{MethodName}] {body}";
 
-            var email = Email.From(from.EmailAddress, from.Name)
-                .To(to)
-                .CC(cc)
-                .BCC(bcc)
-                .Subject(subject)
-                .Attach(attachments)
-                .Body(body);
+            var result = await GetEnvelope().Body(body).SendAsync();
+            ClearAttachments();
 
-            if (!string.IsNullOrEmpty(replyTo.EmailAddress)) email = email.ReplyTo(replyTo.EmailAddress, replyTo.Name);
-
-            switch (priority)
-            {
-                case AlertLevel.High:
-                    email = email.HighPriority();
-                    break;
-                case AlertLevel.Low:
-                    email = email.LowPriority();
-                    break;
-            }
-
-            email.Data.IsHtml = isHtml;
-            email.Sender = GetSender();
-            var result = await email.SendAsync();
-
-            //Cleanup - close any open file streams and clear the list
-            foreach (var attachment in attachments)
-            {
-                attachment.Data.Close();
-                attachment.Data.Dispose();
-            }
-
-            attachments.Clear();
-
-            return result.Successful;
+            return result;
         }
 
         /// <summary>
@@ -519,41 +515,13 @@ namespace Lurgle.Alerting
         /// <param name="template">Body of the email, using Razor template format</param>
         /// <param name="templateModel">The Model to apply to this template</param>
         /// <param name="html"></param>
-        public bool SendTemplate<T>(string template, T templateModel, bool html = true)
+        public SendResponse SendTemplate<T>(string template, T templateModel, bool html = true)
         {
-            var email = Email.From(from.EmailAddress, from.Name)
-                .To(to)
-                .CC(cc)
-                .BCC(bcc)
-                .Subject(subject)
-                .Attach(attachments)
-                .UsingTemplate(template, templateModel, html);
+            var result = GetEnvelope().UsingTemplate(template, templateModel, html).Send();
 
-            if (!string.IsNullOrEmpty(replyTo.EmailAddress)) email = email.ReplyTo(replyTo.EmailAddress, replyTo.Name);
+            ClearAttachments();
 
-            switch (priority)
-            {
-                case AlertLevel.High:
-                    email = email.HighPriority();
-                    break;
-                case AlertLevel.Low:
-                    email = email.LowPriority();
-                    break;
-            }
-
-            email.Sender = GetSender();
-            var result = email.Send();
-
-            //Cleanup - close any open file streams and clear the list
-            foreach (var attachment in attachments)
-            {
-                attachment.Data.Close();
-                attachment.Data.Dispose();
-            }
-
-            attachments.Clear();
-
-            return result.Successful;
+            return result;
         }
 
         /// <summary>
@@ -563,41 +531,12 @@ namespace Lurgle.Alerting
         /// <param name="template">Body of the email, using Razor template format</param>
         /// <param name="templateModel">The Model to apply to this template</param>
         /// <param name="html"></param>
-        public async Task<bool> SendTemplateAsync<T>(string template, T templateModel, bool html = true)
+        public async Task<SendResponse> SendTemplateAsync<T>(string template, T templateModel, bool html = true)
         {
-            var email = Email.From(from.EmailAddress, from.Name)
-                .To(to)
-                .CC(cc)
-                .BCC(bcc)
-                .Subject(subject)
-                .Attach(attachments)
-                .UsingTemplate(template, templateModel, html);
+            var result = await GetEnvelope().UsingTemplate(template, templateModel, html).SendAsync();
+            ClearAttachments();
 
-            if (!string.IsNullOrEmpty(replyTo.EmailAddress)) email = email.ReplyTo(replyTo.EmailAddress, replyTo.Name);
-
-            switch (priority)
-            {
-                case AlertLevel.High:
-                    email = email.HighPriority();
-                    break;
-                case AlertLevel.Low:
-                    email = email.LowPriority();
-                    break;
-            }
-
-            email.Sender = GetSender();
-            var result = await email.SendAsync();
-
-            //Cleanup - close any open file streams and clear the list
-            foreach (var attachment in attachments)
-            {
-                attachment.Data.Close();
-                attachment.Data.Dispose();
-            }
-
-            attachments.Clear();
-
-            return result.Successful;
+            return result;
         }
 
         /// <summary>
@@ -610,44 +549,16 @@ namespace Lurgle.Alerting
         /// <param name="templateConfig">Config item to load for the Razor template file</param>
         /// <param name="templateModel">The Model to apply to this  template</param>
         /// <param name="html"></param>
-        public bool SendTemplateFile<T>(string templateConfig, T templateModel, bool html = true)
+        public SendResponse SendTemplateFile<T>(string templateConfig, T templateModel, bool html = true)
         {
             var templatePath =
                 Path.Combine(Alerting.Config.MailTemplatePath, Alerting.GetEmailTemplate(templateConfig));
 
-            var email = Email.From(from.EmailAddress, from.Name)
-                .To(to)
-                .CC(cc)
-                .BCC(bcc)
-                .Subject(subject)
-                .Attach(attachments)
-                .UsingTemplateFromFile(templatePath, templateModel, html);
+            var result = GetEnvelope().UsingTemplateFromFile(templatePath, templateModel, html).Send();
 
-            if (!string.IsNullOrEmpty(replyTo.EmailAddress)) email = email.ReplyTo(replyTo.EmailAddress, replyTo.Name);
+            ClearAttachments();
 
-            switch (priority)
-            {
-                case AlertLevel.High:
-                    email = email.HighPriority();
-                    break;
-                case AlertLevel.Low:
-                    email = email.LowPriority();
-                    break;
-            }
-
-            email.Sender = GetSender();
-            var response = email.Send();
-
-            //Cleanup - close any open file streams and clear the list
-            foreach (var attachment in attachments)
-            {
-                attachment.Data.Close();
-                attachment.Data.Dispose();
-            }
-
-            attachments.Clear();
-
-            return response.Successful;
+            return result;
         }
 
         /// <summary>
@@ -660,22 +571,29 @@ namespace Lurgle.Alerting
         /// <param name="templateConfig">Config item to load for the Razor template file</param>
         /// <param name="templateModel">The Model to apply to this  template</param>
         /// <param name="html"></param>
-        public async Task<bool> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool html)
+        public async Task<SendResponse> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool html)
         {
             var templatePath =
                 Path.Combine(Alerting.Config.MailTemplatePath, Alerting.GetEmailTemplate(templateConfig));
 
-            var email = Email.From(from.EmailAddress, from.Name)
-                .To(to)
-                .CC(cc)
-                .BCC(bcc)
-                .Subject(subject)
-                .Attach(attachments)
-                .UsingTemplateFromFile(templatePath, templateModel, html);
+            var result = await GetEnvelope().UsingTemplateFromFile(templatePath, templateModel, html).SendAsync();
+            ClearAttachments();
 
-            if (!string.IsNullOrEmpty(replyTo.EmailAddress)) email = email.ReplyTo(replyTo.EmailAddress, replyTo.Name);
+            return result;
+        }
 
-            switch (priority)
+        private IFluentEmail GetEnvelope()
+        {
+            var email = Email.From(FromAddress.EmailAddress, FromAddress.Name)
+                .To(ToAddresses)
+                .CC(CcAddresses)
+                .BCC(BccAddresses)
+                .Subject(AlertSubject)
+                .Attach(Attachments);
+
+            if (!string.IsNullOrEmpty(ReplyToAddress.EmailAddress))
+                email = email.ReplyTo(ReplyToAddress.EmailAddress, ReplyToAddress.Name);
+            switch (AlertPriority)
             {
                 case AlertLevel.High:
                     email = email.HighPriority();
@@ -685,19 +603,22 @@ namespace Lurgle.Alerting
                     break;
             }
 
+            email.Data.IsHtml = IsHtml;
             email.Sender = GetSender();
-            var result = await email.SendAsync();
 
+            return email;
+        }
+
+        private void ClearAttachments()
+        {
             //Cleanup - close any open file streams and clear the list
-            foreach (var attachment in attachments)
+            foreach (var attachment in Attachments)
             {
                 attachment.Data.Close();
                 attachment.Data.Dispose();
             }
 
-            attachments.Clear();
-
-            return result.Successful;
+            Attachments.Clear();
         }
 
         /// <summary>
@@ -726,7 +647,7 @@ namespace Lurgle.Alerting
                 if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
                 {
                     var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-                    attachments.Add(new Attachment
+                    Attachments.Add(new Attachment
                         {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = null});
                 }
 
@@ -825,7 +746,8 @@ namespace Lurgle.Alerting
             return new Alert
             {
                 //We can only select one email address for From, so pick the first
-                from = ToAddressList(emailAddress, fromName).First(), MethodName = methodName, IsMethod = isMethod
+                FromAddress = ToAddressList(emailAddress, fromName).First(), MethodName = methodName,
+                IsMethod = isMethod
             };
         }
 
