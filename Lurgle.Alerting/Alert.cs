@@ -523,7 +523,7 @@ namespace Lurgle.Alerting
         /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
         /// <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
         /// <param name="args">Optional arguments for string replacement</param>
-        public async Task<SendResponse> SendHtmlAsync(string msg, string altMsg, params object[] args)
+        public async Task<SendResponse> SendHtmlAsync(string msg, string altMsg = null, params object[] args)
         {
             var result = await GetEnvelopeWithBody(msg, true, altMsg, args).SendAsync();
             ClearAttachments();
