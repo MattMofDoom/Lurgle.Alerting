@@ -8,26 +8,26 @@
         /// <summary>
         ///     Use the Razor renderer
         /// </summary>
-        Razor,
+        Razor = 0,
 
         /// <summary>
         ///     Use the Liquid (Fluid) renderer
         /// </summary>
-        Fluid,
+        Liquid = 1,
 
         /// <summary>
         ///     Use the Liquid (Fluid) renderer
         /// </summary>
-        Liquid,
+        Fluid = 2,
 
         /// <summary>
         ///     Use the Handlebars renderer
         /// </summary>
-        Handlebars,
+        Handlebars = 3,
 
         /// <summary>
         ///     Use the default Replace renderer
         /// </summary>
-        Replace
+        Replace = -1
     }
 }

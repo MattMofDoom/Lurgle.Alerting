@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Fluent,Email,FluentEmail,Alert,Alerts,Alerting,Razor,Fluid,Liquid,Smtp,MailKit</PackageTags>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <PackageReleaseNotes>- Add MailKit as default sender
@@ -34,7 +34,8 @@
 - Add Handlebars renderer, based on https://github.com/matthewturner/FluentEmail.Handlebars
 - Automatically determine attachment content type
 - Expose errors on send for examination by code
-- Add unit tests</PackageReleaseNotes>
+- Add unit tests
+- Add processing for plain text and HTML</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>

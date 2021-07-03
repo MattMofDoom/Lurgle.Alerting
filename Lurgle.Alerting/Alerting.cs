@@ -50,8 +50,8 @@ namespace Lurgle.Alerting
                 case RendererType.Razor:
                     Email.DefaultRenderer = new RazorRenderer();
                     break;
-                case RendererType.Fluid:
                 case RendererType.Liquid:
+                case RendererType.Fluid:
                     Email.DefaultRenderer = new LiquidRenderer(Options.Create(new LiquidRendererOptions
                     {
                         TextEncoder = HtmlEncoder.Default,
@@ -190,12 +190,12 @@ namespace Lurgle.Alerting
         ///     Resolve an email template filename given the specified template string />
         /// </summary>
         /// <param name="template">Email template to return the filename for</param>
-        public static string GetEmailTemplate(string template)
+        /// <param name="isHtml"></param>
+        public static string GetEmailTemplate(string template, bool isHtml = true)
         {
             var templateConfig = AlertConfig.GetEmailTemplate(template);
-            if (string.IsNullOrEmpty(AlertConfig.GetEmailTemplate(template))) templateConfig = $"alert{template}.html";
-
-            return templateConfig;
+            if (!string.IsNullOrEmpty(AlertConfig.GetEmailTemplate(template))) return templateConfig;
+            return isHtml ? $"alert{template}.html" : $"alert{template}.txt";
         }
     }
 }
