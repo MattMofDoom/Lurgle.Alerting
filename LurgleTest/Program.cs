@@ -23,9 +23,14 @@ namespace LurgleTest
             {
                 Console.WriteLine("Send simple body ...");
                 Alert.To().Subject("Test").Send("Can you fix it?");
+                Console.WriteLine("Send HTML body with alt text ...");
+                Alert.To().Subject("Test HTML")
+                    .SendHtml("<html><body><p>Can you fix it?</p></body></html>", "Can you fix it?");
                 Console.WriteLine("Send Razor template ...");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Razor));
                 Alert.To().Subject("Test Razor Template").SendTemplateFile("Razor", new { });
+                Console.WriteLine("Send Razor template with alt text...");
+                Alert.To().Subject("Test Razor Template with alt text").SendTemplateFile("Razor", new { }, true, true);
                 Console.WriteLine("Send Liquid template ...");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Liquid));
                 Alert.To().Subject("Test Liquid Template").SendTemplateFile("Liquid", new
@@ -48,6 +53,28 @@ namespace LurgleTest
                     Alerting.Config.MailDebug,
                     Alerting.Config.MailSubject
                 });
+                Console.WriteLine("Send Liquid template with alt text...");
+                Alert.To().Subject("Test Liquid Template with alt text").SendTemplateFile("Liquid", new
+                {
+                    Alerting.Config.AppName,
+                    Alerting.Config.AppVersion,
+                    MailRenderer = Alerting.Config.MailRenderer.ToString(),
+                    MailSender = Alerting.Config.MailSender.ToString(),
+                    Alerting.Config.MailTemplatePath,
+                    Alerting.Config.MailHost,
+                    MailTestTimeout = Alerting.Config.MailTestTimeout / 1000,
+                    Alerting.Config.MailPort,
+                    Alerting.Config.MailUseAuthentication,
+                    Alerting.Config.MailUsername,
+                    Alerting.Config.MailPassword,
+                    Alerting.Config.MailUseTls,
+                    MailTimeout = Alerting.Config.MailTimeout / 1000,
+                    Alerting.Config.MailFrom,
+                    Alerting.Config.MailTo,
+                    Alerting.Config.MailDebug,
+                    Alerting.Config.MailSubject
+                });
+
                 //Basic Handlebars templates are similar to Liquid so we re-use the Liquid template
                 Console.WriteLine("Send Handlebars template ...");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Handlebars));
@@ -71,6 +98,27 @@ namespace LurgleTest
                     Alerting.Config.MailDebug,
                     Alerting.Config.MailSubject
                 });
+                Console.WriteLine("Send Handlebars template with alt text...");
+                Alert.To().Subject("Test Handlebars Template with alt text").SendTemplateFile("Liquid", new
+                {
+                    Alerting.Config.AppName,
+                    Alerting.Config.AppVersion,
+                    MailRenderer = Alerting.Config.MailRenderer.ToString(),
+                    MailSender = Alerting.Config.MailSender.ToString(),
+                    Alerting.Config.MailTemplatePath,
+                    Alerting.Config.MailHost,
+                    MailTestTimeout = Alerting.Config.MailTestTimeout / 1000,
+                    Alerting.Config.MailPort,
+                    Alerting.Config.MailUseAuthentication,
+                    Alerting.Config.MailUsername,
+                    Alerting.Config.MailPassword,
+                    Alerting.Config.MailUseTls,
+                    MailTimeout = Alerting.Config.MailTimeout / 1000,
+                    Alerting.Config.MailFrom,
+                    Alerting.Config.MailTo,
+                    Alerting.Config.MailDebug,
+                    Alerting.Config.MailSubject
+                }, true, true);
                 Console.WriteLine("Test sending with no subject");
                 Alert.To().Send("Test No Subject");
                 Console.WriteLine("Test FromConfig ...");

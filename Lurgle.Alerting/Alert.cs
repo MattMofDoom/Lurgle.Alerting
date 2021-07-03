@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -346,10 +347,12 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        ///     Sets the current email to HTML if true (default)
+        ///     Sets the current email to HTML if true (default).
+        ///     Shouldn't be needed any more since we have HTML and alternate text implementations.
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>
+        [Obsolete]
         public IEnvelope SetHtml(bool html)
         {
             IsHtml = html;
@@ -357,11 +360,13 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        ///     Add the Alt view for the HTML contents
+        ///     Add the Alt view for the HTML contents.
+        ///     Shouldn't be needed any more since we have HTML and alternate text implementations.
         /// </summary>
         /// <param name="messageBody"> Message body as string</param>
         /// <param name="linkedResourceList">List of linked resources</param>
         /// <returns></returns>
+        [Obsolete]
         public IEnvelope AddAlternateView(string messageBody, List<LinkedResource> linkedResourceList)
         {
             if (string.IsNullOrEmpty(messageBody) || linkedResourceList.Count <= 0) return this;
@@ -383,12 +388,7 @@ namespace Lurgle.Alerting
         public IEnvelope Attach(string filePath, string contentType = null)
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) return this;
-            var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-            Attachments.Add(new Attachment
-            {
-                Data = attachment, Filename = Path.GetFileName(filePath),
-                ContentType = string.IsNullOrEmpty(contentType) ? GetMimeMapping(filePath) : contentType
-            });
+            AddAttachment(filePath, contentType);
 
             return this;
         }
@@ -404,13 +404,7 @@ namespace Lurgle.Alerting
         {
             foreach (var filePath in fileList)
                 if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-                {
-                    var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-                    Attachments.Add(new Attachment
-                    {
-                        Data = attachment, Filename = Path.GetFileName(filePath), ContentType = GetMimeMapping(filePath)
-                    });
-                }
+                    AddAttachment(filePath);
 
             return this;
         }
@@ -424,11 +418,7 @@ namespace Lurgle.Alerting
         /// <returns></returns>
         public IEnvelope Attach(Stream fileStream, string fileName, string contentType = null)
         {
-            Attachments.Add(new Attachment
-            {
-                Data = fileStream, Filename = fileName,
-                ContentType = string.IsNullOrEmpty(contentType) ? GetMimeMapping(fileName) : contentType
-            });
+            AddAttachment(fileStream, fileName, contentType);
 
             return this;
         }
@@ -448,20 +438,14 @@ namespace Lurgle.Alerting
                 GetInlineFile(inlineFile, folderLocation, out var contentId, out var filePath, out var contentType);
 
                 if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) continue;
-                var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-                var fileName = Path.GetFileName(filePath);
-                Attachments.Add(new Attachment
-                {
-                    Data = attachment, Filename = fileName, ContentType = contentType, IsInline = true,
-                    ContentId = contentId
-                });
+                AddAttachment(filePath, contentType, contentId, true);
             }
 
             return this;
         }
 
         /// <summary>
-        ///     Send the alert with the specified message text
+        ///     Send the alert with the specified message text - assumes plain text
         ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
         ///     applied.
         /// </summary>
@@ -469,27 +453,55 @@ namespace Lurgle.Alerting
         /// <param name="args">Optional arguments for string replacement</param>
         public SendResponse Send(string msg, params object[] args)
         {
-            var body = msg;
-            if (!args.Length.Equals(0)) body = string.Format(msg, args);
-
-            if (IsMethod) body = $"[{MethodName}] {body}";
-
-            var result = GetEnvelope().Body(body).Send();
-
-            //Cleanup - close any open file streams and clear the list
-            foreach (var attachment in Attachments)
-            {
-                attachment.Data.Close();
-                attachment.Data.Dispose();
-            }
-
-            Attachments.Clear();
+            var result = GetEnvelopeWithBody(msg, false, null, args).Send();
+            ClearAttachments();
 
             return result;
         }
 
         /// <summary>
-        ///     Send the alert with the specified message text
+        ///     Return a rendered alert email with the specified message text - assumes plain text
+        ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+        ///     applied.
+        /// </summary>
+        /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
+        /// <param name="args">Optional arguments for string replacement</param>
+        public IFluentEmail Get(string msg, params object[] args)
+        {
+            return GetEnvelopeWithBody(msg, false, null, args);
+        }
+
+        /// <summary>
+        ///     Send the alert with the specified message text and alternate body
+        ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+        ///     applied.
+        /// </summary>
+        /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
+        /// <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
+        /// <param name="args">Optional arguments for string replacement</param>
+        public SendResponse SendHtml(string msg, string altMsg = null, params object[] args)
+        {
+            var result = GetEnvelopeWithBody(msg, true, altMsg, args).Send();
+            ClearAttachments();
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Return a rendered alert email with the specified message text and alternate body
+        ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+        ///     applied.
+        /// </summary>
+        /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
+        /// <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
+        /// <param name="args">Optional arguments for string replacement</param>
+        public IFluentEmail GetHtml(string msg, string altMsg = null, params object[] args)
+        {
+            return GetEnvelopeWithBody(msg, true, altMsg, args);
+        }
+
+        /// <summary>
+        ///     Send the alert with the specified message text - assumes plain text
         ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
         ///     applied.
         /// </summary>
@@ -497,91 +509,212 @@ namespace Lurgle.Alerting
         /// <param name="args">Optional arguments for string replacement</param>
         public async Task<SendResponse> SendAsync(string msg, params object[] args)
         {
+            var result = await GetEnvelopeWithBody(msg, false, null, args).SendAsync();
+            ClearAttachments();
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Send the alert with the specified message text and alternate body
+        ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+        ///     applied.
+        /// </summary>
+        /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
+        /// <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
+        /// <param name="args">Optional arguments for string replacement</param>
+        public async Task<SendResponse> SendHtmlAsync(string msg, string altMsg = null, params object[] args)
+        {
+            var result = await GetEnvelopeWithBody(msg, true, altMsg, args).SendAsync();
+            ClearAttachments();
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Send the alert using the selected <see cref="RendererType" /> template and model
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="template">Body of the email, using selected <see cref="RendererType" /> template format and model</param>
+        /// <param name="templateModel">The Model to apply to this template</param>
+        /// <param name="isHtml"></param>
+        /// <param name="alternateTemplate">Alternate text template</param>
+        public SendResponse SendTemplate<T>(string template, T templateModel, bool isHtml = true,
+            string alternateTemplate = null)
+        {
+            var result = GetEnvelopeWithTemplate(template, templateModel, false, isHtml,
+                string.IsNullOrEmpty(alternateTemplate), alternateTemplate).Send();
+
+            ClearAttachments();
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Return a rendered alert email using the selected <see cref="RendererType" /> template and model
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="template">Body of the email, using selected <see cref="RendererType" /> template format and model</param>
+        /// <param name="templateModel">The Model to apply to this template</param>
+        /// <param name="isHtml"></param>
+        /// <param name="alternateTemplate">Alternate text template</param>
+        public IFluentEmail GetTemplate<T>(string template, T templateModel, bool isHtml = true,
+            string alternateTemplate = null)
+        {
+            return GetEnvelopeWithTemplate(template, templateModel, false, isHtml,
+                string.IsNullOrEmpty(alternateTemplate), alternateTemplate);
+        }
+
+        /// <summary>
+        ///     Send the alert using selected <see cref="RendererType" /> template and model
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="template">Body of the email, using selected <see cref="RendererType" /> template format</param>
+        /// <param name="templateModel">The Model to apply to this template</param>
+        /// <param name="isHtml"></param>
+        /// <param name="alternateTemplate">Alternate text template</param>
+        public async Task<SendResponse> SendTemplateAsync<T>(string template, T templateModel, bool isHtml = true,
+            string alternateTemplate = null)
+        {
+            var result = await GetEnvelopeWithTemplate(template, templateModel, false, isHtml,
+                string.IsNullOrEmpty(alternateTemplate), alternateTemplate).SendAsync();
+            ClearAttachments();
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Send the alert using the selected <see cref="RendererType" /> template file and model
+        ///     <para />
+        ///     This does not check for the file existence, so a non-existent config item or missing file will cause an exception
+        ///     that can be caught.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="templateConfig">Config item to load for the selected <see cref="RendererType" /> template file</param>
+        /// <param name="templateModel">The Model to apply to this  template</param>
+        /// <param name="isHtml"></param>
+        /// <param name="alternateText">Render the text version of your template as an alternate text</param>
+        public SendResponse SendTemplateFile<T>(string templateConfig, T templateModel, bool isHtml = true,
+            bool alternateText = false)
+        {
+            var result = GetEnvelopeWithTemplate(templateConfig, templateModel, true, isHtml, alternateText).Send();
+            ClearAttachments();
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Return a rendered alert email using the selected <see cref="RendererType" /> template file and model
+        ///     <para />
+        ///     This does not check for the file existence, so a non-existent config item or missing file will cause an exception
+        ///     that can be caught.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="templateConfig">Config item to load for the selected <see cref="RendererType" /> template file</param>
+        /// <param name="templateModel">The Model to apply to this  template</param>
+        /// <param name="isHtml"></param>
+        /// <param name="alternateText">Render the text version of your template as an alternate text</param>
+        public IFluentEmail GetTemplateFile<T>(string templateConfig, T templateModel, bool isHtml = true,
+            bool alternateText = false)
+        {
+            return GetEnvelopeWithTemplate(templateConfig, templateModel, true, isHtml, alternateText);
+        }
+
+        /// <summary>
+        ///     Send the alert using the selected <see cref="RendererType" /> template (as configured in the application config)
+        ///     and model
+        ///     <para />
+        ///     This does not check for the file existence, so a non-existent config item or missing file will cause an exception
+        ///     that can be caught.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="templateConfig">Config item to load for the selected <see cref="RendererType" /> template file</param>
+        /// <param name="templateModel">The Model to apply to this  template</param>
+        /// <param name="isHtml"></param>
+        /// <param name="alternateText">Render the text version of your template as an alternate text</param>
+        public async Task<SendResponse> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool isHtml,
+            bool alternateText = false)
+        {
+            var result = await GetEnvelopeWithTemplate(templateConfig, templateModel, true, isHtml, alternateText)
+                .SendAsync();
+            ClearAttachments();
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Return an envelope with the specified body
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="isHtml"></param>
+        /// <param name="altMsg"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private IFluentEmail GetEnvelopeWithBody(string msg, bool isHtml, string altMsg = null, params object[] args)
+        {
             var body = msg;
-            if (!args.Length.Equals(0)) body = string.Format(msg, args);
+            var altBody = altMsg;
+            if (!args.Length.Equals(0))
+            {
+                body = string.Format(body, args);
+                if (!string.IsNullOrEmpty(altBody)) altBody = string.Format(altBody, args);
+            }
 
-            if (IsMethod) body = $"[{MethodName}] {body}";
+            if (!IsMethod)
+                return !string.IsNullOrEmpty(altBody)
+                    ? GetEnvelope().PlaintextAlternativeBody(altBody).Body(body, true)
+                    : GetEnvelope().Body(body);
+            //Doesn't make sense to append method in a HTML email
+            if (!isHtml)
+                body = $"[{MethodName}] {body}";
+            if (!string.IsNullOrEmpty(altBody))
+                altBody = $"[{MethodName}] {altBody}";
 
-            var result = await GetEnvelope().Body(body).SendAsync();
-            ClearAttachments();
+            return !string.IsNullOrEmpty(altBody)
+                ? GetEnvelope().PlaintextAlternativeBody(altBody).Body(body, isHtml)
+                : GetEnvelope().Body(body, isHtml);
+        }
 
-            return result;
+
+        /// <summary>
+        ///     Return an envelope using the specified template
+        /// </summary>
+        /// <param name="templateConfig"></param>
+        /// <param name="templateModel"></param>
+        /// <param name="isFile"></param>
+        /// <param name="isHtml"></param>
+        /// <param name="alternateText"></param>
+        /// <param name="alternateBody"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private IFluentEmail GetEnvelopeWithTemplate<T>(string templateConfig, T templateModel, bool isFile,
+            bool isHtml = true,
+            bool alternateText = false, string alternateBody = null)
+        {
+            var alert = GetEnvelope();
+            if (isFile)
+            {
+                var templatePath =
+                    Path.Combine(Alerting.Config.MailTemplatePath, Alerting.GetEmailTemplate(templateConfig, isHtml));
+                if (isHtml && alternateText)
+                    alert = alert.PlaintextAlternativeUsingTemplateFromFile(
+                        Path.Combine(Alerting.Config.MailTemplatePath,
+                            Alerting.GetEmailTemplate(templateConfig, false)),
+                        templateModel);
+
+                return alert.UsingTemplateFromFile(templatePath, templateModel, isHtml);
+            }
+
+            if (isHtml && alternateText && !string.IsNullOrEmpty(alternateBody))
+                alert = alert.PlaintextAlternativeUsingTemplate(alternateBody, templateModel);
+
+            return alert.UsingTemplate(templateConfig, templateModel, isHtml);
         }
 
         /// <summary>
-        ///     Send the alert using the specified Razor template and model
+        ///     Get an envelope without a body
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="template">Body of the email, using Razor template format</param>
-        /// <param name="templateModel">The Model to apply to this template</param>
-        /// <param name="html"></param>
-        public SendResponse SendTemplate<T>(string template, T templateModel, bool html = true)
-        {
-            var result = GetEnvelope().UsingTemplate(template, templateModel, html).Send();
-
-            ClearAttachments();
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Send the alert using the specified Razor template and model
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="template">Body of the email, using Razor template format</param>
-        /// <param name="templateModel">The Model to apply to this template</param>
-        /// <param name="html"></param>
-        public async Task<SendResponse> SendTemplateAsync<T>(string template, T templateModel, bool html = true)
-        {
-            var result = await GetEnvelope().UsingTemplate(template, templateModel, html).SendAsync();
-            ClearAttachments();
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Send the alert using the specified Razor template (as configured in the application config) and model
-        ///     <para />
-        ///     This does not check for the file existence, so a non-existent config item or missing file will cause an exception
-        ///     that can be caught.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="templateConfig">Config item to load for the Razor template file</param>
-        /// <param name="templateModel">The Model to apply to this  template</param>
-        /// <param name="html"></param>
-        public SendResponse SendTemplateFile<T>(string templateConfig, T templateModel, bool html = true)
-        {
-            var templatePath =
-                Path.Combine(Alerting.Config.MailTemplatePath, Alerting.GetEmailTemplate(templateConfig));
-
-            var result = GetEnvelope().UsingTemplateFromFile(templatePath, templateModel, html).Send();
-
-            ClearAttachments();
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Send the alert using the specified Razor template (as configured in the application config) and model
-        ///     <para />
-        ///     This does not check for the file existence, so a non-existent config item or missing file will cause an exception
-        ///     that can be caught.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="templateConfig">Config item to load for the Razor template file</param>
-        /// <param name="templateModel">The Model to apply to this  template</param>
-        /// <param name="html"></param>
-        public async Task<SendResponse> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool html)
-        {
-            var templatePath =
-                Path.Combine(Alerting.Config.MailTemplatePath, Alerting.GetEmailTemplate(templateConfig));
-
-            var result = await GetEnvelope().UsingTemplateFromFile(templatePath, templateModel, html).SendAsync();
-            ClearAttachments();
-
-            return result;
-        }
-
+        /// <returns></returns>
         private IFluentEmail GetEnvelope()
         {
             var email = Email.From(FromAddress.EmailAddress, FromAddress.Name)
@@ -609,9 +742,54 @@ namespace Lurgle.Alerting
             return email;
         }
 
+        /// <summary>
+        ///     Add an attachment to the envelope
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="contentType"></param>
+        /// <param name="contentId"></param>
+        /// <param name="isInline"></param>
+        private void AddAttachment(string filePath, string contentType = null, string contentId = null,
+            bool isInline = false)
+        {
+            var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
+            var fileName = Path.GetFileName(filePath);
+            if (string.IsNullOrEmpty(contentId) && !isInline)
+                Attachments.Add(new Attachment
+                {
+                    Data = attachment, Filename = fileName,
+                    ContentType = string.IsNullOrEmpty(contentType) ? GetMimeMapping(filePath) : contentType
+                });
+            else
+                Attachments.Add(new Attachment
+                {
+                    Data = attachment, Filename = fileName,
+                    ContentType = string.IsNullOrEmpty(contentType) ? GetMimeMapping(fileName) : contentType,
+                    IsInline = true,
+                    ContentId = contentId
+                });
+        }
+
+        /// <summary>
+        ///     Add an attachment stream to the envelope
+        /// </summary>
+        /// <param name="fileStream"></param>
+        /// <param name="fileName"></param>
+        /// <param name="contentType"></param>
+        private void AddAttachment(Stream fileStream, string fileName, string contentType = null)
+        {
+            Attachments.Add(new Attachment
+            {
+                Data = fileStream, Filename = fileName,
+                ContentType = string.IsNullOrEmpty(contentType) ? GetMimeMapping(fileName) : contentType
+            });
+        }
+
+        /// <summary>
+        ///     Close any open file streams and clear the list
+        /// </summary>
         private void ClearAttachments()
         {
-            //Cleanup - close any open file streams and clear the list
             foreach (var attachment in Attachments)
             {
                 attachment.Data.Close();
@@ -654,6 +832,10 @@ namespace Lurgle.Alerting
             return this;
         }
 
+        /// <summary>
+        ///     Retrieve the configured <see cref="SenderType" /> with settings applied
+        /// </summary>
+        /// <returns></returns>
         private static ISender GetSender()
         {
             switch (Alerting.Config.MailSender)

@@ -83,11 +83,109 @@ namespace Lurgle.Alerting.Tests
         }
 
         /// <summary>
+        ///     Validate the template render
+        /// </summary>
+        [Fact]
+        public void TemplateRenderTest()
+        {
+            Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Liquid));
+            var alert = Alert.To().Subject("Test Liquid Template").GetTemplateFile("Liquid", new
+            {
+                Alerting.Config.AppName,
+                Alerting.Config.AppVersion,
+                MailRenderer = Alerting.Config.MailRenderer.ToString(),
+                MailSender = Alerting.Config.MailSender.ToString(),
+                Alerting.Config.MailTemplatePath,
+                Alerting.Config.MailHost,
+                MailTestTimeout = Alerting.Config.MailTestTimeout / 1000,
+                Alerting.Config.MailPort,
+                Alerting.Config.MailUseAuthentication,
+                Alerting.Config.MailUsername,
+                Alerting.Config.MailPassword,
+                Alerting.Config.MailUseTls,
+                MailTimeout = Alerting.Config.MailTimeout / 1000,
+                Alerting.Config.MailFrom,
+                Alerting.Config.MailTo,
+                Alerting.Config.MailDebug,
+                Alerting.Config.MailSubject
+            });
+
+            Assert.True(alert.Data.IsHtml);
+            Assert.True(alert.Data.Body.Length  > 0);
+            Assert.True(alert.Data.PlaintextAlternativeBody == null);
+            testOutputHelper.WriteLine(alert.Data.Body);
+        }
+
+        /// <summary>
+        ///     Validate Razor rendering
+        /// </summary>
+        [Fact]
+        public void RazorRenderTest()
+        {
+            Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Razor));
+            var alert = Alert.To().Subject("Test Razor Template").GetTemplateFile("Razor", new { });
+            Assert.True(alert.Data.IsHtml);
+            Assert.True(alert.Data.Body.Length  > 0);
+            Assert.True(alert.Data.PlaintextAlternativeBody == null);
+            testOutputHelper.WriteLine(alert.Data.Body);
+        }
+
+        /// <summary>
+        ///     Validate the template render with alt text template
+        /// </summary>
+        [Fact]
+        public void TemplateAltRenderTest()
+        {
+            Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Liquid));
+            var alert = Alert.To().Subject("Test Liquid Template").GetTemplateFile("Liquid", new
+            {
+                Alerting.Config.AppName,
+                Alerting.Config.AppVersion,
+                MailRenderer = Alerting.Config.MailRenderer.ToString(),
+                MailSender = Alerting.Config.MailSender.ToString(),
+                Alerting.Config.MailTemplatePath,
+                Alerting.Config.MailHost,
+                MailTestTimeout = Alerting.Config.MailTestTimeout / 1000,
+                Alerting.Config.MailPort,
+                Alerting.Config.MailUseAuthentication,
+                Alerting.Config.MailUsername,
+                Alerting.Config.MailPassword,
+                Alerting.Config.MailUseTls,
+                MailTimeout = Alerting.Config.MailTimeout / 1000,
+                Alerting.Config.MailFrom,
+                Alerting.Config.MailTo,
+                Alerting.Config.MailDebug,
+                Alerting.Config.MailSubject
+            }, true, true);
+
+            Assert.True(alert.Data.IsHtml);
+            Assert.True(alert.Data.Body.Length  > 0);
+            Assert.True(alert.Data.PlaintextAlternativeBody.Length > 0);
+            testOutputHelper.WriteLine(alert.Data.PlaintextAlternativeBody);
+        }
+
+        /// <summary>
+        ///     Validate the template render with alt text template
+        /// </summary>
+        [Fact]
+        public void RazorAltRenderTest()
+        {
+            Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Razor));
+            var alert = Alert.To().Subject("Test Razor Template").GetTemplateFile("Razor", new { }, true, true);
+
+            Assert.True(alert.Data.IsHtml);
+            Assert.True(alert.Data.Body.Length  > 0);
+            Assert.True(alert.Data.PlaintextAlternativeBody.Length > 0);
+            testOutputHelper.WriteLine(alert.Data.PlaintextAlternativeBody);
+        }
+
+        /// <summary>
         ///     Validate the template render and send processes
         /// </summary>
         [Fact]
         public void TemplateSendTest()
         {
+            Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Liquid));
             var alert = Alert.To().Subject("Test Liquid Template").SendTemplateFile("Liquid", new
             {
                 Alerting.Config.AppName,
@@ -108,6 +206,36 @@ namespace Lurgle.Alerting.Tests
                 Alerting.Config.MailDebug,
                 Alerting.Config.MailSubject
             });
+
+            foreach (var error in alert.ErrorMessages)
+                testOutputHelper.WriteLine("Error Output: {0}", error);
+            Assert.True(!alert.Successful);
+        }
+
+        [Fact]
+        public void TemplateAltSendTest()
+        {
+            Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Liquid));
+            var alert = Alert.To().Subject("Test Liquid with alternate text").SendTemplateFile("Liquid", new
+            {
+                Alerting.Config.AppName,
+                Alerting.Config.AppVersion,
+                MailRenderer = Alerting.Config.MailRenderer.ToString(),
+                MailSender = Alerting.Config.MailSender.ToString(),
+                Alerting.Config.MailTemplatePath,
+                Alerting.Config.MailHost,
+                MailTestTimeout = Alerting.Config.MailTestTimeout / 1000,
+                Alerting.Config.MailPort,
+                Alerting.Config.MailUseAuthentication,
+                Alerting.Config.MailUsername,
+                Alerting.Config.MailPassword,
+                Alerting.Config.MailUseTls,
+                MailTimeout = Alerting.Config.MailTimeout / 1000,
+                Alerting.Config.MailFrom,
+                Alerting.Config.MailTo,
+                Alerting.Config.MailDebug,
+                Alerting.Config.MailSubject
+            }, true, true);
 
             foreach (var error in alert.ErrorMessages)
                 testOutputHelper.WriteLine("Error Output: {0}", error);

@@ -1,0 +1,18 @@
+﻿@using Lurgle.Alerting
+@Alerting.Config.AppName v@(Alerting.Config.AppVersion)
+
+Renderer:				@Alerting.Config.MailRenderer
+Sender:					@Alerting.Config.MailSender
+Template Path:			@Alerting.Config.MailTemplatePath
+Mail Host:				@Alerting.Config.MailHost
+Mail Port:				@Alerting.Config.MailPort
+Mail Test Timeout:		@(Alerting.Config.MailTestTimeout/1000)
+Use Authentication:		@Alerting.Config.MailUseAuthentication
+Username:				@Alerting.Config.MailUsername
+Password:				@Alerting.Config.MailPassword
+Use TLS:				@Alerting.Config.MailUseTls
+SMTP Timeout:			@(Alerting.Config.MailTimeout/1000)
+Mail From:				@Alerting.Config.MailFrom
+Mail To:				@Alerting.Config.MailTo
+Mail Debug:				@Alerting.Config.MailDebug
+Mail Subject:			@Alerting.Config.MailSubject

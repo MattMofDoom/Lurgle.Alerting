@@ -1,0 +1,17 @@
+﻿{{AppName}} v{{AppVersion}}
+
+Renderer:				{{MailRenderer}}
+Sender:					{{MailSender}}
+Template Path:			{{MailTemplatePath}}
+Mail Host:				{{MailHost}}
+Mail Port:				{{MailPort}}
+Mail Test Timeout:		{{MailTestTimeout}}
+Use Authentication:		{{MailUseAuthentication}}
+Username:				{{MailUsername}}
+Password:				{{MailPassword}}
+Use TLS:				{{MailUseTls}}
+SMTP Timeout:			{{MailTimeout}}
+Mail From:				{{MailFrom}}
+Mail To:				{{MailTo}}
+Mail Debug:				{{MailDebug}}
+Mail Subject:			{{MailSubject}}
