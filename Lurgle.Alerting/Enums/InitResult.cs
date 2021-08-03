@@ -1,4 +1,6 @@
-﻿namespace Lurgle.Alerting
+﻿// ReSharper disable InconsistentNaming
+
+namespace Lurgle.Alerting
 {
     /// <summary>
     ///     Return a reason why initialisation failed
