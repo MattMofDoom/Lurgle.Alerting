@@ -1,4 +1,6 @@
-﻿namespace Lurgle.Alerting
+﻿// ReSharper disable InconsistentNaming
+
+namespace Lurgle.Alerting
 {
     /// <summary>
     ///     Send using the old SmtpClient (deprecated) or MailKit

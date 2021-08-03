@@ -11,14 +11,14 @@ namespace Lurgle.Alerting.Renderers
     /// </summary>
     public class HandlebarsRenderer : ITemplateRenderer
     {
-        private readonly IHandlebars engine;
+        private readonly IHandlebars _engine;
 
         /// <summary>
         ///     Handlebars Renderer constructor
         /// </summary>
         public HandlebarsRenderer()
         {
-            engine = Handlebars.Create();
+            _engine = Handlebars.Create();
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Lurgle.Alerting.Renderers
         /// <returns></returns>
         public async Task<string> ParseAsync<T>(string template, T model, bool isHtml = true)
         {
-            var compiledTemplate = engine.Compile(template);
+            var compiledTemplate = _engine.Compile(template);
 
             var result = compiledTemplate(model);
 
@@ -76,7 +76,7 @@ namespace Lurgle.Alerting.Renderers
             {
                 var name = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(template)).ToLower();
                 var content = File.ReadAllText(template);
-                engine.RegisterTemplate(name, content);
+                _engine.RegisterTemplate(name, content);
             }
         }
     }

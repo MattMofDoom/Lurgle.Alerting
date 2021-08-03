@@ -8,11 +8,11 @@ namespace Lurgle.Alerting.Tests
 {
     public class AlertTests
     {
-        private readonly ITestOutputHelper testOutputHelper;
+        private readonly ITestOutputHelper _testOutputHelper;
 
         public AlertTests(ITestOutputHelper testOutputHelper)
         {
-            this.testOutputHelper = testOutputHelper;
+            _testOutputHelper = testOutputHelper;
             Alerting.SetConfig(new AlertConfig(appName: "TestMaster Prime", mailRenderer: RendererType.Liquid,
                 mailSender: SenderType.MailKit, mailHost: "mail", mailPort: 25, mailFrom: "bob@builder.com",
                 mailTo: "wendy@builder.com", mailDebug: "scoop@builder.com", mailSubject: "Can you fix it?",
@@ -111,9 +111,9 @@ namespace Lurgle.Alerting.Tests
             });
 
             Assert.True(alert.Data.IsHtml);
-            Assert.True(alert.Data.Body.Length  > 0);
+            Assert.True(alert.Data.Body.Length > 0);
             Assert.True(alert.Data.PlaintextAlternativeBody == null);
-            testOutputHelper.WriteLine(alert.Data.Body);
+            _testOutputHelper.WriteLine(alert.Data.Body);
         }
 
         /// <summary>
@@ -125,9 +125,9 @@ namespace Lurgle.Alerting.Tests
             Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Razor));
             var alert = Alert.To().Subject("Test Razor Template").GetTemplateFile("Razor", new { });
             Assert.True(alert.Data.IsHtml);
-            Assert.True(alert.Data.Body.Length  > 0);
+            Assert.True(alert.Data.Body.Length > 0);
             Assert.True(alert.Data.PlaintextAlternativeBody == null);
-            testOutputHelper.WriteLine(alert.Data.Body);
+            _testOutputHelper.WriteLine(alert.Data.Body);
         }
 
         /// <summary>
@@ -159,9 +159,9 @@ namespace Lurgle.Alerting.Tests
             }, true, true);
 
             Assert.True(alert.Data.IsHtml);
-            Assert.True(alert.Data.Body.Length  > 0);
+            Assert.True(alert.Data.Body.Length > 0);
             Assert.True(alert.Data.PlaintextAlternativeBody.Length > 0);
-            testOutputHelper.WriteLine(alert.Data.PlaintextAlternativeBody);
+            _testOutputHelper.WriteLine(alert.Data.PlaintextAlternativeBody);
         }
 
         /// <summary>
@@ -174,9 +174,9 @@ namespace Lurgle.Alerting.Tests
             var alert = Alert.To().Subject("Test Razor Template").GetTemplateFile("Razor", new { }, true, true);
 
             Assert.True(alert.Data.IsHtml);
-            Assert.True(alert.Data.Body.Length  > 0);
+            Assert.True(alert.Data.Body.Length > 0);
             Assert.True(alert.Data.PlaintextAlternativeBody.Length > 0);
-            testOutputHelper.WriteLine(alert.Data.PlaintextAlternativeBody);
+            _testOutputHelper.WriteLine(alert.Data.PlaintextAlternativeBody);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Lurgle.Alerting.Tests
             });
 
             foreach (var error in alert.ErrorMessages)
-                testOutputHelper.WriteLine("Error Output: {0}", error);
+                _testOutputHelper.WriteLine("Error Output: {0}", error);
             Assert.True(!alert.Successful);
         }
 
@@ -238,7 +238,7 @@ namespace Lurgle.Alerting.Tests
             }, true, true);
 
             foreach (var error in alert.ErrorMessages)
-                testOutputHelper.WriteLine("Error Output: {0}", error);
+                _testOutputHelper.WriteLine("Error Output: {0}", error);
             Assert.True(!alert.Successful);
         }
     }
