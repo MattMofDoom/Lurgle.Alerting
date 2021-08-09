@@ -12,7 +12,7 @@
     <PackageProjectUrl>https://github.com/MattMofDoom/Lurgle.Alerting</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <PackageTags>Fluent,Email,FluentEmail,Alert,Alerts,Alerting,Razor,Fluid,Liquid,Smtp,MailKit</PackageTags>
+    <PackageTags>Lurgle Fluent Email FluentEmail Alert Alerts Alerting Razor Fluid Liquid Smtp MailKit</PackageTags>
     <Version>1.2.3</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
