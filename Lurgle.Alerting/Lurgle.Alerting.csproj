@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.0;net461;net47;net48;net5.0;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Matt Marlor</Authors>
-    <Description>Alerting library that accelerates getting projects up and running with FluentEmail. Use text/HTML or Razor, Fluid, or Handlebars templates!</Description>
+    <Description>Alerting library that accelerates getting projects up and running with FluentEmail. Use text/HTML or Razor, Liquid, or Handlebars templates!</Description>
     <Copyright>Matt Marlor</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageIcon>LurgleMail.png</PackageIcon>
@@ -12,7 +12,7 @@
     <PackageProjectUrl>https://github.com/MattMofDoom/Lurgle.Alerting</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <PackageTags>Lurgle Fluent Email FluentEmail Alert Alerts Alerting Razor Fluid Liquid Smtp MailKit</PackageTags>
+    <PackageTags>Lurgle Fluent Email FluentEmail Alert Alerts Alerting Razor Fluid Liquid Smtp MailKit Handlebars template</PackageTags>
     <Version>1.2.4</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
