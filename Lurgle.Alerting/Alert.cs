@@ -16,6 +16,7 @@ using FluentEmail.MailKitSmtp;
 using FluentEmail.Smtp;
 using Lurgle.Alerting.Classes;
 using Lurgle.Alerting.Interfaces;
+using MailKit.Security;
 using static MimeMapping.MimeUtility;
 using Attachment = FluentEmail.Core.Models.Attachment;
 
@@ -865,7 +866,7 @@ namespace Lurgle.Alerting
                         RequiresAuthentication = Alerting.Config.MailUseAuthentication,
                         User = Alerting.Config.MailUsername,
                         Password = Alerting.Config.MailPassword,
-                        SocketOptions = Alerting.Config.MailTlsOptions
+                        SocketOptions = Alerting.Config.MailTlsOptions == null ? SecureSocketOptions.Auto : (SecureSocketOptions)Alerting.Config.MailTlsOptions
                     });
             }
         }
