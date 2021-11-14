@@ -107,7 +107,8 @@ namespace Lurgle.Alerting.Tests
                 Alerting.Config.MailFrom,
                 Alerting.Config.MailTo,
                 Alerting.Config.MailDebug,
-                Alerting.Config.MailSubject
+                Alerting.Config.MailSubject,
+                Alerting.Config.MailTlsOptions
             });
 
             Assert.True(alert.Data.IsHtml);
@@ -155,7 +156,8 @@ namespace Lurgle.Alerting.Tests
                 Alerting.Config.MailFrom,
                 Alerting.Config.MailTo,
                 Alerting.Config.MailDebug,
-                Alerting.Config.MailSubject
+                Alerting.Config.MailSubject,
+                Alerting.Config.MailTlsOptions
             }, true, true);
 
             Assert.True(alert.Data.IsHtml);
@@ -204,7 +206,8 @@ namespace Lurgle.Alerting.Tests
                 Alerting.Config.MailFrom,
                 Alerting.Config.MailTo,
                 Alerting.Config.MailDebug,
-                Alerting.Config.MailSubject
+                Alerting.Config.MailSubject,
+                Alerting.Config.MailTlsOptions
             });
 
             foreach (var error in alert.ErrorMessages)
@@ -234,7 +237,8 @@ namespace Lurgle.Alerting.Tests
                 Alerting.Config.MailFrom,
                 Alerting.Config.MailTo,
                 Alerting.Config.MailDebug,
-                Alerting.Config.MailSubject
+                Alerting.Config.MailSubject,
+                Alerting.Config.MailTlsOptions
             }, true, true);
 
             foreach (var error in alert.ErrorMessages)

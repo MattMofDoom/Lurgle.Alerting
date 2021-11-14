@@ -468,7 +468,7 @@
             <param name="fileList">List of paths to files that will be attached</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.GetSender">
+        <member name="M:Lurgle.Alerting.Alert.GetSender(System.String)">
             <summary>
                 Retrieve the configured <see cref="T:Lurgle.Alerting.SenderType" /> with settings applied
             </summary>
@@ -483,6 +483,13 @@
             <param name="contentId"></param>
             <param name="filePath"></param>
             <param name="contentType"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.GetDomains(FluentEmail.Core.IFluentEmail)">
+            <summary>
+            Parse email domains from envelope
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alert.From(System.String,System.String,Lurgle.Alerting.AddressType,System.Boolean,System.String)">
             <summary>
@@ -533,7 +540,7 @@
                 AlertConfig constructor
             </summary>
         </member>
-        <member name="M:Lurgle.Alerting.AlertConfig.#ctor(Lurgle.Alerting.AlertConfig,System.String,System.String,System.Nullable{Lurgle.Alerting.RendererType},System.Nullable{Lurgle.Alerting.SenderType},System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+        <member name="M:Lurgle.Alerting.AlertConfig.#ctor(Lurgle.Alerting.AlertConfig,System.String,System.String,System.Nullable{Lurgle.Alerting.RendererType},System.Nullable{Lurgle.Alerting.SenderType},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{MailKit.Security.SecureSocketOptions},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
             <summary>
                 Constructor that permits passing a config and optional overrides of any property
             </summary>
@@ -544,6 +551,7 @@
             <param name="mailSender"></param>
             <param name="mailTemplatePath"></param>
             <param name="mailHost"></param>
+            <param name="mailUseDns"></param>
             <param name="mailPort"></param>
             <param name="mailTestTimeout"></param>
             <param name="mailUseAuthentication"></param>
@@ -555,6 +563,7 @@
             <param name="mailTo"></param>
             <param name="mailDebug"></param>
             <param name="mailSubject"></param>
+            <param name="mailTlsOptions"></param>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.AppName">
             <summary>
@@ -583,7 +592,12 @@
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailHost">
             <summary>
-                Set the SMTP mail host. Must be specified.
+                Set one or more SMTP mail hosts, comma-delimited. If not specified, MailUseDns will be assumed.
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.AlertConfig.MailUseDns">
+            <summary>
+             Use DNS delivery. If set with MailHost, this will be used as a fallback delivery method.
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailPort">
@@ -614,6 +628,11 @@
         <member name="P:Lurgle.Alerting.AlertConfig.MailUseTls">
             <summary>
                 Enable TLS over SMTP - defaults to false
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.AlertConfig.MailTlsOptions">
+            <summary>
+                Discrete configuration of TLS - overrides MailUseTls if set
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailTimeout">
@@ -723,6 +742,11 @@
                 List of issues found during alerting initialisation
             </summary>
         </member>
+        <member name="F:Lurgle.Alerting.Alerting.DnsResolver">
+            <summary>
+            Static DNS resolver
+            </summary>
+        </member>
         <member name="M:Lurgle.Alerting.Alerting.SetConfig(Lurgle.Alerting.AlertConfig)">
             <summary>
                 Set the <see cref="P:Lurgle.Alerting.Alerting.Config" /> by passing an <see cref="T:Lurgle.Alerting.AlertConfig" /> or reading from app config
@@ -778,6 +802,61 @@
             <param name="template">Email template to return the filename for</param>
             <param name="isHtml"></param>
         </member>
+        <member name="T:Lurgle.Alerting.Classes.DeliveryAttempt">
+            <summary>
+            Delivery Attempt record
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Classes.DeliveryAttempt.DeliveryType">
+            <summary>
+            Type of delivery
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Classes.DeliveryAttempt.MailHost">
+            <summary>
+            Host attempted
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Classes.DeliveryAttempt.Result">
+            <summary>
+            Send response
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.Classes.MailResult">
+            <summary>
+            Record of mail send result, including all results for iteration
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Classes.MailResult.Successful">
+            <summary>
+            Overall Success / Failure
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Classes.MailResult.DeliveryType">
+            <summary>
+            Last send's delivery type
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Classes.MailResult.MailHost">
+            <summary>
+            Last send's mail host
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Classes.MailResult.ErrorMessages">
+            <summary>
+            Last send's ErrorMessages for backward compatibility
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Classes.MailResult.MessageId">
+            <summary>
+            Last send's MessageId for backward compatibility
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Classes.MailResult.DeliveryAttempts">
+            <summary>
+            List of all attempts
+            </summary>
+        </member>
         <member name="T:Lurgle.Alerting.AddressType">
             <summary>
                 Indicate whether an email address passing in to <see cref="T:Lurgle.Alerting.Alert" /> is an actual email address, or if it should be
@@ -813,6 +892,41 @@
         <member name="F:Lurgle.Alerting.AlertLevel.High">
             <summary>
                 High
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.DeliveryType">
+            <summary>
+            Type of mail delivery
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.DeliveryType.MailHost">
+            <summary>
+            Delivery via mailhost
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.DeliveryType.MailFallback">
+            <summary>
+            Delivery via mailhost fallback
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.DeliveryType.Dns">
+            <summary>
+            Delivery via DNS
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.DeliveryType.DnsFallback">
+            <summary>
+            Delivery via DNS fallback
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.DeliveryType.HostDnsFallback">
+            <summary>
+            Delivery via Mailhost DNS fallback
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.DeliveryType.None">
+            <summary>
+            N/A
             </summary>
         </member>
         <member name="T:Lurgle.Alerting.InitResult">

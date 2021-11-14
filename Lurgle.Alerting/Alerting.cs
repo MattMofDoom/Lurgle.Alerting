@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text.Encodings.Web;
+using DnsClient;
 using FluentEmail.Core;
 using FluentEmail.Core.Defaults;
 using FluentEmail.Liquid;
@@ -36,6 +37,11 @@ namespace Lurgle.Alerting
         ///     List of issues found during alerting initialisation
         /// </summary>
         public static List<InitResult> AlertFailures { get; private set; }
+
+        /// <summary>
+        /// Static DNS resolver
+        /// </summary>
+        public static readonly LookupClient DnsResolver = new LookupClient();
 
         /// <summary>
         ///     Set the <see cref="Config" /> by passing an <see cref="AlertConfig" /> or reading from app config
@@ -86,7 +92,7 @@ namespace Lurgle.Alerting
 
             AlertFailures = new List<InitResult>();
 
-            if (string.IsNullOrEmpty(Config?.MailHost))
+            if (Config != null && !Config.MailHost.Any() && !Config.MailUseDns)
                 AlertFailures.Add(InitResult.MailHostNotConfigured);
 
             if (string.IsNullOrEmpty(Config?.MailFrom) || !Alert.ToAddressList(Config.MailFrom).Any())
@@ -102,7 +108,7 @@ namespace Lurgle.Alerting
                 AlertFailures.Add(InitResult.SubjectEmpty);
 
             //SMTP test should automatically fail if we don't have a mail host
-            if (string.IsNullOrEmpty(Config?.MailHost) || !TestSmtp())
+            if (Config != null && ((!Config.MailHost.Any() && !Config.MailUseDns) || (Config.MailHost.Any() && !TestSmtp())))
                 AlertFailures.Add(InitResult.SmtpTestFailed);
 
             return AlertFailures.Count.Equals(0);
@@ -120,16 +126,23 @@ namespace Lurgle.Alerting
 
             var useTimeout = timeout ?? Config.MailTestTimeout;
 
-            var useMailHost = !string.IsNullOrEmpty(mailHost) ? mailHost : Config.MailHost;
+            var useMailHost = !string.IsNullOrEmpty(mailHost) ? new List<string> { mailHost } : Config.MailHost;
 
             var useMailPort = mailPort ?? Config.MailPort;
 
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            var result = socket.BeginConnect(useMailHost, useMailPort, null, null);
-            // X second timeout
-            var isSuccess = result.AsyncWaitHandle.WaitOne(useTimeout, true);
-            socket.Close();
+            var isSuccess = false;
 
+            foreach (var result in useMailHost.Select(host => socket.BeginConnect(host, useMailPort, null, null)))
+            {
+                // X second timeout
+                isSuccess = result.AsyncWaitHandle.WaitOne(useTimeout, true);
+                socket.Close();
+
+                //End on first failure
+                if (!isSuccess)
+                    break;
+            }
             return isSuccess;
         }
 

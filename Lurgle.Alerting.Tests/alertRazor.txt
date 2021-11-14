@@ -5,12 +5,14 @@ Renderer:				@Alerting.Config.MailRenderer
 Sender:					@Alerting.Config.MailSender
 Template Path:			@Alerting.Config.MailTemplatePath
 Mail Host:				@Alerting.Config.MailHost
+Mail Use DNS:			@Alerting.Config.MailUseDns
 Mail Port:				@Alerting.Config.MailPort
 Mail Test Timeout:		@(Alerting.Config.MailTestTimeout/1000)
 Use Authentication:		@Alerting.Config.MailUseAuthentication
 Username:				@Alerting.Config.MailUsername
 Password:				@Alerting.Config.MailPassword
 Use TLS:				@Alerting.Config.MailUseTls
+TLS Options:			@Alerting.Config.MailTlsOptions
 SMTP Timeout:			@(Alerting.Config.MailTimeout/1000)
 Mail From:				@Alerting.Config.MailFrom
 Mail To:				@Alerting.Config.MailTo

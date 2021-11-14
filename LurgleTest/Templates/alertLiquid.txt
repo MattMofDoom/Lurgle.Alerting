@@ -4,12 +4,14 @@ Renderer:				{{MailRenderer}}
 Sender:					{{MailSender}}
 Template Path:			{{MailTemplatePath}}
 Mail Host:				{{MailHost}}
+Mail Use DNS:			{{MailUseDns}}
 Mail Port:				{{MailPort}}
 Mail Test Timeout:		{{MailTestTimeout}}
 Use Authentication:		{{MailUseAuthentication}}
 Username:				{{MailUsername}}
 Password:				{{MailPassword}}
 Use TLS:				{{MailUseTls}}
+TLS Options:			{{MailTlsOptions}}
 SMTP Timeout:			{{MailTimeout}}
 Mail From:				{{MailFrom}}
 Mail To:				{{MailTo}}
