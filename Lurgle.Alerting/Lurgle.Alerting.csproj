@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle Fluent Email FluentEmail Alert Alerts Alerting Razor Fluid Liquid Smtp MailKit Handlebars template</PackageTags>
-    <Version>1.3.0</Version>
+    <Version>1.3.1</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <PackageReleaseNotes>- Add MailUseDns to delivery using DNS resolution of MX records

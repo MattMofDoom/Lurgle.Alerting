@@ -55,7 +55,7 @@ namespace Lurgle.Alerting
             SenderType? mailSender = null, string mailTemplatePath = null, string mailHost = null, bool? mailUseDns = null,
             int? mailPort = null, int? mailTestTimeout = null, bool? mailUseAuthentication = null,
             string mailUsername = null,
-            string mailPassword = null, bool? mailUseTls = null, SecureSocketOptions? mailTlsOptions = null, int ? mailTimeout = null, string mailFrom = null,
+            string mailPassword = null, bool? mailUseTls = null, TlsOptions? mailTlsOptions = null, int ? mailTimeout = null, string mailFrom = null,
             string mailTo = null, string mailDebug = null, string mailSubject = null
             )
         {
@@ -109,7 +109,7 @@ namespace Lurgle.Alerting
             if (mailUseTls != null)
                 MailUseTls = (bool) mailUseTls;
             if (mailTlsOptions != null)
-                MailTlsOptions = (SecureSocketOptions) mailTlsOptions;
+                MailTlsOptions = (TlsOptions) mailTlsOptions;
             if (mailTimeout != null)
                 MailTimeout = (int) mailTimeout;
             if (!string.IsNullOrEmpty(mailFrom))
@@ -129,16 +129,16 @@ namespace Lurgle.Alerting
             switch (MailTlsOptions)
             {
                 case null when MailUseTls && MailPort == 465: //Implicit TLS
-                case SecureSocketOptions.None when MailPort == 465:
-                case SecureSocketOptions.Auto when MailPort == 465:
-                case SecureSocketOptions.StartTlsWhenAvailable when MailPort == 465:
-                    MailTlsOptions = SecureSocketOptions.SslOnConnect;
+                case TlsOptions.None when MailPort == 465:
+                case TlsOptions.Auto when MailPort == 465:
+                case TlsOptions.StartTlsWhenAvailable when MailPort == 465:
+                    MailTlsOptions = TlsOptions.SslOnConnect;
                     break;
                 case null when MailUseTls:
-                    MailTlsOptions = SecureSocketOptions.StartTls; //Explicit TLS
+                    MailTlsOptions = TlsOptions.StartTls; //Explicit TLS
                     break;
                 case null:
-                    MailTlsOptions = SecureSocketOptions.Auto;
+                    MailTlsOptions = TlsOptions.Auto;
                     break;
             }
 
@@ -225,7 +225,7 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     Discrete configuration of TLS - overrides MailUseTls if set
         /// </summary>
-        public SecureSocketOptions? MailTlsOptions { get; private set; }
+        public TlsOptions? MailTlsOptions { get; private set; }
 
         /// <summary>
         ///     Set the timeout for SMTP sends - defaults to 60 seconds
@@ -326,16 +326,16 @@ namespace Lurgle.Alerting
             switch (alertConfig.MailTlsOptions)
             {
                 case null when alertConfig.MailUseTls && alertConfig.MailPort == 465: //Implicit TLS
-                case SecureSocketOptions.None when alertConfig.MailPort == 465:
-                case SecureSocketOptions.Auto when alertConfig.MailPort == 465:
-                case SecureSocketOptions.StartTlsWhenAvailable when alertConfig.MailPort == 465:
-                    alertConfig.MailTlsOptions = SecureSocketOptions.SslOnConnect;
+                case TlsOptions.None when alertConfig.MailPort == 465:
+                case TlsOptions.Auto when alertConfig.MailPort == 465:
+                case TlsOptions.StartTlsWhenAvailable when alertConfig.MailPort == 465:
+                    alertConfig.MailTlsOptions = TlsOptions.SslOnConnect;
                     break;
                 case null when alertConfig.MailUseTls:
-                    alertConfig.MailTlsOptions = SecureSocketOptions.StartTls; //Explicit TLS
+                    alertConfig.MailTlsOptions = TlsOptions.StartTls; //Explicit TLS
                     break;
                 case null:
-                    alertConfig.MailTlsOptions = SecureSocketOptions.Auto;
+                    alertConfig.MailTlsOptions = TlsOptions.Auto;
                     break;
             }
 
@@ -380,12 +380,12 @@ namespace Lurgle.Alerting
             return bool.TryParse(sourceString, out var destBool) && destBool;
         }
 
-        private static SecureSocketOptions GetSocketOptions(string configValue)
+        private static TlsOptions GetSocketOptions(string configValue)
         {
-            if (string.IsNullOrEmpty(configValue)) return SecureSocketOptions.Auto;
-            return Enum.TryParse(configValue, true, out SecureSocketOptions socketOptions)
+            if (string.IsNullOrEmpty(configValue)) return TlsOptions.Auto;
+            return Enum.TryParse(configValue, true, out TlsOptions socketOptions)
                 ? socketOptions
-                : SecureSocketOptions.Auto;
+                : TlsOptions.Auto;
         }
 
         private static IEnumerable<string> GetServerList(string hostName)

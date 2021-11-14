@@ -540,7 +540,7 @@
                 AlertConfig constructor
             </summary>
         </member>
-        <member name="M:Lurgle.Alerting.AlertConfig.#ctor(Lurgle.Alerting.AlertConfig,System.String,System.String,System.Nullable{Lurgle.Alerting.RendererType},System.Nullable{Lurgle.Alerting.SenderType},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{MailKit.Security.SecureSocketOptions},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
+        <member name="M:Lurgle.Alerting.AlertConfig.#ctor(Lurgle.Alerting.AlertConfig,System.String,System.String,System.Nullable{Lurgle.Alerting.RendererType},System.Nullable{Lurgle.Alerting.SenderType},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{Lurgle.Alerting.TlsOptions},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
             <summary>
                 Constructor that permits passing a config and optional overrides of any property
             </summary>
@@ -1007,6 +1007,36 @@
         <member name="F:Lurgle.Alerting.SenderType.MailKit">
             <summary>
                 Use MailKit
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.TlsOptions">
+            <summary>
+            TLS Options
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.TlsOptions.None">
+            <summary>
+            None
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.TlsOptions.Auto">
+            <summary>
+            Auto
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.TlsOptions.SslOnConnect">
+            <summary>
+            Implicit TLS
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.TlsOptions.StartTls">
+            <summary>
+            Explicit TLS
+            </summary>
+        </member>
+        <member name="F:Lurgle.Alerting.TlsOptions.StartTlsWhenAvailable">
+            <summary>
+            Optional TLS
             </summary>
         </member>
         <member name="T:Lurgle.Alerting.Interfaces.IAlert">
