@@ -13,30 +13,12 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle Fluent Email FluentEmail Alert Alerts Alerting Razor Fluid Liquid Smtp MailKit Handlebars template</PackageTags>
-    <Version>1.2.4</Version>
+    <Version>1.3.0</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
-    <PackageReleaseNotes>- Add MailKit as default sender
-- Add mail host authentication
-- Add additional targets
-- Add test Razor template
-- Add XML docs
-- Code refactor
-- Add AlertConfig constructor for passing config and optional overrides
-- Expose MailTestTimeout to allow configuring the SMTP mail host test timeout (or disable with 0)
-- Add MailSubject config to allow configuring a default subject
-- Add sending an attachment from a stream
-- Add Alerting.SetDebug for global debug mode
-- Add MailDebug setting
-- Consistently handle comma delimited email address strings
-- Filter out invalid email addresses
-- Validate default MailHost, From, To, Debug, Subject configs and return results to Alerting.AlertFailures
-- Add Handlebars renderer, based on https://github.com/matthewturner/FluentEmail.Handlebars
-- Automatically determine attachment content type
-- Expose errors on send for examination by code
-- Add unit tests
-- Add processing for plain text and HTML
-- Update Handlebars.NET</PackageReleaseNotes>
+    <PackageReleaseNotes>- Add MailUseDns to delivery using DNS resolution of MX records
+- Add MailTlsOptions to allow specifying TLS behaviour
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -48,6 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DnsClient" Version="1.5.0" />
     <PackageReference Include="FluentEmail.Liquid" Version="3.0.0" />
     <PackageReference Include="FluentEmail.MailKit" Version="3.0.0" />
     <PackageReference Include="FluentEmail.Razor" Version="3.0.0" />

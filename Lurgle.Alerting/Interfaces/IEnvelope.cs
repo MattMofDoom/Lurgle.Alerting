@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using FluentEmail.Core;
 using FluentEmail.Core.Models;
+using Lurgle.Alerting.Classes;
 using Attachment = FluentEmail.Core.Models.Attachment;
 
 namespace Lurgle.Alerting.Interfaces
@@ -290,7 +291,7 @@ namespace Lurgle.Alerting.Interfaces
         /// </summary>
         /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
         /// <param name="args">Optional arguments for string replacement</param>
-        SendResponse Send(string msg, params object[] args);
+        MailResult Send(string msg, params object[] args);
 
         /// <summary>
         ///     Return a rendered alert email with the specified message text - assumes plain text
@@ -309,7 +310,7 @@ namespace Lurgle.Alerting.Interfaces
         /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
         /// <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
         /// <param name="args">Optional arguments for string replacement</param>
-        SendResponse SendHtml(string msg, string altMsg = null, params object[] args);
+        MailResult SendHtml(string msg, string altMsg = null, params object[] args);
 
         /// <summary>
         ///     Return a rendered alert email with the specified message text and alternate body
@@ -328,7 +329,7 @@ namespace Lurgle.Alerting.Interfaces
         /// </summary>
         /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
         /// <param name="args">Optional arguments for string replacement</param>
-        Task<SendResponse> SendAsync(string msg, params object[] args);
+        Task<MailResult> SendAsync(string msg, params object[] args);
 
         /// <summary>
         ///     Send the alert with the specified message text and alternate body
@@ -338,7 +339,7 @@ namespace Lurgle.Alerting.Interfaces
         /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
         /// <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
         /// <param name="args">Optional arguments for string replacement</param>
-        Task<SendResponse> SendHtmlAsync(string msg, string altMsg = null, params object[] args);
+        Task<MailResult> SendHtmlAsync(string msg, string altMsg = null, params object[] args);
 
         /// <summary>
         ///     Send the alert using the selected <see cref="RendererType" /> template and model
@@ -348,7 +349,7 @@ namespace Lurgle.Alerting.Interfaces
         /// <param name="templateModel">The Model to apply to this template</param>
         /// <param name="isHtml"></param>
         /// <param name="alternateTemplate">Alternate text template</param>
-        SendResponse SendTemplate<T>(string template, T templateModel, bool isHtml = true,
+        MailResult SendTemplate<T>(string template, T templateModel, bool isHtml = true,
             string alternateTemplate = null);
 
         /// <summary>
@@ -370,7 +371,7 @@ namespace Lurgle.Alerting.Interfaces
         /// <param name="templateModel">The Model to apply to this template</param>
         /// <param name="isHtml"></param>
         /// <param name="alternateTemplate">Alternate text template</param>
-        Task<SendResponse> SendTemplateAsync<T>(string template, T templateModel, bool isHtml = true,
+        Task<MailResult> SendTemplateAsync<T>(string template, T templateModel, bool isHtml = true,
             string alternateTemplate = null);
 
         /// <summary>
@@ -384,7 +385,7 @@ namespace Lurgle.Alerting.Interfaces
         /// <param name="templateModel">The Model to apply to this  template</param>
         /// <param name="isHtml"></param>
         /// <param name="alternateText">Render the text version of your template as an alternate text</param>
-        SendResponse SendTemplateFile<T>(string templateConfig, T templateModel, bool isHtml = true,
+        MailResult SendTemplateFile<T>(string templateConfig, T templateModel, bool isHtml = true,
             bool alternateText = false);
 
         /// <summary>
@@ -412,7 +413,7 @@ namespace Lurgle.Alerting.Interfaces
         /// <param name="templateModel">The Model to apply to this  template</param>
         /// <param name="isHtml"></param>
         /// <param name="alternateText">Render the text version of your template as an alternate text</param>
-        Task<SendResponse> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool isHtml = true,
+        Task<MailResult> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool isHtml = true,
             bool alternateText = false);
     }
 }
