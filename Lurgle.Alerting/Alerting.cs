@@ -139,8 +139,8 @@ namespace Lurgle.Alerting
                 isSuccess = result.AsyncWaitHandle.WaitOne(useTimeout, true);
                 socket.Close();
 
-                //End on first failure
-                if (!isSuccess)
+                //End on first success - at least one mail host is available
+                if (isSuccess)
                     break;
             }
             return isSuccess;
