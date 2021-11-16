@@ -638,7 +638,9 @@ namespace Lurgle.Alerting
         public async Task<MailResult> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool isHtml,
             bool alternateText = false)
         {
-            var result = await SendEmailAsync(GetEnvelopeWithTemplate(templateConfig, templateModel, true, isHtml, alternateText));
+            var result =
+                await SendEmailAsync(
+                    GetEnvelopeWithTemplate(templateConfig, templateModel, true, isHtml, alternateText));
             ClearAttachments();
 
             return result;
@@ -866,7 +868,9 @@ namespace Lurgle.Alerting
                         RequiresAuthentication = Alerting.Config.MailUseAuthentication,
                         User = Alerting.Config.MailUsername,
                         Password = Alerting.Config.MailPassword,
-                        SocketOptions = Alerting.Config.MailTlsOptions == null ? SecureSocketOptions.Auto : (SecureSocketOptions)Alerting.Config.MailTlsOptions
+                        SocketOptions = Alerting.Config.MailTlsOptions == null
+                            ? SecureSocketOptions.Auto
+                            : (SecureSocketOptions) Alerting.Config.MailTlsOptions
                     });
             }
         }
@@ -898,15 +902,20 @@ namespace Lurgle.Alerting
 
         private static MailResult SendEmail(IFluentEmail email)
         {
-            var mailResult = new MailResult() {Successful = false, ErrorMessages = new List<string>(), DeliveryAttempts = new List<DeliveryAttempt>()};
+            var mailResult = new MailResult
+            {
+                Successful = false, ErrorMessages = new List<string>(), DeliveryAttempts = new List<DeliveryAttempt>()
+            };
+
+            DeliveryType deliveryType;
 
             if (Alerting.Config.MailHost.Any())
             {
-                var deliveryType = DeliveryType.MailHost;
+                deliveryType = DeliveryType.MailHost;
 
                 foreach (var server in Alerting.Config.MailHost)
                 {
-                    var attempt = new DeliveryAttempt() {DeliveryType = deliveryType};
+                    var attempt = new DeliveryAttempt {DeliveryType = deliveryType, MailHost = server};
                     email.Sender = GetSender(server);
                     attempt.Result = email.Send();
                     mailResult.MailHost = server;
@@ -925,37 +934,36 @@ namespace Lurgle.Alerting
                 }
             }
 
-            if (Alerting.Config.MailUseDns)
+            if (!Alerting.Config.MailUseDns) return mailResult;
+
+            deliveryType = Alerting.Config.MailHost.Any() ? DeliveryType.HostDnsFallback : DeliveryType.Dns;
+            var domains = GetDomains(email).ToList();
+
+            foreach (var domain in domains)
             {
-                var deliveryType = Alerting.Config.MailHost.Any() ? DeliveryType.HostDnsFallback : DeliveryType.Dns;
-                var domains = GetDomains(email).ToList();
-                
-                foreach (var domain in domains)
+                var mx = Alerting.DnsResolver.Query(domain, QueryType.MX);
+                var mxServers =
+                    (from mxServer in mx.Answers
+                        where !string.IsNullOrEmpty(((MxRecord) mxServer).Exchange)
+                        select ((MxRecord) mxServer).Exchange).Select(dummy => (string) dummy).ToList();
+                foreach (var server in mxServers)
                 {
-                    var mx = Alerting.DnsResolver.Query(domain, QueryType.MX);
-                    var mxServers =
-                        (from mxServer in mx.Answers
-                            where !string.IsNullOrEmpty(((MxRecord) mxServer).Exchange)
-                            select ((MxRecord) mxServer).Exchange).Select(dummy => (string) dummy).ToList();
-                    foreach (var server in mxServers)
+                    var attempt = new DeliveryAttempt {DeliveryType = deliveryType, MailHost = server};
+                    email.Sender = GetSender(server);
+                    attempt.Result = email.Send();
+                    mailResult.MailHost = server;
+                    mailResult.DeliveryType = deliveryType;
+                    mailResult.ErrorMessages = attempt.Result.ErrorMessages;
+                    mailResult.MessageId = attempt.Result.MessageId;
+                    mailResult.DeliveryAttempts.Add(attempt);
+
+                    if (attempt.Result.Successful)
                     {
-                        var attempt = new DeliveryAttempt() {DeliveryType = deliveryType, MailHost = server};
-                        email.Sender = GetSender(server);
-                        attempt.Result = email.Send();
-                        mailResult.MailHost = server;
-                        mailResult.DeliveryType = deliveryType;
-                        mailResult.ErrorMessages = attempt.Result.ErrorMessages;
-                        mailResult.MessageId = attempt.Result.MessageId;
-                        mailResult.DeliveryAttempts.Add(attempt);
-
-                        if (attempt.Result.Successful)
-                        {
-                            mailResult.Successful = true;
-                            return mailResult;
-                        }
-
-                        deliveryType = DeliveryType.DnsFallback;
+                        mailResult.Successful = true;
+                        return mailResult;
                     }
+
+                    deliveryType = DeliveryType.DnsFallback;
                 }
             }
 
@@ -964,15 +972,20 @@ namespace Lurgle.Alerting
 
         private static async Task<MailResult> SendEmailAsync(IFluentEmail email)
         {
-            var mailResult = new MailResult() { Successful = false, ErrorMessages = new List<string>(), DeliveryAttempts = new List<DeliveryAttempt>() };
+            var mailResult = new MailResult
+            {
+                Successful = false, ErrorMessages = new List<string>(), DeliveryAttempts = new List<DeliveryAttempt>()
+            };
+
+            DeliveryType deliveryType;
 
             if (Alerting.Config.MailHost.Any())
             {
-                var deliveryType = DeliveryType.MailHost;
+                deliveryType = DeliveryType.MailHost;
 
                 foreach (var server in Alerting.Config.MailHost)
                 {
-                    var attempt = new DeliveryAttempt() { DeliveryType = deliveryType };
+                    var attempt = new DeliveryAttempt {DeliveryType = deliveryType};
                     email.Sender = GetSender(server);
                     attempt.Result = await email.SendAsync();
                     mailResult.ErrorMessages = attempt.Result.ErrorMessages;
@@ -989,35 +1002,33 @@ namespace Lurgle.Alerting
                 }
             }
 
-            if (Alerting.Config.MailUseDns)
+            if (!Alerting.Config.MailUseDns) return mailResult;
+            deliveryType = Alerting.Config.MailHost.Any() ? DeliveryType.HostDnsFallback : DeliveryType.Dns;
+            var domains = GetDomains(email).ToList();
+
+            foreach (var domain in domains)
             {
-                var deliveryType = Alerting.Config.MailHost.Any() ? DeliveryType.HostDnsFallback : DeliveryType.Dns;
-                var domains = GetDomains(email).ToList();
-
-                foreach (var domain in domains)
+                var mx = await Alerting.DnsResolver.QueryAsync(domain, QueryType.MX);
+                var mxServers =
+                    (from mxServer in mx.Answers
+                        where !string.IsNullOrEmpty(((MxRecord) mxServer).Exchange)
+                        select ((MxRecord) mxServer).Exchange).Select(dummy => (string) dummy).ToList();
+                foreach (var server in mxServers)
                 {
-                    var mx = await Alerting.DnsResolver.QueryAsync(domain, QueryType.MX);
-                    var mxServers =
-                        (from mxServer in mx.Answers
-                         where !string.IsNullOrEmpty(((MxRecord)mxServer).Exchange)
-                         select ((MxRecord)mxServer).Exchange).Select(dummy => (string)dummy).ToList();
-                    foreach (var server in mxServers)
+                    var attempt = new DeliveryAttempt {DeliveryType = deliveryType};
+                    email.Sender = GetSender(server);
+                    attempt.Result = await email.SendAsync();
+                    mailResult.ErrorMessages = attempt.Result.ErrorMessages;
+                    mailResult.MessageId = attempt.Result.MessageId;
+                    mailResult.DeliveryAttempts.Add(attempt);
+
+                    if (attempt.Result.Successful)
                     {
-                        var attempt = new DeliveryAttempt() { DeliveryType = deliveryType };
-                        email.Sender = GetSender(server);
-                        attempt.Result = await email.SendAsync();
-                        mailResult.ErrorMessages = attempt.Result.ErrorMessages;
-                        mailResult.MessageId = attempt.Result.MessageId;
-                        mailResult.DeliveryAttempts.Add(attempt);
-
-                        if (attempt.Result.Successful)
-                        {
-                            mailResult.Successful = true;
-                            return mailResult;
-                        }
-
-                        deliveryType = DeliveryType.DnsFallback;
+                        mailResult.Successful = true;
+                        return mailResult;
                     }
+
+                    deliveryType = DeliveryType.DnsFallback;
                 }
             }
 
@@ -1025,7 +1036,7 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        /// Parse email domains from envelope
+        ///     Parse email domains from envelope
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
