@@ -1,35 +1,41 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 // ReSharper disable CommentTypo
+
 namespace Lurgle.Alerting
 {
     /// <summary>
-    /// Type of mail delivery
+    ///     Type of mail delivery
     /// </summary>
     public enum DeliveryType
     {
         /// <summary>
-        /// Delivery via mailhost
+        ///     Delivery via mailhost
         /// </summary>
         MailHost,
+
         /// <summary>
-        /// Delivery via mailhost fallback
+        ///     Delivery via mailhost fallback
         /// </summary>
         MailFallback,
+
         /// <summary>
-        /// Delivery via DNS
+        ///     Delivery via DNS
         /// </summary>
         Dns,
+
         /// <summary>
-        /// Delivery via DNS fallback
+        ///     Delivery via DNS fallback
         /// </summary>
         DnsFallback,
+
         /// <summary>
-        /// Delivery via Mailhost DNS fallback
+        ///     Delivery via Mailhost DNS fallback
         /// </summary>
         HostDnsFallback,
+
         /// <summary>
-        /// N/A
+        ///     N/A
         /// </summary>
         None = -1
     }

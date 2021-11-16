@@ -13,13 +13,13 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Alerting</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle Fluent Email FluentEmail Alert Alerts Alerting Razor Fluid Liquid Smtp MailKit Handlebars template</PackageTags>
-    <Version>1.3.2</Version>
+    <Version>1.3.3</Version>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <PackageReleaseNotes>- Allow specifying multiple mail hosts as comma-delimited string for fallback capabilities
 - Add MailUseDns to delivery using DNS resolution of MX records
 - Add MailTlsOptions to allow specifying TLS behaviour
-</PackageReleaseNotes>
+- Bug fixes around attachments and alternate emails</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>

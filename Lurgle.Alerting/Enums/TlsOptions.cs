@@ -3,30 +3,33 @@
 namespace Lurgle.Alerting
 {
     /// <summary>
-    /// TLS Options
+    ///     TLS Options
     /// </summary>
     public enum TlsOptions
     {
         /// <summary>
-        /// None
+        ///     None
         /// </summary>
         None = SecureSocketOptions.None,
+
         /// <summary>
-        /// Auto
+        ///     Auto
         /// </summary>
         Auto = SecureSocketOptions.Auto,
+
         /// <summary>
-        /// Implicit TLS
+        ///     Implicit TLS
         /// </summary>
         SslOnConnect = SecureSocketOptions.SslOnConnect,
+
         /// <summary>
-        /// Explicit TLS
+        ///     Explicit TLS
         /// </summary>
         StartTls = SecureSocketOptions.StartTls,
+
         /// <summary>
-        /// Optional TLS
+        ///     Optional TLS
         /// </summary>
         StartTlsWhenAvailable = SecureSocketOptions.StartTlsWhenAvailable
-
     }
 }

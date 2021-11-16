@@ -4,7 +4,6 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using MailKit.Security;
 
 namespace Lurgle.Alerting
 {
@@ -52,12 +51,14 @@ namespace Lurgle.Alerting
         /// <param name="mailTlsOptions"></param>
         public AlertConfig(AlertConfig config = null, string appName = null, string appVersion = null,
             RendererType? mailRenderer = null,
-            SenderType? mailSender = null, string mailTemplatePath = null, string mailHost = null, bool? mailUseDns = null,
+            SenderType? mailSender = null, string mailTemplatePath = null, string mailHost = null,
+            bool? mailUseDns = null,
             int? mailPort = null, int? mailTestTimeout = null, bool? mailUseAuthentication = null,
             string mailUsername = null,
-            string mailPassword = null, bool? mailUseTls = null, TlsOptions? mailTlsOptions = null, int ? mailTimeout = null, string mailFrom = null,
+            string mailPassword = null, bool? mailUseTls = null, TlsOptions? mailTlsOptions = null,
+            int? mailTimeout = null, string mailFrom = null,
             string mailTo = null, string mailDebug = null, string mailSubject = null
-            )
+        )
         {
             if (config != null)
             {
@@ -188,7 +189,7 @@ namespace Lurgle.Alerting
         public List<string> MailHost { get; private set; }
 
         /// <summary>
-        ///  Use DNS delivery. If set with MailHost, this will be used as a fallback delivery method.
+        ///     Use DNS delivery. If set with MailHost, this will be used as a fallback delivery method.
         /// </summary>
         public bool MailUseDns { get; private set; }
 
@@ -391,7 +392,7 @@ namespace Lurgle.Alerting
         private static IEnumerable<string> GetServerList(string hostName)
         {
             if (!string.IsNullOrEmpty(hostName))
-                return hostName.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                return hostName.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(t => t.Trim()).ToList();
             return new List<string>();
         }

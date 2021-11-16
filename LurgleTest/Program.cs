@@ -24,7 +24,7 @@ namespace LurgleTest
             {
                 Console.WriteLine("Send simple body ...");
                 DisplayResult(Alert.To().Subject("Test").Send("Can you fix it?"));
-                
+
                 Console.WriteLine("Send HTML body with alt text ...");
                 DisplayResult(Alert.To().Subject("Test HTML")
                     .SendHtml("<html><body><p>Can you fix it?</p></body></html>", "Can you fix it?"));
@@ -32,7 +32,8 @@ namespace LurgleTest
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Razor));
                 DisplayResult(Alert.To().Subject("Test Razor Template").SendTemplateFile("Razor", new { }));
                 Console.WriteLine("Send Razor template with alt text...");
-                DisplayResult(Alert.To().Subject("Test Razor Template with alt text").SendTemplateFile("Razor", new { }, true, true));
+                DisplayResult(Alert.To().Subject("Test Razor Template with alt text")
+                    .SendTemplateFile("Razor", new { }, true, true));
                 Console.WriteLine("Send Liquid template ...");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailRenderer: RendererType.Liquid));
                 DisplayResult(Alert.To().Subject("Test Liquid Template").SendTemplateFile("Liquid", new
@@ -105,31 +106,32 @@ namespace LurgleTest
                     Alerting.Config.MailFrom,
                     Alerting.Config.MailTo,
                     Alerting.Config.MailDebug,
-                    Alerting.Config.MailSubject,
+                    Alerting.Config.MailSubject
                 }));
                 Console.WriteLine("Send Handlebars template with alt text...");
-                DisplayResult(Alert.To().Subject("Test Handlebars Template with alt text").SendTemplateFile("Liquid", new
-                {
-                    Alerting.Config.AppName,
-                    Alerting.Config.AppVersion,
-                    MailRenderer = Alerting.Config.MailRenderer.ToString(),
-                    MailSender = Alerting.Config.MailSender.ToString(),
-                    Alerting.Config.MailTemplatePath,
-                    Alerting.Config.MailHost,
-                    Alerting.Config.MailUseDns,
-                    MailTestTimeout = Alerting.Config.MailTestTimeout / 1000,
-                    Alerting.Config.MailPort,
-                    Alerting.Config.MailUseAuthentication,
-                    Alerting.Config.MailUsername,
-                    Alerting.Config.MailPassword,
-                    Alerting.Config.MailUseTls,
-                    MailTlsOptions = Alerting.Config.MailTlsOptions.ToString(),
-                    MailTimeout = Alerting.Config.MailTimeout / 1000,
-                    Alerting.Config.MailFrom,
-                    Alerting.Config.MailTo,
-                    Alerting.Config.MailDebug,
-                    Alerting.Config.MailSubject
-                }, true, true));
+                DisplayResult(Alert.To().Subject("Test Handlebars Template with alt text").SendTemplateFile("Liquid",
+                    new
+                    {
+                        Alerting.Config.AppName,
+                        Alerting.Config.AppVersion,
+                        MailRenderer = Alerting.Config.MailRenderer.ToString(),
+                        MailSender = Alerting.Config.MailSender.ToString(),
+                        Alerting.Config.MailTemplatePath,
+                        Alerting.Config.MailHost,
+                        Alerting.Config.MailUseDns,
+                        MailTestTimeout = Alerting.Config.MailTestTimeout / 1000,
+                        Alerting.Config.MailPort,
+                        Alerting.Config.MailUseAuthentication,
+                        Alerting.Config.MailUsername,
+                        Alerting.Config.MailPassword,
+                        Alerting.Config.MailUseTls,
+                        MailTlsOptions = Alerting.Config.MailTlsOptions.ToString(),
+                        MailTimeout = Alerting.Config.MailTimeout / 1000,
+                        Alerting.Config.MailFrom,
+                        Alerting.Config.MailTo,
+                        Alerting.Config.MailDebug,
+                        Alerting.Config.MailSubject
+                    }, true, true));
                 Console.WriteLine("Test sending with no subject");
                 DisplayResult(Alert.To().Send("Test No Subject"));
                 Console.WriteLine("Test FromConfig ...");
@@ -140,18 +142,21 @@ namespace LurgleTest
                 DisplayResult(Alert.To().Subject("Test Debug").Send("Aaaah it's a debug mode"));
                 Console.WriteLine("Test attachment with SmtpClient");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailSender: SenderType.SmtpClient));
-                DisplayResult(Alert.To().Subject("Test Attachment").Attach(Path.Combine(Alerting.Config.MailTemplatePath,
+                DisplayResult(Alert.To().Subject("Test Attachment").Attach(Path.Combine(
+                    Alerting.Config.MailTemplatePath,
                     Alerting.GetEmailTemplate("Liquid"))).Send("Test attachment"));
                 Console.WriteLine("Test attachment with MailKit");
                 Alerting.SetConfig(new AlertConfig(Alerting.Config, mailSender: SenderType.MailKit));
-                DisplayResult(Alert.To().Subject("Test Attachment").Attach(Path.Combine(Alerting.Config.MailTemplatePath,
+                DisplayResult(Alert.To().Subject("Test Attachment").Attach(Path.Combine(
+                    Alerting.Config.MailTemplatePath,
                     Alerting.GetEmailTemplate("Liquid"))).Send("Test attachment"));
             }
         }
 
         private static void DisplayResult(MailResult result)
         {
-            Console.WriteLine(" - Attempts {0}, Last attempt sent via {1} using {2}: {3}", result.DeliveryAttempts.Count, result.MailHost, result.DeliveryType, result.Successful);
+            Console.WriteLine(" - Attempts {0}, Last attempt sent via {1} using {2}: {3}",
+                result.DeliveryAttempts.Count, result.MailHost, result.DeliveryType, result.Successful);
             foreach (var error in result.ErrorMessages)
                 Console.WriteLine("   - {0}", error);
         }

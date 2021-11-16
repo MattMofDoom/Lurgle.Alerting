@@ -456,10 +456,19 @@ namespace Lurgle.Alerting
         /// <param name="args">Optional arguments for string replacement</param>
         public MailResult Send(string msg, params object[] args)
         {
-            var result = SendEmail(GetEnvelopeWithBody(msg, false, null, args));
-            ClearAttachments();
+            return SendBody(msg, null, false, args).Result;
+        }
 
-            return result;
+        /// <summary>
+        ///     Send the alert with the specified message text - assumes plain text
+        ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+        ///     applied.
+        /// </summary>
+        /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
+        /// <param name="args">Optional arguments for string replacement</param>
+        public async Task<MailResult> SendAsync(string msg, params object[] args)
+        {
+            return await SendBody(msg, null, false, args);
         }
 
         /// <summary>
@@ -484,10 +493,20 @@ namespace Lurgle.Alerting
         /// <param name="args">Optional arguments for string replacement</param>
         public MailResult SendHtml(string msg, string altMsg = null, params object[] args)
         {
-            var result = SendEmail(GetEnvelopeWithBody(msg, true, altMsg, args));
-            ClearAttachments();
+            return SendBody(msg, altMsg, true, args).Result;
+        }
 
-            return result;
+        /// <summary>
+        ///     Send the alert with the specified message text and alternate body
+        ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+        ///     applied.
+        /// </summary>
+        /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
+        /// <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
+        /// <param name="args">Optional arguments for string replacement</param>
+        public async Task<MailResult> SendHtmlAsync(string msg, string altMsg = null, params object[] args)
+        {
+            return await SendBody(msg, altMsg, true, args);
         }
 
         /// <summary>
@@ -502,38 +521,7 @@ namespace Lurgle.Alerting
         {
             return GetEnvelopeWithBody(msg, true, altMsg, args);
         }
-
-        /// <summary>
-        ///     Send the alert with the specified message text - assumes plain text
-        ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
-        ///     applied.
-        /// </summary>
-        /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
-        /// <param name="args">Optional arguments for string replacement</param>
-        public async Task<MailResult> SendAsync(string msg, params object[] args)
-        {
-            var result = await SendEmailAsync(GetEnvelopeWithBody(msg, false, null, args));
-            ClearAttachments();
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Send the alert with the specified message text and alternate body
-        ///     You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
-        ///     applied.
-        /// </summary>
-        /// <param name="msg">Body of the email. Can contain format items for string replacement.</param>
-        /// <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
-        /// <param name="args">Optional arguments for string replacement</param>
-        public async Task<MailResult> SendHtmlAsync(string msg, string altMsg = null, params object[] args)
-        {
-            var result = await SendEmailAsync(GetEnvelopeWithBody(msg, true, altMsg, args));
-            ClearAttachments();
-
-            return result;
-        }
-
+        
         /// <summary>
         ///     Send the alert using the selected <see cref="RendererType" /> template and model
         /// </summary>
@@ -545,12 +533,23 @@ namespace Lurgle.Alerting
         public MailResult SendTemplate<T>(string template, T templateModel, bool isHtml = true,
             string alternateTemplate = null)
         {
-            var result = SendEmail(GetEnvelopeWithTemplate(template, templateModel, false, isHtml,
-                string.IsNullOrEmpty(alternateTemplate), alternateTemplate));
+            return SendTemplate(template, templateModel, false, isHtml,
+                string.IsNullOrEmpty(alternateTemplate), alternateTemplate).Result;
+        }
 
-            ClearAttachments();
-
-            return result;
+        /// <summary>
+        ///     Send the alert using selected <see cref="RendererType" /> template and model
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="template">Body of the email, using selected <see cref="RendererType" /> template format</param>
+        /// <param name="templateModel">The Model to apply to this template</param>
+        /// <param name="isHtml"></param>
+        /// <param name="alternateTemplate">Alternate text template</param>
+        public async Task<MailResult> SendTemplateAsync<T>(string template, T templateModel, bool isHtml = true,
+            string alternateTemplate = null)
+        {
+            return await SendTemplate(template, templateModel, false, isHtml,
+                string.IsNullOrEmpty(alternateTemplate), alternateTemplate);
         }
 
         /// <summary>
@@ -569,24 +568,6 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        ///     Send the alert using selected <see cref="RendererType" /> template and model
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="template">Body of the email, using selected <see cref="RendererType" /> template format</param>
-        /// <param name="templateModel">The Model to apply to this template</param>
-        /// <param name="isHtml"></param>
-        /// <param name="alternateTemplate">Alternate text template</param>
-        public async Task<MailResult> SendTemplateAsync<T>(string template, T templateModel, bool isHtml = true,
-            string alternateTemplate = null)
-        {
-            var result = await SendEmailAsync(GetEnvelopeWithTemplate(template, templateModel, false, isHtml,
-                string.IsNullOrEmpty(alternateTemplate), alternateTemplate));
-            ClearAttachments();
-
-            return result;
-        }
-
-        /// <summary>
         ///     Send the alert using the selected <see cref="RendererType" /> template file and model
         ///     <para />
         ///     This does not check for the file existence, so a non-existent config item or missing file will cause an exception
@@ -600,27 +581,7 @@ namespace Lurgle.Alerting
         public MailResult SendTemplateFile<T>(string templateConfig, T templateModel, bool isHtml = true,
             bool alternateText = false)
         {
-            var result = SendEmail(GetEnvelopeWithTemplate(templateConfig, templateModel, true, isHtml, alternateText));
-            ClearAttachments();
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Return a rendered alert email using the selected <see cref="RendererType" /> template file and model
-        ///     <para />
-        ///     This does not check for the file existence, so a non-existent config item or missing file will cause an exception
-        ///     that can be caught.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="templateConfig">Config item to load for the selected <see cref="RendererType" /> template file</param>
-        /// <param name="templateModel">The Model to apply to this  template</param>
-        /// <param name="isHtml"></param>
-        /// <param name="alternateText">Render the text version of your template as an alternate text</param>
-        public IFluentEmail GetTemplateFile<T>(string templateConfig, T templateModel, bool isHtml = true,
-            bool alternateText = false)
-        {
-            return GetEnvelopeWithTemplate(templateConfig, templateModel, true, isHtml, alternateText);
+            return SendTemplate(templateConfig, templateModel, true, isHtml, alternateText).Result;
         }
 
         /// <summary>
@@ -638,10 +599,24 @@ namespace Lurgle.Alerting
         public async Task<MailResult> SendTemplateFileAsync<T>(string templateConfig, T templateModel, bool isHtml,
             bool alternateText = false)
         {
-            var result = await SendEmailAsync(GetEnvelopeWithTemplate(templateConfig, templateModel, true, isHtml, alternateText));
-            ClearAttachments();
+            return await SendTemplate(templateConfig, templateModel, true, isHtml, alternateText);
+        }
 
-            return result;
+        /// <summary>
+        ///     Return a rendered alert email using the selected <see cref="RendererType" /> template file and model
+        ///     <para />
+        ///     This does not check for the file existence, so a non-existent config item or missing file will cause an exception
+        ///     that can be caught.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="templateConfig">Config item to load for the selected <see cref="RendererType" /> template file</param>
+        /// <param name="templateModel">The Model to apply to this  template</param>
+        /// <param name="isHtml"></param>
+        /// <param name="alternateText">Render the text version of your template as an alternate text</param>
+        public IFluentEmail GetTemplateFile<T>(string templateConfig, T templateModel, bool isHtml = true,
+            bool alternateText = false)
+        {
+            return GetEnvelopeWithTemplate(templateConfig, templateModel, true, isHtml, alternateText);
         }
 
         /// <summary>
@@ -743,6 +718,257 @@ namespace Lurgle.Alerting
             return email;
         }
 
+        private async Task<MailResult> SendBody(string body = null, string altBody = null, bool isHtml = false,
+            params object[] args)
+        {
+            var mailResult = new MailResult
+            {
+                Successful = false,
+                ErrorMessages = new List<string>(),
+                DeliveryAttempts = new List<DeliveryAttempt>(),
+                MailHost = "None",
+                DeliveryType = DeliveryType.None
+            };
+
+            DeliveryType deliveryType;
+            var email = GetEnvelopeWithBody(body, isHtml, altBody, args);
+
+            if (Alerting.Config.MailHost.Any())
+            {
+                deliveryType = DeliveryType.MailHost;
+
+                foreach (var server in Alerting.Config.MailHost)
+                {
+                    email.Sender = GetSender(server);
+                    var attempt = new DeliveryAttempt
+                    {
+                        DeliveryType = deliveryType,
+                        MailHost = server,
+                        Result = await email.SendAsync()
+                    };
+                    mailResult.MailHost = server;
+                    mailResult.DeliveryType = deliveryType;
+                    mailResult.ErrorMessages = attempt.Result.ErrorMessages;
+                    mailResult.MessageId = attempt.Result.MessageId;
+                    mailResult.DeliveryAttempts.Add(attempt);
+
+                    if (attempt.Result.Successful)
+                    {
+                        mailResult.Successful = true;
+                        ClearAttachments();
+                        return mailResult;
+                    }
+
+                    deliveryType = DeliveryType.MailFallback;
+                }
+            }
+
+            if (!Alerting.Config.MailUseDns)
+            {
+                ClearAttachments();
+                return mailResult;
+            }
+
+            deliveryType = Alerting.Config.MailHost.Any() ? DeliveryType.HostDnsFallback : DeliveryType.Dns;
+            var domains = GetDomains().ToList();
+
+            foreach (var domain in domains)
+            {
+                var mx = await Alerting.DnsResolver.QueryAsync(domain, QueryType.MX);
+                var mxServers =
+                    (from mxServer in mx.Answers
+                        where !string.IsNullOrEmpty(((MxRecord) mxServer).Exchange)
+                        select ((MxRecord) mxServer).Exchange).Select(dummy => (string) dummy).ToList();
+                foreach (var server in mxServers)
+                {
+                    email.Sender = GetSender(server);
+                    var attempt = new DeliveryAttempt
+                    {
+                        DeliveryType = deliveryType,
+                        MailHost = server,
+                        Result = await email.SendAsync()
+                    };
+                    mailResult.MailHost = server;
+                    mailResult.DeliveryType = deliveryType;
+                    mailResult.ErrorMessages = attempt.Result.ErrorMessages;
+                    mailResult.MessageId = attempt.Result.MessageId;
+                    mailResult.DeliveryAttempts.Add(attempt);
+
+                    if (attempt.Result.Successful)
+                    {
+                        mailResult.Successful = true;
+                        ClearAttachments();
+                        return mailResult;
+                    }
+
+                    deliveryType = DeliveryType.DnsFallback;
+                }
+            }
+
+            ClearAttachments();
+            return mailResult;
+        }
+
+        private async Task<MailResult> SendTemplate<T>(string templateConfig, T templateModel, bool isFile,
+            bool isHtml = true, bool alternateText = false, string alternateBody = null)
+        {
+            var mailResult = new MailResult
+            {
+                Successful = false,
+                ErrorMessages = new List<string>(),
+                DeliveryAttempts = new List<DeliveryAttempt>(),
+                MailHost = "None",
+                DeliveryType = DeliveryType.None
+            };
+
+            DeliveryType deliveryType;
+            var email = GetEnvelopeWithTemplate(templateConfig, templateModel, isFile, isHtml, alternateText,
+                alternateBody);
+
+            if (Alerting.Config.MailHost.Any())
+            {
+                deliveryType = DeliveryType.MailHost;
+
+                foreach (var server in Alerting.Config.MailHost)
+                {
+                    email.Sender = GetSender(server);
+                    var attempt = new DeliveryAttempt
+                    {
+                        DeliveryType = deliveryType,
+                        MailHost = server,
+                        Result = await email.SendAsync()
+                    };
+                    mailResult.MailHost = server;
+                    mailResult.DeliveryType = deliveryType;
+                    mailResult.ErrorMessages = attempt.Result.ErrorMessages;
+                    mailResult.MessageId = attempt.Result.MessageId;
+                    mailResult.DeliveryAttempts.Add(attempt);
+
+                    if (attempt.Result.Successful)
+                    {
+                        mailResult.Successful = true;
+                        ClearAttachments();
+                        return mailResult;
+                    }
+
+                    deliveryType = DeliveryType.MailFallback;
+                }
+            }
+
+            if (!Alerting.Config.MailUseDns)
+            {
+                ClearAttachments();
+                return mailResult;
+            }
+
+            deliveryType = Alerting.Config.MailHost.Any() ? DeliveryType.HostDnsFallback : DeliveryType.Dns;
+            var domains = GetDomains().ToList();
+
+            foreach (var domain in domains)
+            {
+                var mx = await Alerting.DnsResolver.QueryAsync(domain, QueryType.MX);
+                var mxServers =
+                    (from mxServer in mx.Answers
+                        where !string.IsNullOrEmpty(((MxRecord) mxServer).Exchange)
+                        select ((MxRecord) mxServer).Exchange).Select(dummy => (string) dummy).ToList();
+                foreach (var server in mxServers)
+                {
+                    email.Sender = GetSender(server);
+                    var attempt = new DeliveryAttempt
+                    {
+                        DeliveryType = deliveryType,
+                        MailHost = server,
+                        Result = await email.SendAsync()
+                    };
+                    mailResult.MailHost = server;
+                    mailResult.DeliveryType = deliveryType;
+                    mailResult.ErrorMessages = attempt.Result.ErrorMessages;
+                    mailResult.MessageId = attempt.Result.MessageId;
+                    mailResult.DeliveryAttempts.Add(attempt);
+
+                    if (attempt.Result.Successful)
+                    {
+                        mailResult.Successful = true;
+                        ClearAttachments();
+                        return mailResult;
+                    }
+
+                    deliveryType = DeliveryType.DnsFallback;
+                }
+            }
+
+            ClearAttachments();
+            return mailResult;
+        }
+
+        /// <summary>
+        ///     Parse email domains from envelope
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> GetDomains()
+        {
+            var domains = new List<string>();
+            foreach (var toDomain in from to in ToAddresses
+                select to.EmailAddress.Split('@')[1]
+                into toDomain
+                where !string.IsNullOrEmpty(toDomain)
+                where !domains.Any(domain => domain.Equals(toDomain, StringComparison.OrdinalIgnoreCase))
+                select toDomain) domains.Add(toDomain);
+
+            foreach (var ccDomain in from cc in CcAddresses
+                select cc.EmailAddress.Split('@')[1]
+                into ccDomain
+                where !string.IsNullOrEmpty(ccDomain)
+                where !domains.Any(domain => domain.Equals(ccDomain, StringComparison.OrdinalIgnoreCase))
+                select ccDomain) domains.Add(ccDomain);
+
+
+            foreach (var bccDomain in from bcc in BccAddresses
+                select bcc.EmailAddress.Split('@')[1]
+                into bccDomain
+                where !string.IsNullOrEmpty(bccDomain)
+                where !domains.Any(domain => domain.Equals(bccDomain, StringComparison.OrdinalIgnoreCase))
+                select bccDomain) domains.Add(bccDomain);
+
+            return domains;
+        }
+
+        private static ISender GetSender(string host)
+        {
+            switch (Alerting.Config.MailSender)
+            {
+                case SenderType.SmtpClient:
+                    if (Alerting.Config.MailUseAuthentication)
+                        return new SmtpSender(new SmtpClient(host, Alerting.Config.MailPort)
+                        {
+                            Timeout = Alerting.Config.MailTimeout,
+                            EnableSsl = Alerting.Config.MailUseTls,
+                            Credentials = new NetworkCredential(Alerting.Config.MailUsername,
+                                Alerting.Config.MailPassword)
+                        });
+                    else
+                        return new SmtpSender(new SmtpClient(host, Alerting.Config.MailPort)
+                        {
+                            Timeout = Alerting.Config.MailTimeout,
+                            EnableSsl = Alerting.Config.MailUseTls
+                        });
+
+                default:
+                    return new MailKitSender(new SmtpClientOptions
+                    {
+                        Server = host,
+                        Port = Alerting.Config.MailPort,
+                        UseSsl = Alerting.Config.MailUseTls,
+                        RequiresAuthentication = Alerting.Config.MailUseAuthentication,
+                        User = Alerting.Config.MailUsername,
+                        Password = Alerting.Config.MailPassword,
+                        SocketOptions = Alerting.Config.MailTlsOptions == null
+                            ? SecureSocketOptions.Auto
+                            : (SecureSocketOptions) Alerting.Config.MailTlsOptions
+                    });
+            }
+        }
+
         /// <summary>
         ///     Add an attachment to the envelope
         /// </summary>
@@ -801,76 +1027,9 @@ namespace Lurgle.Alerting
         }
 
         /// <summary>
-        ///     Return a list of valid email addresses
-        /// </summary>
-        /// <param name="emailValue"></param>
-        /// <param name="toName"></param>
-        /// <returns></returns>
-        public static IEnumerable<Address> ToAddressList(string emailValue, string toName = null)
-        {
-            return (from emailAddress in string.Join(",", emailValue.Split(';')).Split(',').ToList()
-                where Alerting.IsValidEmail(emailAddress)
-                select new Address(emailAddress, toName)).ToList();
-        }
-
-        /// <summary>
-        ///     Attach a list of files to the alert
-        ///     <para />
-        ///     If any file does not exist, it will be ignored
-        /// </summary>
-        /// <param name="fileList">List of paths to files that will be attached</param>
-        /// <returns></returns>
-        public IEnvelope Attach(List<string> fileList)
-        {
-            foreach (var filePath in fileList)
-                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-                {
-                    var attachment = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 262144);
-                    Attachments.Add(new Attachment
-                        {Data = attachment, Filename = Path.GetFileName(filePath), ContentType = null});
-                }
-
-            return this;
-        }
-
-        /// <summary>
         ///     Retrieve the configured <see cref="SenderType" /> with settings applied
         /// </summary>
         /// <returns></returns>
-        private static ISender GetSender(string host)
-        {
-            switch (Alerting.Config.MailSender)
-            {
-                case SenderType.SmtpClient:
-                    if (Alerting.Config.MailUseAuthentication)
-                        return new SmtpSender(new SmtpClient(host, Alerting.Config.MailPort)
-                        {
-                            Timeout = Alerting.Config.MailTimeout,
-                            EnableSsl = Alerting.Config.MailUseTls,
-                            Credentials = new NetworkCredential(Alerting.Config.MailUsername,
-                                Alerting.Config.MailPassword)
-                        });
-                    else
-                        return new SmtpSender(new SmtpClient(host, Alerting.Config.MailPort)
-                        {
-                            Timeout = Alerting.Config.MailTimeout,
-                            EnableSsl = Alerting.Config.MailUseTls
-                        });
-
-                default:
-                    return new MailKitSender(new SmtpClientOptions
-                    {
-                        Server = host,
-                        Port = Alerting.Config.MailPort,
-                        UseSsl = Alerting.Config.MailUseTls,
-                        RequiresAuthentication = Alerting.Config.MailUseAuthentication,
-                        User = Alerting.Config.MailUsername,
-                        Password = Alerting.Config.MailPassword,
-                        SocketOptions = Alerting.Config.MailTlsOptions == null ? SecureSocketOptions.Auto : (SecureSocketOptions)Alerting.Config.MailTlsOptions
-                    });
-            }
-        }
-
         /// <summary>
         ///     Retrieve a file spec for attachment as an inline file
         /// </summary>
@@ -896,168 +1055,17 @@ namespace Lurgle.Alerting
             filePath = Path.Combine(folderLocation, filePath);
         }
 
-        private static MailResult SendEmail(IFluentEmail email)
-        {
-            var mailResult = new MailResult() {Successful = false, ErrorMessages = new List<string>(), DeliveryAttempts = new List<DeliveryAttempt>()};
-
-            if (Alerting.Config.MailHost.Any())
-            {
-                var deliveryType = DeliveryType.MailHost;
-
-                foreach (var server in Alerting.Config.MailHost)
-                {
-                    var attempt = new DeliveryAttempt() {DeliveryType = deliveryType};
-                    email.Sender = GetSender(server);
-                    attempt.Result = email.Send();
-                    mailResult.MailHost = server;
-                    mailResult.DeliveryType = deliveryType;
-                    mailResult.ErrorMessages = attempt.Result.ErrorMessages;
-                    mailResult.MessageId = attempt.Result.MessageId;
-                    mailResult.DeliveryAttempts.Add(attempt);
-
-                    if (attempt.Result.Successful)
-                    {
-                        mailResult.Successful = true;
-                        return mailResult;
-                    }
-
-                    deliveryType = DeliveryType.MailFallback;
-                }
-            }
-
-            if (Alerting.Config.MailUseDns)
-            {
-                var deliveryType = Alerting.Config.MailHost.Any() ? DeliveryType.HostDnsFallback : DeliveryType.Dns;
-                var domains = GetDomains(email).ToList();
-                
-                foreach (var domain in domains)
-                {
-                    var mx = Alerting.DnsResolver.Query(domain, QueryType.MX);
-                    var mxServers =
-                        (from mxServer in mx.Answers
-                            where !string.IsNullOrEmpty(((MxRecord) mxServer).Exchange)
-                            select ((MxRecord) mxServer).Exchange).Select(dummy => (string) dummy).ToList();
-                    foreach (var server in mxServers)
-                    {
-                        var attempt = new DeliveryAttempt() {DeliveryType = deliveryType, MailHost = server};
-                        email.Sender = GetSender(server);
-                        attempt.Result = email.Send();
-                        mailResult.MailHost = server;
-                        mailResult.DeliveryType = deliveryType;
-                        mailResult.ErrorMessages = attempt.Result.ErrorMessages;
-                        mailResult.MessageId = attempt.Result.MessageId;
-                        mailResult.DeliveryAttempts.Add(attempt);
-
-                        if (attempt.Result.Successful)
-                        {
-                            mailResult.Successful = true;
-                            return mailResult;
-                        }
-
-                        deliveryType = DeliveryType.DnsFallback;
-                    }
-                }
-            }
-
-            return mailResult;
-        }
-
-        private static async Task<MailResult> SendEmailAsync(IFluentEmail email)
-        {
-            var mailResult = new MailResult() { Successful = false, ErrorMessages = new List<string>(), DeliveryAttempts = new List<DeliveryAttempt>() };
-
-            if (Alerting.Config.MailHost.Any())
-            {
-                var deliveryType = DeliveryType.MailHost;
-
-                foreach (var server in Alerting.Config.MailHost)
-                {
-                    var attempt = new DeliveryAttempt() { DeliveryType = deliveryType };
-                    email.Sender = GetSender(server);
-                    attempt.Result = await email.SendAsync();
-                    mailResult.ErrorMessages = attempt.Result.ErrorMessages;
-                    mailResult.MessageId = attempt.Result.MessageId;
-                    mailResult.DeliveryAttempts.Add(attempt);
-
-                    if (attempt.Result.Successful)
-                    {
-                        mailResult.Successful = true;
-                        return mailResult;
-                    }
-
-                    deliveryType = DeliveryType.MailFallback;
-                }
-            }
-
-            if (Alerting.Config.MailUseDns)
-            {
-                var deliveryType = Alerting.Config.MailHost.Any() ? DeliveryType.HostDnsFallback : DeliveryType.Dns;
-                var domains = GetDomains(email).ToList();
-
-                foreach (var domain in domains)
-                {
-                    var mx = await Alerting.DnsResolver.QueryAsync(domain, QueryType.MX);
-                    var mxServers =
-                        (from mxServer in mx.Answers
-                         where !string.IsNullOrEmpty(((MxRecord)mxServer).Exchange)
-                         select ((MxRecord)mxServer).Exchange).Select(dummy => (string)dummy).ToList();
-                    foreach (var server in mxServers)
-                    {
-                        var attempt = new DeliveryAttempt() { DeliveryType = deliveryType };
-                        email.Sender = GetSender(server);
-                        attempt.Result = await email.SendAsync();
-                        mailResult.ErrorMessages = attempt.Result.ErrorMessages;
-                        mailResult.MessageId = attempt.Result.MessageId;
-                        mailResult.DeliveryAttempts.Add(attempt);
-
-                        if (attempt.Result.Successful)
-                        {
-                            mailResult.Successful = true;
-                            return mailResult;
-                        }
-
-                        deliveryType = DeliveryType.DnsFallback;
-                    }
-                }
-            }
-
-            return mailResult;
-        }
-
         /// <summary>
-        /// Parse email domains from envelope
+        ///     Return a list of valid email addresses
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="emailValue"></param>
+        /// <param name="toName"></param>
         /// <returns></returns>
-        public static IEnumerable<string> GetDomains(IFluentEmail message)
+        public static IEnumerable<Address> ToAddressList(string emailValue, string toName = null)
         {
-            var domains = new List<string>();
-            foreach (var to in message.Data.ToAddresses)
-            {
-                var toDomain = to.EmailAddress.Split('@')[1];
-                if (string.IsNullOrEmpty(toDomain)) continue;
-                if (!domains.Any(domain => domain.Equals(toDomain, StringComparison.OrdinalIgnoreCase)))
-                    domains.Add(toDomain);
-            }
-
-            foreach (var cc in message.Data.CcAddresses)
-            {
-                var ccDomain = cc.EmailAddress.Split('@')[1];
-                if (string.IsNullOrEmpty(ccDomain)) continue;
-                if (!domains.Any(domain => domain.Equals(ccDomain, StringComparison.OrdinalIgnoreCase)))
-                    domains.Add(ccDomain);
-            }
-
-
-            foreach (var bcc in message.Data.BccAddresses)
-            {
-                var bccDomain = bcc.EmailAddress.Split('@')[1];
-                if (string.IsNullOrEmpty(bccDomain)) continue;
-                if (!domains.Any(domain => domain.Equals(bccDomain, StringComparison.OrdinalIgnoreCase)))
-                    domains.Add(bccDomain);
-            }
-
-            return domains;
+            return (from emailAddress in string.Join(",", emailValue.Split(';')).Split(',').ToList()
+                where Alerting.IsValidEmail(emailAddress)
+                select new Address(emailAddress, toName)).ToList();
         }
 
         /// <summary>

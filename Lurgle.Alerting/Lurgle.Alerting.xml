@@ -282,6 +282,15 @@
             <param name="msg">Body of the email. Can contain format items for string replacement.</param>
             <param name="args">Optional arguments for string replacement</param>
         </member>
+        <member name="M:Lurgle.Alerting.Alert.SendAsync(System.String,System.Object[])">
+            <summary>
+                Send the alert with the specified message text - assumes plain text
+                You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
+                applied.
+            </summary>
+            <param name="msg">Body of the email. Can contain format items for string replacement.</param>
+            <param name="args">Optional arguments for string replacement</param>
+        </member>
         <member name="M:Lurgle.Alerting.Alert.Get(System.String,System.Object[])">
             <summary>
                 Return a rendered alert email with the specified message text - assumes plain text
@@ -301,9 +310,9 @@
             <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
             <param name="args">Optional arguments for string replacement</param>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.GetHtml(System.String,System.String,System.Object[])">
+        <member name="M:Lurgle.Alerting.Alert.SendHtmlAsync(System.String,System.String,System.Object[])">
             <summary>
-                Return a rendered alert email with the specified message text and alternate body
+                Send the alert with the specified message text and alternate body
                 You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
                 applied.
             </summary>
@@ -311,18 +320,9 @@
             <param name="altMsg">Alternate text body. Can contain format items for string replacement.</param>
             <param name="args">Optional arguments for string replacement</param>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.SendAsync(System.String,System.Object[])">
+        <member name="M:Lurgle.Alerting.Alert.GetHtml(System.String,System.String,System.Object[])">
             <summary>
-                Send the alert with the specified message text - assumes plain text
-                You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
-                applied.
-            </summary>
-            <param name="msg">Body of the email. Can contain format items for string replacement.</param>
-            <param name="args">Optional arguments for string replacement</param>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.SendHtmlAsync(System.String,System.String,System.Object[])">
-            <summary>
-                Send the alert with the specified message text and alternate body
+                Return a rendered alert email with the specified message text and alternate body
                 You can optionally pass a string containing format items, and the replacement objects, and a string.format will be
                 applied.
             </summary>
@@ -340,22 +340,22 @@
             <param name="isHtml"></param>
             <param name="alternateTemplate">Alternate text template</param>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.GetTemplate``1(System.String,``0,System.Boolean,System.String)">
-            <summary>
-                Return a rendered alert email using the selected <see cref="T:Lurgle.Alerting.RendererType" /> template and model
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="template">Body of the email, using selected <see cref="T:Lurgle.Alerting.RendererType" /> template format and model</param>
-            <param name="templateModel">The Model to apply to this template</param>
-            <param name="isHtml"></param>
-            <param name="alternateTemplate">Alternate text template</param>
-        </member>
         <member name="M:Lurgle.Alerting.Alert.SendTemplateAsync``1(System.String,``0,System.Boolean,System.String)">
             <summary>
                 Send the alert using selected <see cref="T:Lurgle.Alerting.RendererType" /> template and model
             </summary>
             <typeparam name="T"></typeparam>
             <param name="template">Body of the email, using selected <see cref="T:Lurgle.Alerting.RendererType" /> template format</param>
+            <param name="templateModel">The Model to apply to this template</param>
+            <param name="isHtml"></param>
+            <param name="alternateTemplate">Alternate text template</param>
+        </member>
+        <member name="M:Lurgle.Alerting.Alert.GetTemplate``1(System.String,``0,System.Boolean,System.String)">
+            <summary>
+                Return a rendered alert email using the selected <see cref="T:Lurgle.Alerting.RendererType" /> template and model
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="template">Body of the email, using selected <see cref="T:Lurgle.Alerting.RendererType" /> template format and model</param>
             <param name="templateModel">The Model to apply to this template</param>
             <param name="isHtml"></param>
             <param name="alternateTemplate">Alternate text template</param>
@@ -373,9 +373,10 @@
             <param name="isHtml"></param>
             <param name="alternateText">Render the text version of your template as an alternate text</param>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.GetTemplateFile``1(System.String,``0,System.Boolean,System.Boolean)">
+        <member name="M:Lurgle.Alerting.Alert.SendTemplateFileAsync``1(System.String,``0,System.Boolean,System.Boolean)">
             <summary>
-                Return a rendered alert email using the selected <see cref="T:Lurgle.Alerting.RendererType" /> template file and model
+                Send the alert using the selected <see cref="T:Lurgle.Alerting.RendererType" /> template (as configured in the application config)
+                and model
                 <para />
                 This does not check for the file existence, so a non-existent config item or missing file will cause an exception
                 that can be caught.
@@ -386,10 +387,9 @@
             <param name="isHtml"></param>
             <param name="alternateText">Render the text version of your template as an alternate text</param>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.SendTemplateFileAsync``1(System.String,``0,System.Boolean,System.Boolean)">
+        <member name="M:Lurgle.Alerting.Alert.GetTemplateFile``1(System.String,``0,System.Boolean,System.Boolean)">
             <summary>
-                Send the alert using the selected <see cref="T:Lurgle.Alerting.RendererType" /> template (as configured in the application config)
-                and model
+                Return a rendered alert email using the selected <see cref="T:Lurgle.Alerting.RendererType" /> template file and model
                 <para />
                 This does not check for the file existence, so a non-existent config item or missing file will cause an exception
                 that can be caught.
@@ -429,6 +429,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Lurgle.Alerting.Alert.GetDomains">
+            <summary>
+                Parse email domains from envelope
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Lurgle.Alerting.Alert.AddAttachment(System.String,System.String,System.String,System.Boolean)">
             <summary>
                 Add an attachment to the envelope
@@ -451,30 +457,11 @@
                 Close any open file streams and clear the list
             </summary>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.ToAddressList(System.String,System.String)">
-            <summary>
-                Return a list of valid email addresses
-            </summary>
-            <param name="emailValue"></param>
-            <param name="toName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.Attach(System.Collections.Generic.List{System.String})">
-            <summary>
-                Attach a list of files to the alert
-                <para />
-                If any file does not exist, it will be ignored
-            </summary>
-            <param name="fileList">List of paths to files that will be attached</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.GetSender(System.String)">
+        <member name="M:Lurgle.Alerting.Alert.GetInlineFile(System.String,System.String,System.String@,System.String@,System.String@)">
             <summary>
                 Retrieve the configured <see cref="T:Lurgle.Alerting.SenderType" /> with settings applied
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:Lurgle.Alerting.Alert.GetInlineFile(System.String,System.String,System.String@,System.String@,System.String@)">
             <summary>
                 Retrieve a file spec for attachment as an inline file
             </summary>
@@ -484,11 +471,12 @@
             <param name="filePath"></param>
             <param name="contentType"></param>
         </member>
-        <member name="M:Lurgle.Alerting.Alert.GetDomains(FluentEmail.Core.IFluentEmail)">
+        <member name="M:Lurgle.Alerting.Alert.ToAddressList(System.String,System.String)">
             <summary>
-            Parse email domains from envelope
+                Return a list of valid email addresses
             </summary>
-            <param name="message"></param>
+            <param name="emailValue"></param>
+            <param name="toName"></param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Alerting.Alert.From(System.String,System.String,Lurgle.Alerting.AddressType,System.Boolean,System.String)">
@@ -597,7 +585,7 @@
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailUseDns">
             <summary>
-             Use DNS delivery. If set with MailHost, this will be used as a fallback delivery method.
+                Use DNS delivery. If set with MailHost, this will be used as a fallback delivery method.
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.AlertConfig.MailPort">
@@ -744,7 +732,7 @@
         </member>
         <member name="F:Lurgle.Alerting.Alerting.DnsResolver">
             <summary>
-            Static DNS resolver
+                Static DNS resolver
             </summary>
         </member>
         <member name="M:Lurgle.Alerting.Alerting.SetConfig(Lurgle.Alerting.AlertConfig)">
@@ -804,57 +792,57 @@
         </member>
         <member name="T:Lurgle.Alerting.Classes.DeliveryAttempt">
             <summary>
-            Delivery Attempt record
+                Delivery Attempt record
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Classes.DeliveryAttempt.DeliveryType">
             <summary>
-            Type of delivery
+                Type of delivery
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Classes.DeliveryAttempt.MailHost">
             <summary>
-            Host attempted
+                Host attempted
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Classes.DeliveryAttempt.Result">
             <summary>
-            Send response
+                Send response
             </summary>
         </member>
         <member name="T:Lurgle.Alerting.Classes.MailResult">
             <summary>
-            Record of mail send result, including all results for iteration
+                Record of mail send result, including all results for iteration
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Classes.MailResult.Successful">
             <summary>
-            Overall Success / Failure
+                Overall Success / Failure
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Classes.MailResult.DeliveryType">
             <summary>
-            Last send's delivery type
+                Last send's delivery type
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Classes.MailResult.MailHost">
             <summary>
-            Last send's mail host
+                Last send's mail host
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Classes.MailResult.ErrorMessages">
             <summary>
-            Last send's ErrorMessages for backward compatibility
+                Last send's ErrorMessages for backward compatibility
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Classes.MailResult.MessageId">
             <summary>
-            Last send's MessageId for backward compatibility
+                Last send's MessageId for backward compatibility
             </summary>
         </member>
         <member name="P:Lurgle.Alerting.Classes.MailResult.DeliveryAttempts">
             <summary>
-            List of all attempts
+                List of all attempts
             </summary>
         </member>
         <member name="T:Lurgle.Alerting.AddressType">
@@ -896,37 +884,37 @@
         </member>
         <member name="T:Lurgle.Alerting.DeliveryType">
             <summary>
-            Type of mail delivery
+                Type of mail delivery
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.DeliveryType.MailHost">
             <summary>
-            Delivery via mailhost
+                Delivery via mailhost
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.DeliveryType.MailFallback">
             <summary>
-            Delivery via mailhost fallback
+                Delivery via mailhost fallback
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.DeliveryType.Dns">
             <summary>
-            Delivery via DNS
+                Delivery via DNS
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.DeliveryType.DnsFallback">
             <summary>
-            Delivery via DNS fallback
+                Delivery via DNS fallback
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.DeliveryType.HostDnsFallback">
             <summary>
-            Delivery via Mailhost DNS fallback
+                Delivery via Mailhost DNS fallback
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.DeliveryType.None">
             <summary>
-            N/A
+                N/A
             </summary>
         </member>
         <member name="T:Lurgle.Alerting.InitResult">
@@ -1011,32 +999,32 @@
         </member>
         <member name="T:Lurgle.Alerting.TlsOptions">
             <summary>
-            TLS Options
+                TLS Options
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.TlsOptions.None">
             <summary>
-            None
+                None
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.TlsOptions.Auto">
             <summary>
-            Auto
+                Auto
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.TlsOptions.SslOnConnect">
             <summary>
-            Implicit TLS
+                Implicit TLS
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.TlsOptions.StartTls">
             <summary>
-            Explicit TLS
+                Explicit TLS
             </summary>
         </member>
         <member name="F:Lurgle.Alerting.TlsOptions.StartTlsWhenAvailable">
             <summary>
-            Optional TLS
+                Optional TLS
             </summary>
         </member>
         <member name="T:Lurgle.Alerting.Interfaces.IAlert">

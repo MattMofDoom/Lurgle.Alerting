@@ -39,7 +39,7 @@ namespace Lurgle.Alerting
         public static List<InitResult> AlertFailures { get; private set; }
 
         /// <summary>
-        /// Static DNS resolver
+        ///     Static DNS resolver
         /// </summary>
         public static readonly LookupClient DnsResolver = new LookupClient();
 
@@ -108,7 +108,8 @@ namespace Lurgle.Alerting
                 AlertFailures.Add(InitResult.SubjectEmpty);
 
             //SMTP test should automatically fail if we don't have a mail host
-            if (Config != null && ((!Config.MailHost.Any() && !Config.MailUseDns) || (Config.MailHost.Any() && !TestSmtp())))
+            if (Config != null &&
+                (!Config.MailHost.Any() && !Config.MailUseDns || Config.MailHost.Any() && !TestSmtp()))
                 AlertFailures.Add(InitResult.SmtpTestFailed);
 
             return AlertFailures.Count.Equals(0);
@@ -126,7 +127,7 @@ namespace Lurgle.Alerting
 
             var useTimeout = timeout ?? Config.MailTestTimeout;
 
-            var useMailHost = !string.IsNullOrEmpty(mailHost) ? new List<string> { mailHost } : Config.MailHost;
+            var useMailHost = !string.IsNullOrEmpty(mailHost) ? new List<string> {mailHost} : Config.MailHost;
 
             var useMailPort = mailPort ?? Config.MailPort;
 
@@ -143,6 +144,7 @@ namespace Lurgle.Alerting
                 if (isSuccess)
                     break;
             }
+
             return isSuccess;
         }
 
