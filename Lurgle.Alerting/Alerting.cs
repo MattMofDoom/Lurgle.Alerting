@@ -12,6 +12,8 @@ using Lurgle.Alerting.Renderers;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 
+// ReSharper disable UnusedMethodReturnValue.Global
+
 namespace Lurgle.Alerting
 {
     /// <summary>
@@ -85,7 +87,6 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     Initialise alerting and test availability of SMTP
         /// </summary>
-        // ReSharper disable once UnusedMethodReturnValue.Global
         public static bool Init()
         {
             if (Config == null) SetConfig();

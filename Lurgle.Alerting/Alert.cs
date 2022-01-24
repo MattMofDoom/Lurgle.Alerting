@@ -20,6 +20,8 @@ using MailKit.Security;
 using static MimeMapping.MimeUtility;
 using Attachment = FluentEmail.Core.Models.Attachment;
 
+// ReSharper disable MethodOverloadWithOptionalParameter
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
 
@@ -283,9 +285,9 @@ namespace Lurgle.Alerting
         public IEnvelope Bcc(Dictionary<string, string> emailList)
         {
             foreach (var email in from email in emailList
-                let emailAddress = Alerting.GetEmailAddress(email.Key)
-                where !string.IsNullOrEmpty(emailAddress)
-                select email) BccAddresses.AddRange(ToAddressList(email.Key, email.Value));
+                     let emailAddress = Alerting.GetEmailAddress(email.Key)
+                     where !string.IsNullOrEmpty(emailAddress)
+                     select email) BccAddresses.AddRange(ToAddressList(email.Key, email.Value));
 
             return this;
         }
@@ -521,7 +523,7 @@ namespace Lurgle.Alerting
         {
             return GetEnvelopeWithBody(msg, true, altMsg, args);
         }
-        
+
         /// <summary>
         ///     Send the alert using the selected <see cref="RendererType" /> template and model
         /// </summary>
@@ -909,26 +911,26 @@ namespace Lurgle.Alerting
         {
             var domains = new List<string>();
             foreach (var toDomain in from to in ToAddresses
-                select to.EmailAddress.Split('@')[1]
-                into toDomain
-                where !string.IsNullOrEmpty(toDomain)
-                where !domains.Any(domain => domain.Equals(toDomain, StringComparison.OrdinalIgnoreCase))
-                select toDomain) domains.Add(toDomain);
+                     select to.EmailAddress.Split('@')[1]
+                     into toDomain
+                     where !string.IsNullOrEmpty(toDomain)
+                     where !domains.Any(domain => domain.Equals(toDomain, StringComparison.OrdinalIgnoreCase))
+                     select toDomain) domains.Add(toDomain);
 
             foreach (var ccDomain in from cc in CcAddresses
-                select cc.EmailAddress.Split('@')[1]
-                into ccDomain
-                where !string.IsNullOrEmpty(ccDomain)
-                where !domains.Any(domain => domain.Equals(ccDomain, StringComparison.OrdinalIgnoreCase))
-                select ccDomain) domains.Add(ccDomain);
+                     select cc.EmailAddress.Split('@')[1]
+                     into ccDomain
+                     where !string.IsNullOrEmpty(ccDomain)
+                     where !domains.Any(domain => domain.Equals(ccDomain, StringComparison.OrdinalIgnoreCase))
+                     select ccDomain) domains.Add(ccDomain);
 
 
             foreach (var bccDomain in from bcc in BccAddresses
-                select bcc.EmailAddress.Split('@')[1]
-                into bccDomain
-                where !string.IsNullOrEmpty(bccDomain)
-                where !domains.Any(domain => domain.Equals(bccDomain, StringComparison.OrdinalIgnoreCase))
-                select bccDomain) domains.Add(bccDomain);
+                     select bcc.EmailAddress.Split('@')[1]
+                     into bccDomain
+                     where !string.IsNullOrEmpty(bccDomain)
+                     where !domains.Any(domain => domain.Equals(bccDomain, StringComparison.OrdinalIgnoreCase))
+                     select bccDomain) domains.Add(bccDomain);
 
             return domains;
         }
@@ -1082,7 +1084,6 @@ namespace Lurgle.Alerting
         /// <param name="isMethod">Add the calling method to the message text if using <see cref="Send" /> to send an email</param>
         /// <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
         /// <returns></returns>
-        // ReSharper disable once MemberCanBePrivate.Global
         public static IEnvelope From(string fromAddress = null, string fromName = null,
             AddressType addressType = AddressType.Email, bool isMethod = false,
             [CallerMemberName] string methodName = null)
@@ -1128,7 +1129,6 @@ namespace Lurgle.Alerting
         /// <param name="methodName">Automatically captures the calling method via [CallerMemberName]</param>
         /// <returns></returns>
         public static IEnvelope To(string toAddress = null, string toName = null,
-            // ReSharper disable once MethodOverloadWithOptionalParameter
             AddressType addressType = AddressType.Email, bool isMethod = false,
             [CallerMemberName] string methodName = null)
         {

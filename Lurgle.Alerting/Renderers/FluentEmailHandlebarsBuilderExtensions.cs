@@ -2,10 +2,11 @@
 using Lurgle.Alerting.Renderers;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
+// ReSharper disable CheckNamespace
+
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
-// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>

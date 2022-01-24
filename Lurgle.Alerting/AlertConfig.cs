@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable RedundantCaseLabel
+
 namespace Lurgle.Alerting
 {
     /// <summary>
@@ -141,6 +144,10 @@ namespace Lurgle.Alerting
                 case null:
                     MailTlsOptions = TlsOptions.Auto;
                     break;
+                case TlsOptions.SslOnConnect:
+                case TlsOptions.StartTls:
+                default:
+                    break;
             }
 
             //Don't accept timeouts less than 1 second (unless 0, which disables the test), negatives, or higher than 20 seconds
@@ -159,13 +166,11 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     Meaningful app name that is used for alerting. Will be auto-set if not specified.
         /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
         public string AppName { get; private set; }
 
         /// <summary>
         ///     App version will be determined from the binary version, but can be overriden
         /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
         public string AppVersion { get; private set; }
 
         /// <summary>
@@ -337,6 +342,10 @@ namespace Lurgle.Alerting
                     break;
                 case null:
                     alertConfig.MailTlsOptions = TlsOptions.Auto;
+                    break;
+                case TlsOptions.SslOnConnect:
+                case TlsOptions.StartTls:
+                default:
                     break;
             }
 
