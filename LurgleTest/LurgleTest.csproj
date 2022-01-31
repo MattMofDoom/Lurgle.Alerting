@@ -3,12 +3,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net461;net47;net48;net5.0</TargetFrameworks>
+    <LangVersion>9.0</LangVersion>
     <Version>1.2.2</Version>
     <Authors>Matt Marlor</Authors>
     <Company>Matt Marlor</Company>
     <IsPackable>false</IsPackable>
     <!--This is required for .NET Core / .NET 5 projects-->
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

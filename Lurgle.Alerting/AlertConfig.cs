@@ -126,7 +126,7 @@ namespace Lurgle.Alerting
                 MailSubject = mailSubject;
 
             //Don't allow invalid TCP port
-            if (MailPort <= 0 || MailPort > 65535)
+            if (MailPort is <= 0 or > 65535)
                 MailPort = 25;
 
             //Catch edge cases for MailTlsOptions
@@ -151,8 +151,7 @@ namespace Lurgle.Alerting
             }
 
             //Don't accept timeouts less than 1 second (unless 0, which disables the test), negatives, or higher than 20 seconds
-            if (MailTestTimeout > SmtpTestTimeoutMax || MailTestTimeout < SmtpTestTimeoutMin ||
-                MailTestTimeout > 0 && MailTestTimeout < 1000)
+            if (MailTestTimeout is > SmtpTestTimeoutMax or < SmtpTestTimeoutMin or > 0 and < 1000)
                 MailTestTimeout = SmtpTestTimeoutDefault;
 
             //Disable authentication if a username isn't specified
@@ -326,7 +325,7 @@ namespace Lurgle.Alerting
                     Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty,
                         "Templates");
 
-            if (alertConfig.MailPort <= 0 || alertConfig.MailPort > 65535) alertConfig.MailPort = 25;
+            if (alertConfig.MailPort is <= 0 or > 65535) alertConfig.MailPort = 25;
 
             //Catch edge cases for MailTlsOptions
             switch (alertConfig.MailTlsOptions)

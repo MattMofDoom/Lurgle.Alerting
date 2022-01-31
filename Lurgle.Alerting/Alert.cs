@@ -12,10 +12,10 @@ using DnsClient.Protocol;
 using FluentEmail.Core;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Core.Models;
-using FluentEmail.MailKitSmtp;
 using FluentEmail.Smtp;
 using Lurgle.Alerting.Classes;
 using Lurgle.Alerting.Interfaces;
+using Lurgle.Alerting.Senders;
 using MailKit.Security;
 using static MimeMapping.MimeUtility;
 using Attachment = FluentEmail.Core.Models.Attachment;
@@ -45,17 +45,17 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     List of attachments
         /// </summary>
-        public List<Attachment> Attachments { get; private set; } = new List<Attachment>();
+        public List<Attachment> Attachments { get; private set; } = new();
 
         /// <summary>
         ///     List of BCC addresses
         /// </summary>
-        public List<Address> BccAddresses { get; private set; } = new List<Address>();
+        public List<Address> BccAddresses { get; private set; } = new();
 
         /// <summary>
         ///     List of CC addresses
         /// </summary>
-        public List<Address> CcAddresses { get; private set; } = new List<Address>();
+        public List<Address> CcAddresses { get; private set; } = new();
 
         /// <summary>
         ///     Alternate view for email
@@ -65,7 +65,7 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     From address
         /// </summary>
-        public Address FromAddress { get; private set; } = new Address();
+        public Address FromAddress { get; private set; } = new();
 
         /// <summary>
         ///     Is email HTML?
@@ -80,7 +80,7 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     Email reply to
         /// </summary>
-        public Address ReplyToAddress { get; private set; } = new Address();
+        public Address ReplyToAddress { get; private set; } = new();
 
         /// <summary>
         ///     Email subject
@@ -90,7 +90,7 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     List of To addresses
         /// </summary>
-        public List<Address> ToAddresses { get; private set; } = new List<Address>();
+        public List<Address> ToAddresses { get; private set; } = new();
 
         /// <summary>
         ///     Add method to body?
@@ -705,15 +705,12 @@ namespace Lurgle.Alerting
 
             if (!string.IsNullOrEmpty(ReplyToAddress.EmailAddress))
                 email = email.ReplyTo(ReplyToAddress.EmailAddress, ReplyToAddress.Name);
-            switch (AlertPriority)
+            email = AlertPriority switch
             {
-                case AlertLevel.High:
-                    email = email.HighPriority();
-                    break;
-                case AlertLevel.Low:
-                    email = email.LowPriority();
-                    break;
-            }
+                AlertLevel.High => email.HighPriority(),
+                AlertLevel.Low => email.LowPriority(),
+                _ => email
+            };
 
             email.Data.IsHtml = IsHtml;
 

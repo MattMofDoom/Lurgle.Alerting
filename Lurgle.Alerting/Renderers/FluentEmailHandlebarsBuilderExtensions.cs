@@ -2,6 +2,8 @@
 using Lurgle.Alerting.Renderers;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
+// ReSharper disable UnusedParameter.Local
+
 // ReSharper disable CheckNamespace
 
 // ReSharper disable UnusedType.Global
