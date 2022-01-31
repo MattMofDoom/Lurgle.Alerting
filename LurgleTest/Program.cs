@@ -161,7 +161,7 @@ namespace LurgleTest
                 Console.WriteLine("   - {0}", error);
         }
 
-        private static bool ValidateCertificate(object sender, X509Certificate certificate, X509Chain chain,
+        private static bool ValidateCertificate(object sender, X509Certificate? certificate, X509Chain? chain,
             SslPolicyErrors errors)
         {
             return true;

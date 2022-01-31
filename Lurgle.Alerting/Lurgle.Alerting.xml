@@ -1499,6 +1499,245 @@
             </summary>
             <param name="templateRoot"></param>
         </member>
+        <member name="T:Lurgle.Alerting.Renderers.InMemoryRazorLightProject">
+            <summary>
+                In memory RazorLight project
+            </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.InMemoryRazorLightProject.GetItemAsync(System.String)">
+            <summary>
+                Get template key
+            </summary>
+            <param name="templateKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.InMemoryRazorLightProject.GetImportsAsync(System.String)">
+            <summary>
+                Get imports
+            </summary>
+            <param name="templateKey"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Lurgle.Alerting.Renderers.IViewBagModel">
+            <summary>
+                Viewbag model
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Renderers.IViewBagModel.ViewBag">
+            <summary>
+                Viewbag
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.Renderers.LiquidRenderer">
+            <summary>
+                Liquid Renderer
+            </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.LiquidRenderer.#ctor(Microsoft.Extensions.Options.IOptions{Lurgle.Alerting.Renderers.LiquidRendererOptions})">
+            <summary>
+                Liquid Renderer
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.LiquidRenderer.Parse``1(System.String,``0,System.Boolean)">
+            <summary>
+                Parse Liquid template
+            </summary>
+            <param name="template"></param>
+            <param name="model"></param>
+            <param name="isHtml"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.LiquidRenderer.ParseAsync``1(System.String,``0,System.Boolean)">
+            <summary>
+                Parse Liquid template
+            </summary>
+            <param name="template"></param>
+            <param name="model"></param>
+            <param name="isHtml"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Lurgle.Alerting.Renderers.LiquidRendererOptions">
+            <summary>
+                Liquid Renderer Options
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Renderers.LiquidRendererOptions.ConfigureTemplateContext">
+            <summary>
+                Allows configuring template context before running the template. Parameters are context that has been
+                prepared and the model that is going to be used.
+            </summary>
+            <remarks>
+                This API creates dependency on Fluid.
+            </remarks>
+        </member>
+        <member name="P:Lurgle.Alerting.Renderers.LiquidRendererOptions.TextEncoder">
+            <summary>
+                Text encoder to use. Defaults to <see cref="T:System.Text.Encodings.Web.HtmlEncoder" />.
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Renderers.LiquidRendererOptions.FileProvider">
+            <summary>
+                File provider to use, used when resolving references in templates, like master layout.
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Renderers.LiquidRendererOptions.TemplateOptions">
+            <summary>
+                Set custom Template Options for Fluid
+            </summary>
+        </member>
+        <member name="T:Lurgle.Alerting.Renderers.RazorRenderer">
+            <summary>
+                Razor renderer
+            </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.RazorRenderer.#ctor(System.String)">
+            <summary>
+                Razor renderer
+            </summary>
+            <param name="root"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.RazorRenderer.#ctor(RazorLight.Razor.RazorLightProject)">
+            <summary>
+                Razor renderer
+            </summary>
+            <param name="project"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.RazorRenderer.#ctor(System.Type)">
+            <summary>
+                Razor renderer
+            </summary>
+            <param name="embeddedResRootType"></param>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.RazorRenderer.ParseAsync``1(System.String,``0,System.Boolean)">
+            <summary>
+                Parse Razor template
+            </summary>
+            <param name="template"></param>
+            <param name="model"></param>
+            <param name="isHtml"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Alerting.Renderers.RazorRenderer.GetHashString(System.String)">
+            <summary>
+                Get SHA256 hash
+            </summary>
+            <param name="inputString"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Lurgle.Alerting.Senders.MailKitSender">
+            <summary>
+                Send emails with the MailKit Library.
+            </summary>
+        </member>
+        <member name="M:Lurgle.Alerting.Senders.MailKitSender.#ctor(Lurgle.Alerting.Senders.SmtpClientOptions)">
+            <summary>
+                Creates a sender that uses the given SmtpClientOptions when sending with MailKit. Since the client is internal this
+                will dispose of the client.
+            </summary>
+            <param name="smtpClientOptions">The SmtpClientOptions to use to create the MailKit client</param>
+        </member>
+        <member name="M:Lurgle.Alerting.Senders.MailKitSender.Send(FluentEmail.Core.IFluentEmail,System.Nullable{System.Threading.CancellationToken})">
+            <summary>
+                Send the specified email.
+            </summary>
+            <returns>A response with any errors and a success boolean.</returns>
+            <param name="email">Email.</param>
+            <param name="token">Cancellation Token.</param>
+        </member>
+        <member name="M:Lurgle.Alerting.Senders.MailKitSender.SendAsync(FluentEmail.Core.IFluentEmail,System.Nullable{System.Threading.CancellationToken})">
+            <summary>
+                Send the specified email.
+            </summary>
+            <returns>A response with any errors and a success boolean.</returns>
+            <param name="email">Email.</param>
+            <param name="token">Cancellation Token.</param>
+        </member>
+        <member name="M:Lurgle.Alerting.Senders.MailKitSender.SaveToPickupDirectory(MimeKit.MimeMessage,System.String)">
+            <summary>
+                Saves email to a pickup directory.
+            </summary>
+            <param name="message">Message to save for pickup.</param>
+            <param name="pickupDirectory">Pickup directory.</param>
+        </member>
+        <member name="M:Lurgle.Alerting.Senders.MailKitSender.CreateMailMessage(FluentEmail.Core.IFluentEmail)">
+            <summary>
+                Create a MimMessage so MailKit can send it
+            </summary>
+            <returns>The mail message.</returns>
+            <param name="email">Email data.</param>
+        </member>
+        <member name="T:Lurgle.Alerting.Senders.SmtpClientOptions">
+            <summary>
+                SMTP Client Options
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.Server">
+            <summary>
+                Server
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.Port">
+            <summary>
+                Port
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.User">
+            <summary>
+                Username
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.Password">
+            <summary>
+                Password
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.UseSsl">
+            <summary>
+                UseSsl (SocketOptions is preferable)
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.RequiresAuthentication">
+            <summary>
+                Use authentication
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.PreferredEncoding">
+            <summary>
+                Preferred Encoding
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.UsePickupDirectory">
+            <summary>
+                Enable pickup directory
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.MailPickupDirectory">
+            <summary>
+                Mail pickup directory
+            </summary>
+        </member>
+        <member name="P:Lurgle.Alerting.Senders.SmtpClientOptions.SocketOptions">
+            <summary>
+                Secure socket options
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.FluentEmailFluidBuilderExtensions">
+            <summary>
+                FluentEmail Fluid/Liquid Builder Extensions
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.FluentEmailFluidBuilderExtensions.AddLiquidRenderer(Microsoft.Extensions.DependencyInjection.FluentEmailServicesBuilder,System.Action{Lurgle.Alerting.Renderers.LiquidRendererOptions})">
+            <summary>
+                Liquid Renderer
+            </summary>
+            <param name="builder"></param>
+            <param name="configure"></param>
+            <returns></returns>
+        </member>
         <member name="T:Microsoft.Extensions.DependencyInjection.FluentEmailHandlebarsBuilderExtensions">
             <summary>
                 Handlebars builder extensions, based off https://github.com/matthewturner/FluentEmail.Handlebars
@@ -1518,6 +1757,65 @@
             <param name="builder"></param>
             <param name="templateRoot"></param>
             <returns></returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.FluentEmailRazorBuilderExtensions">
+            <summary>
+                FluentEmail Razor Extensions
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.FluentEmailRazorBuilderExtensions.AddRazorRenderer(Microsoft.Extensions.DependencyInjection.FluentEmailServicesBuilder)">
+            <summary>
+                Add Razor renderer
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.FluentEmailRazorBuilderExtensions.AddRazorRenderer(Microsoft.Extensions.DependencyInjection.FluentEmailServicesBuilder,System.String)">
+            <summary>
+                Add razor renderer with project views and layouts
+            </summary>
+            <param name="builder"></param>
+            <param name="templateRootFolder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.FluentEmailRazorBuilderExtensions.AddRazorRenderer(Microsoft.Extensions.DependencyInjection.FluentEmailServicesBuilder,System.Type)">
+            <summary>
+                Add razor renderer with embedded views and layouts
+            </summary>
+            <param name="builder"></param>
+            <param name="embeddedResourceRootType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.FluentEmailRazorBuilderExtensions.AddRazorRenderer(Microsoft.Extensions.DependencyInjection.FluentEmailServicesBuilder,RazorLight.Razor.RazorLightProject)">
+            <summary>
+                Add razor renderer with a RazorLightProject to support views and layouts
+            </summary>
+            <param name="builder"></param>
+            <param name="razorLightProject"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.FluentEmailMailKitBuilderExtensions">
+            <summary>
+                FluentEmail MailKit extensions
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.FluentEmailMailKitBuilderExtensions.AddMailKitSender(Microsoft.Extensions.DependencyInjection.FluentEmailServicesBuilder,Lurgle.Alerting.Senders.SmtpClientOptions)">
+            <summary>
+                MailKit sender
+            </summary>
+            <param name="builder"></param>
+            <param name="smtpClientOptions"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LiquidParser">
+            <summary>
+                Liquid Parser
+            </summary>
+        </member>
+        <member name="M:LiquidParser.#ctor">
+            <summary>
+                Liquid Parser
+            </summary>
         </member>
     </members>
 </doc>

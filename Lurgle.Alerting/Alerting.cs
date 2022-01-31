@@ -6,8 +6,6 @@ using System.Text.Encodings.Web;
 using DnsClient;
 using FluentEmail.Core;
 using FluentEmail.Core.Defaults;
-using FluentEmail.Liquid;
-using FluentEmail.Razor;
 using Lurgle.Alerting.Renderers;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
@@ -43,7 +41,7 @@ namespace Lurgle.Alerting
         /// <summary>
         ///     Static DNS resolver
         /// </summary>
-        public static readonly LookupClient DnsResolver = new LookupClient();
+        public static readonly LookupClient DnsResolver = new();
 
         /// <summary>
         ///     Set the <see cref="Config" /> by passing an <see cref="AlertConfig" /> or reading from app config
