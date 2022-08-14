@@ -36,6 +36,6 @@ namespace Lurgle.Alerting.Renderers
         /// <summary>
         ///     Set custom Template Options for Fluid
         /// </summary>
-        public TemplateOptions TemplateOptions { get; set; } = new();
+        public TemplateOptions TemplateOptions { get; set; } = new TemplateOptions();
     }
 }
