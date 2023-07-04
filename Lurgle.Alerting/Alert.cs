@@ -945,12 +945,12 @@ namespace Lurgle.Alerting
                             Credentials = new NetworkCredential(Alerting.Config.MailUsername,
                                 Alerting.Config.MailPassword)
                         });
-                    else
-                        return new SmtpSender(new SmtpClient(host, Alerting.Config.MailPort)
-                        {
-                            Timeout = Alerting.Config.MailTimeout,
-                            EnableSsl = Alerting.Config.MailUseTls
-                        });
+
+                    return new SmtpSender(new SmtpClient(host, Alerting.Config.MailPort)
+                    {
+                        Timeout = Alerting.Config.MailTimeout,
+                        EnableSsl = Alerting.Config.MailUseTls
+                    });
 
                 default:
                     return new MailKitSender(new SmtpClientOptions
